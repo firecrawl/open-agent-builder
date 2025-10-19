@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getConvexClient, getAuthenticatedConvexClient, api, isConvexConfigured } from '@/lib/convex/client';
+import { getWorkflowByCustomId, getWorkflow, getDatabaseProvider } from '@/lib/db';
+import { getAuthUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * GET /api/workflows/[workflowId] - Get a specific workflow from Convex
+ * GET /api/workflows/[workflowId] - Get a specific workflow
+ * Works with both Convex and PostgreSQL
  */
 export async function GET(
   request: NextRequest,
@@ -13,29 +15,12 @@ export async function GET(
   try {
     const { workflowId } = await params;
 
-    if (!isConvexConfigured()) {
-      return NextResponse.json(
-        { error: 'Convex not configured' },
-        { status: 500 }
-      );
-    }
+    // Look up by customId first
+    let workflow = await getWorkflowByCustomId(workflowId);
 
-    const convex = await getAuthenticatedConvexClient();
-
-    // Look up by customId first, then try as Convex ID
-    let workflow = await convex.query(api.workflows.getWorkflowByCustomId, {
-      customId: workflowId,
-    });
-
-    // If not found and looks like Convex ID, try direct lookup
-    if (!workflow && workflowId.startsWith('j')) {
-      try {
-        workflow = await convex.query(api.workflows.getWorkflow, {
-          id: workflowId as any,
-        });
-      } catch (e) {
-        // Not a valid Convex ID
-      }
+    // If not found, try direct ID lookup
+    if (!workflow) {
+      workflow = await getWorkflow(workflowId);
     }
 
     if (!workflow) {
@@ -45,13 +30,15 @@ export async function GET(
       );
     }
 
+    const provider = getDatabaseProvider();
+
     return NextResponse.json({
       success: true,
       workflow: {
         ...workflow,
-        id: workflow.customId || workflow._id, // Return customId if exists
+        id: workflow.customId || workflow._id || workflow.id,
       },
-      source: 'convex',
+      source: provider,
     });
   } catch (error) {
     console.error('Error fetching workflow:', error);
@@ -66,28 +53,30 @@ export async function GET(
 }
 
 /**
- * DELETE /api/workflows/[workflowId] - Delete a workflow from Convex
+ * DELETE /api/workflows/[workflowId] - Delete a workflow
+ * Works with both Convex and PostgreSQL
  */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ workflowId: string }> }
 ) {
   try {
-    const { workflowId } = await params;
-
-    if (!isConvexConfigured()) {
-      return NextResponse.json(
-        { error: 'Convex not configured' },
-        { status: 500 }
-      );
+    const { userId } = await getAuthUser();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const convex = await getAuthenticatedConvexClient();
+    const { workflowId } = await params;
 
-    // Look up by customId to get Convex ID
-    const workflow = await convex.query(api.workflows.getWorkflowByCustomId, {
-      customId: workflowId,
-    });
+    const { deleteWorkflow } = await import('@/lib/db');
+
+    // Look up by customId first
+    let workflow = await getWorkflowByCustomId(workflowId);
+
+    // If not found, try direct ID lookup
+    if (!workflow) {
+      workflow = await getWorkflow(workflowId);
+    }
 
     if (!workflow) {
       return NextResponse.json(
@@ -96,14 +85,22 @@ export async function DELETE(
       );
     }
 
-    // Delete using Convex ID
-    await convex.mutation(api.workflows.deleteWorkflow, {
-      id: workflow._id,
-    });
+    // Verify ownership
+    if (workflow.userId && workflow.userId !== userId) {
+      return NextResponse.json(
+        { error: 'Unauthorized to delete this workflow' },
+        { status: 403 }
+      );
+    }
+
+    // Delete using actual ID
+    await deleteWorkflow(workflow._id || workflow.id!);
+
+    const provider = getDatabaseProvider();
 
     return NextResponse.json({
       success: true,
-      source: 'convex',
+      source: provider,
       message: `Workflow ${workflowId} deleted`,
     });
   } catch (error) {

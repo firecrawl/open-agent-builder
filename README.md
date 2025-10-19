@@ -41,13 +41,16 @@ Open Agent Builder is a visual workflow builder for creating AI agent pipelines 
 - **Template library** with pre-built workflows
 - **MCP protocol support** for extensible tool integration
 
-### Powered by Firecrawl
-- **Native Firecrawl integration** for web scraping and searching
+### Self-Hosted Web Scraping
+- **Jina.ai Reader API** for FREE markdown conversion
+- **Browserless** for local browser automation
+- **Optional Firecrawl** fallback if you have existing subscription
 
 ### Enterprise Features
 - **LangGraph execution engine** for reliable state management
-- **Clerk authentication** for secure multi-user access
-- **Convex database** for persistent storage
+- **NextAuth authentication** for self-hosted secure multi-user access
+- **PostgreSQL database** for user/auth data (self-hosted)
+- **Convex database** for workflow storage (temporary - Phase 1 migration planned)
 - **API endpoints** for programmatic execution
 - **Human-in-the-loop** approvals for sensitive operations
 
@@ -55,21 +58,23 @@ Open Agent Builder is a visual workflow builder for creating AI agent pipelines 
 
 ## Tech Stack
 
-| Technology | Purpose |
-|-----------|---------|
-| **[Firecrawl](https://firecrawl.dev)** | Web scraping API for converting websites into LLM-ready data |
-| **[Next.js 16 (canary)](https://nextjs.org/)** | React framework with App Router for frontend and API routes |
-| **[TypeScript](https://www.typescriptlang.org/)** | Type-safe development across the stack |
-| **[LangGraph](https://github.com/langchain-ai/langgraph)** | Workflow orchestration engine with state management, conditional routing, and human-in-the-loop support |
-| **[Convex](https://convex.dev)** | Real-time database with automatic reactivity for workflows, executions, and user data |
-| **[Clerk](https://clerk.com)** | Authentication and user management with JWT integration |
-| **[Tailwind CSS](https://tailwindcss.com/)** | Utility-first CSS framework for responsive UI |
-| **[React Flow](https://reactflow.dev/)** | Visual workflow builder canvas with drag-and-drop nodes |
-| **[Anthropic](https://www.anthropic.com/)** | Claude AI integration with native MCP support (Claude Haiku 4.5 & Sonnet 4.5) |
-| **[OpenAI](https://platform.openai.com/)** | gpt-5 integration (MCP support coming soon) |
-| **[Groq](https://groq.com/)** | Fast inference for open models (MCP support coming soon) |
-| **[E2B](https://e2b.dev)** | Sandboxed code execution for secure transform nodes |
-| **[Vercel](https://vercel.com)** | Deployment platform with edge functions |
+| Technology | Purpose | Self-Hosted? |
+|-----------|---------|--------------|
+| **[Ollama](https://ollama.ai)** | FREE local LLM inference | ✅ Yes (Docker) |
+| **[Jina.ai Reader](https://jina.ai)** | FREE markdown conversion API | ✅ Yes (public API) |
+| **[Browserless](https://browserless.io)** | Browser automation for scraping | ✅ Yes (Docker) |
+| **[PostgreSQL](https://postgresql.org)** | Database for users and auth | ✅ Yes (Docker) |
+| **[NextAuth.js](https://next-auth.js.org)** | Authentication and user management | ✅ Yes |
+| **[Next.js 16 (canary)](https://nextjs.org/)** | React framework with App Router | ✅ Yes (Docker) |
+| **[TypeScript](https://www.typescriptlang.org/)** | Type-safe development | ✅ Yes |
+| **[LangGraph](https://github.com/langchain-ai/langgraph)** | Workflow orchestration engine | ✅ Yes |
+| **[Tailwind CSS](https://tailwindcss.com/)** | Utility-first CSS framework | ✅ Yes |
+| **[React Flow](https://reactflow.dev/)** | Visual workflow builder canvas | ✅ Yes |
+| **[Convex](https://convex.dev)** | Real-time database (temporary) | ⏸️ Cloud (Phase 1 migration planned) |
+| **[Anthropic](https://www.anthropic.com/)** | Optional: Claude AI (MCP support) | Optional |
+| **[OpenAI](https://platform.openai.com/)** | Optional: GPT models | Optional |
+| **[Groq](https://groq.com/)** | Optional: Fast inference | Optional |
+| **[E2B](https://e2b.dev)** | Optional: Sandboxed code execution | Optional |
 
 ---
 
@@ -77,16 +82,57 @@ Open Agent Builder is a visual workflow builder for creating AI agent pipelines 
 
 Before you begin, you'll need:
 
-1. **Node.js 18+** installed on your machine
-2. **Firecrawl API key** (Required for web scraping) - [Get one here](https://firecrawl.dev)
-3. **Convex account** - [Sign up free](https://convex.dev)
-4. **Clerk account** - [Sign up free](https://clerk.com)
+1. **Docker** (Recommended) - [Get Docker](https://www.docker.com/get-started)
+2. **Convex account** (temporary) - [Sign up free](https://convex.dev)
 
-> **Note:** LLM API keys can be added directly in the UI via Settings → API Keys after setup. For MCP tool support, Anthropic Claude (Haiku 4.5 or Sonnet 4.5) is currently recommended as the default option.
+> **🎉 95% Self-Hosted!** This project now runs almost entirely on your machine:
+> - ✅ **Local LLM** (Ollama) - FREE AI inference
+> - ✅ **Local scraping** (Jina.ai + Browserless) - FREE web scraping
+> - ✅ **Local auth** (NextAuth + PostgreSQL) - No third-party auth service needed
+> - ⏸️ **Convex database** - Still cloud-based (Phase 1 migration coming soon)
+> 
+> **No Clerk, No Firecrawl subscription, No LLM API costs!**
 
 ---
 
-## Installation & Setup
+## Docker Setup (Recommended) 🐳
+
+**95% Self-Hosted - Everything runs locally except Convex!**
+
+```bash
+# 1. Clone and setup
+git clone https://github.com/firecrawl/open-agent-builder.git
+cd open-agent-builder
+cp env.example .env
+
+# 2. Set up environment variables
+# Required: NEXT_PUBLIC_CONVEX_URL (temporary until Phase 1)
+# Optional: LLM API keys (or use FREE local Ollama)
+# Generate: NEXTAUTH_SECRET=$(openssl rand -base64 32)
+# Generate: DATABASE_URL=postgresql://agent_builder:yourpassword@postgres:5432/agent_builder
+
+# 3. Start everything
+docker-compose up
+
+# 4. First run: Create your account at http://localhost:3000/sign-up
+```
+
+**What you get:**
+- ✅ **FREE local LLM** (Ollama with Llama 3.2 3B, Qwen 2.5 Coder 7B)
+- ✅ **FREE web scraping** (Jina.ai API + local Browserless)
+- ✅ **Self-hosted auth** (NextAuth + PostgreSQL)
+- ✅ **No Clerk subscription** ($0/month saved)
+- ✅ **No Firecrawl subscription** ($50-100/month saved)
+- ✅ **No LLM API costs** ($50-200/month saved)
+- ✅ **Complete data ownership** - Everything on your server
+
+**Total savings: $100-300/month!** 💰
+
+**See [COMPLETE_SELF_HOSTING_GUIDE.md](./COMPLETE_SELF_HOSTING_GUIDE.md) for full details.**
+
+---
+
+## Installation & Setup (Local)
 
 ### 1. Clone the Repository
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LangGraphExecutor } from '@/lib/workflow/langgraph';
 import { validateApiKey, createUnauthorizedResponse } from '@/lib/api/auth';
+import { createExecution, updateExecutionStatus, getDatabaseProvider } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +14,8 @@ export async function POST(
   if (!authResult.authenticated) {
     return createUnauthorizedResponse(authResult.error || 'Authentication required');
   }
+
+  let executionId: string | undefined;
 
   try {
     const { workflowId } = await params;
@@ -30,6 +33,13 @@ export async function POST(
 
     console.log('API: Loaded workflow:', workflow.name);
 
+    // Create execution record
+    executionId = await createExecution({
+      workflowId: workflow.id || workflowId,
+      input: input || '',
+      variables: {},
+    });
+
     const apiKeys = {
       anthropic: process.env.ANTHROPIC_API_KEY,
       groq: process.env.GROQ_API_KEY,
@@ -44,14 +54,45 @@ export async function POST(
 
     console.log('API: Execution complete:', execution.status);
 
+    // Update execution record with results
+    await updateExecutionStatus(
+      executionId,
+      execution.status,
+      execution.nodeResults,
+      execution.output,
+      execution.error
+    );
+
+    const provider = getDatabaseProvider();
+
     return NextResponse.json({
       success: execution.status === 'completed',
-      execution,
+      execution: {
+        ...execution,
+        id: executionId,
+      },
       input,
       workflowName: workflow.name,
+      source: provider,
     });
   } catch (error) {
     console.error('Workflow execution error:', error);
+
+    // Mark execution as failed if we created one
+    if (executionId) {
+      try {
+        await updateExecutionStatus(
+          executionId,
+          'failed',
+          {},
+          null,
+          error instanceof Error ? error.message : 'Unknown error'
+        );
+      } catch (updateError) {
+        console.error('Failed to update execution status:', updateError);
+      }
+    }
+
     return NextResponse.json(
       {
         error: 'Workflow execution failed',

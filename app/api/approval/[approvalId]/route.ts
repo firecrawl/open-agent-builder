@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getApprovalRecord, updateApprovalRecord } from '@/lib/approval/approval-store';
+import { getApproval, updateApprovalStatus, getDatabaseProvider } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/approval/[approvalId] - Get approval status
+ * Works with both Convex and PostgreSQL
  */
 export async function GET(
   request: NextRequest,
@@ -19,7 +20,7 @@ export async function GET(
     );
   }
 
-  const record = await getApprovalRecord(approvalId);
+  const record = await getApproval(approvalId);
   if (!record) {
     return NextResponse.json(
       { success: false, error: 'Approval record not found' },
@@ -27,14 +28,18 @@ export async function GET(
     );
   }
 
+  const provider = getDatabaseProvider();
+
   return NextResponse.json({
     success: true,
     record,
+    source: provider,
   });
 }
 
 /**
  * POST /api/approval/[approvalId] - Approve or reject
+ * Works with both Convex and PostgreSQL
  */
 export async function POST(
   request: NextRequest,
@@ -61,21 +66,15 @@ export async function POST(
     }
 
     const status = action === 'approve' ? 'approved' : 'rejected';
-    const record = await updateApprovalRecord(approvalId, {
-      status,
-      resolvedBy: userId,
-    });
+    await updateApprovalStatus(approvalId, status, userId);
 
-    if (!record) {
-      return NextResponse.json(
-        { success: false, error: 'Approval record not found' },
-        { status: 404 }
-      );
-    }
+    const record = await getApproval(approvalId);
+    const provider = getDatabaseProvider();
 
     return NextResponse.json({
       success: true,
       record,
+      source: provider,
     });
   } catch (error) {
     console.error('Failed to update approval:', error);

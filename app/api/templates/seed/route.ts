@@ -1,23 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthenticatedConvexClient, api, isConvexConfigured } from '@/lib/convex/client';
+import { saveWorkflow, getWorkflowByCustomId, getDatabaseProvider } from '@/lib/db';
 import { listTemplates, getTemplate } from '@/lib/workflow/templates';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * POST /api/templates/seed - Seed official templates to Convex
+ * POST /api/templates/seed - Seed official templates
+ * Works with both Convex and PostgreSQL
  */
 export async function POST(request: NextRequest) {
   try {
-    if (!isConvexConfigured()) {
-      return NextResponse.json({
-        success: false,
-        message: 'Convex not configured',
-      }, { status: 500 });
-    }
-
-    const convex = await getAuthenticatedConvexClient();
-
     // Get all templates from static file
     const templateList = listTemplates();
     const seededTemplates: string[] = [];
@@ -28,28 +20,36 @@ export async function POST(request: NextRequest) {
       if (!template) continue;
 
       try {
-        const result = await convex.mutation(api.workflows.seedOfficialTemplate, {
+        // Check if template already exists
+        const existing = await getWorkflowByCustomId(template.id);
+        if (existing) {
+          skippedTemplates.push(template.name);
+          continue;
+        }
+
+        // Save as template
+        await saveWorkflow({
           customId: template.id,
           name: template.name,
           description: template.description,
           category: template.category,
-          tags: template.tags,
+          tags: template.tags || [],
           difficulty: template.difficulty,
           estimatedTime: template.estimatedTime,
           nodes: template.nodes,
           edges: template.edges,
+          isTemplate: true,
+          isPublic: true,
         });
 
-        if (result.success) {
-          seededTemplates.push(template.name);
-        } else {
-          skippedTemplates.push(template.name);
-        }
+        seededTemplates.push(template.name);
       } catch (error) {
         console.error(`Failed to seed template ${template.name}:`, error);
         skippedTemplates.push(template.name);
       }
     }
+
+    const provider = getDatabaseProvider();
 
     return NextResponse.json({
       success: true,
@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
       seededTemplates,
       skippedTemplates,
       message: `Seeded ${seededTemplates.length} templates, skipped ${skippedTemplates.length}`,
+      source: provider,
     });
   } catch (error) {
     console.error('Error seeding templates:', error);

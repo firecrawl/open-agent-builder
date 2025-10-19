@@ -3,15 +3,17 @@
 import { GeistMono } from "geist/font/mono";
 import { Roboto_Mono } from "next/font/google";
 import { Toaster } from "sonner";
-import { ClerkProvider, useAuth } from '@clerk/nextjs';
-import { ConvexProviderWithClerk } from "convex/react-clerk";
+import { SessionProvider } from 'next-auth/react';
+import { ConvexProvider } from "convex/react";
 import { ConvexReactClient } from "convex/react";
 import ColorStyles from "@/components/shared/color-styles/color-styles";
 import Scrollbar from "@/components/ui/scrollbar";
 import { BigIntProvider } from "@/components/providers/BigIntProvider";
 import "styles/main.css";
 
-const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+// Make Convex optional (using PostgreSQL by default)
+const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || 'https://placeholder.convex.cloud';
+const convex = new ConvexReactClient(convexUrl);
 
 const robotoMono = Roboto_Mono({
   subsets: ["latin"],
@@ -28,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+    <SessionProvider>
+      <ConvexProvider client={convex}>
         <html lang="en">
           <head>
             <title>Open Agent Builder</title>
@@ -47,8 +49,8 @@ export default function RootLayout({
             </BigIntProvider>
           </body>
         </html>
-      </ConvexProviderWithClerk>
-    </ClerkProvider>
+      </ConvexProvider>
+    </SessionProvider>
   );
 }
 

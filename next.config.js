@@ -18,6 +18,8 @@ const nextConfig = {
     '@e2b/code-interpreter',
     'e2b',
   ],
+  // Enable standalone output for Docker production builds
+  output: 'standalone',
 }
 
 module.exports = nextConfig

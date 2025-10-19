@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+  # Ollama - Local LLM inference server
+  ollama:
+    image: ollama/ollama:latest
+    container_name: open-agent-builder-ollama
+    ports:
+      - "11435:11434"  # Use 11435 on host (system Ollama uses 11434)
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    restart: unless-stopped
+    networks:
+      - agent-builder-network
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Ollama model loader - pulls models on first run
+  ollama-setup:
+    image: ollama/ollama:latest
+    container_name: open-agent-builder-ollama-setup
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - ollama-data:/root/.ollama
+    depends_on:
+      ollama:
+        condition: service_healthy
+    networks:
+      - agent-builder-network
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      echo 'Pulling Ollama models...' &&
+      ollama pull llama3.2:3b &&
+      ollama pull qwen2.5-coder:7b &&
+      echo 'Models ready!' &&
+      echo 'Available models:' &&
+      ollama list
+      "
+    restart: "no"
+
+  # PostgreSQL Database (for NextAuth and future migration)
+  postgres:
+    image: postgres:16-alpine
+    container_name: open-agent-builder-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-agent_builder}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
+      POSTGRES_DB: ${DB_NAME:-agent_builder}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "54320:5432"  # Use 54320 on host to avoid conflicts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-agent_builder}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - agent-builder-network
+
+  # Convex development server
+  convex-dev:
+    image: node:18-alpine
+    container_name: open-agent-builder-convex
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    command: sh -c "npm install -g convex && npx convex dev"
+    restart: unless-stopped
+    networks:
+      - agent-builder-network
+
+  # Browserless - Browser automation for scraping
+  browserless:
+    image: browserless/chrome:latest
+    container_name: open-agent-builder-browserless
+    ports:
+      - "3001:3000"
+    environment:
+      - MAX_CONCURRENT_SESSIONS=3
+      - CONNECTION_TIMEOUT=60000
+      - PREBOOT_CHROME=true
+    restart: unless-stopped
+    networks:
+      - agent-builder-network
+    shm_size: '2gb'
+
+  # Next.js application
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: open-agent-builder-nextjs
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - WATCHPACK_POLLING=true
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - BROWSERLESS_URL=http://browserless:3000
+    depends_on:
+      - convex-dev
+      - ollama
+      - browserless
+    restart: unless-stopped
+    networks:
+      - agent-builder-network
+
+volumes:
+  ollama-data:
+    driver: local
+  postgres-data:
+    driver: local
+
+networks:
+  agent-builder-network:
+    driver: bridge
+

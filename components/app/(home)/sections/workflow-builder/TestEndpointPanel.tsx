@@ -4,8 +4,6 @@ import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/shadcn/tabs";
 import { Workflow } from "@/lib/workflow/types";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 
 interface TestEndpointPanelProps {
   workflowId: string;
@@ -15,8 +13,16 @@ interface TestEndpointPanelProps {
 }
 
 export default function TestEndpointPanel({ workflowId, workflow, environment, onClose }: TestEndpointPanelProps) {
-  // Get user's API keys
-  const apiKeys = useQuery(api.apiKeys.list, {});
+  // Get user's API keys via API
+  const [apiKeys, setApiKeys] = useState<any[]>([]);
+  
+  useEffect(() => {
+    fetch('/api/config?type=api-keys')
+      .then(r => r.json())
+      .then(data => setApiKeys(data.keys || []))
+      .catch(err => console.error('Failed to fetch API keys:', err));
+  }, []);
+
   const firstKey = apiKeys?.[0];
 
   // Try to get the full API key from localStorage (only available if just generated)

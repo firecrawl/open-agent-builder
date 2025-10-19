@@ -1,0 +1,31 @@
+# Development Dockerfile for Open Agent Builder
+# Optimized for hot-reloading and development workflow
+
+FROM node:20-alpine
+
+# Install dependencies for better compatibility
+RUN apk add --no-cache libc6-compat bash
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+    # Install all dependencies (including devDependencies)
+    RUN npm ci --legacy-peer-deps
+
+# Copy application code
+COPY . .
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Expose port
+EXPOSE 3000
+
+ENV PORT=3000
+ENV NODE_ENV=development
+
+# Start development server
+CMD ["npm", "run", "dev"]
+

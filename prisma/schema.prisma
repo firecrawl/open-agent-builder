@@ -1,0 +1,274 @@
+// Prisma Schema for Open Agent Builder
+// Phase 2: NextAuth.js authentication tables
+// Phase 1 (Future): Will add Convex replacement tables
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth.js Models
+// https://next-auth.js.org/adapters/prisma
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?   // For credentials provider
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  accounts      Account[]
+  sessions      Session[]
+  workflows     Workflow[]
+  mcpServers    McpServer[]
+  userLLMKeys   UserLLMKey[]
+  apiKeys       ApiKey[]
+  approvals     Approval[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================================================
+// Phase 1: Workflow Tables (Convex replacement)
+// ============================================================================
+
+model Workflow {
+  id          String   @id @default(cuid())
+  userId      String?  @map("user_id") // Optional for backward compat
+  
+  // Workflow identification
+  customId    String?  @map("custom_id") // Original workflow ID
+  name        String
+  description String?
+  category    String?
+  tags        String[] // Array of strings
+  difficulty  String?
+  estimatedTime String? @map("estimated_time")
+  
+  // Workflow structure (JSON)
+  nodes       Json    // Flexible workflow nodes
+  edges       Json    // Workflow edges
+  
+  // Timestamps
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  // Metadata
+  version     String?
+  isTemplate  Boolean? @default(false) @map("is_template")
+  isPublic    Boolean? @default(false) @map("is_public")
+  
+  // Relations
+  user        User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  executions  Execution[]
+  approvals   Approval[]
+  
+  @@index([userId])
+  @@index([customId])
+  @@index([createdAt])
+  @@index([category])
+  @@index([isTemplate])
+  @@map("workflows")
+}
+
+model Execution {
+  id            String   @id @default(cuid())
+  workflowId    String   @map("workflow_id")
+  status        String   // "running" | "completed" | "failed"
+  
+  // Execution state (JSON)
+  currentNodeId String?  @map("current_node_id")
+  nodeResults   Json     @map("node_results")
+  variables     Json
+  
+  // Input/Output (JSON)
+  input         Json?
+  output        Json?
+  error         String?  @db.Text
+  
+  // Timestamps
+  startedAt     DateTime @default(now()) @map("started_at")
+  completedAt   DateTime? @map("completed_at")
+  
+  // Metadata
+  threadId      String?  @map("thread_id")
+  
+  // Relations
+  workflow      Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  
+  @@index([workflowId])
+  @@index([status])
+  @@index([startedAt])
+  @@map("executions")
+}
+
+model McpServer {
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  
+  // Basic info
+  name            String
+  url             String
+  description     String?
+  category        String   // "web" | "ai" | "data" | "custom"
+  
+  // Authentication
+  authType        String   @map("auth_type") // "none" | "api-key" | "bearer"
+  accessToken     String?  @map("access_token") @db.Text // Encrypted
+  
+  // Tools & Status
+  tools           String[] // Array of tool names
+  connectionStatus String  @map("connection_status") // "connected" | "error" | "untested"
+  lastTested      DateTime? @map("last_tested")
+  lastError       String?  @map("last_error") @db.Text
+  
+  // Configuration
+  enabled         Boolean  @default(true)
+  isOfficial      Boolean  @default(false) @map("is_official")
+  headers         Json?    // Custom headers
+  
+  // Timestamps
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([name])
+  @@index([enabled])
+  @@index([category])
+  @@index([isOfficial])
+  @@map("mcp_servers")
+}
+
+model UserLLMKey {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  provider      String   // "anthropic" | "openai" | "groq"
+  encryptedKey  String   @map("encrypted_key") @db.Text
+  keyPrefix     String   @map("key_prefix") // For display
+  
+  // Metadata
+  label         String?
+  isActive      Boolean  @default(true) @map("is_active")
+  
+  // Timestamps
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  lastUsedAt    DateTime? @map("last_used_at")
+  
+  // Usage tracking
+  usageCount    Int      @default(0) @map("usage_count")
+  
+  // Relations
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([provider])
+  @@index([userId, provider])
+  @@index([isActive])
+  @@map("user_llm_keys")
+}
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  key         String   @unique // Hashed key
+  keyPrefix   String   @map("key_prefix") // For display
+  userId      String   @map("user_id")
+  name        String
+  
+  // Usage tracking
+  usageCount  Int      @default(0) @map("usage_count")
+  lastUsedAt  DateTime? @map("last_used_at")
+  
+  // Timestamps
+  createdAt   DateTime @default(now()) @map("created_at")
+  expiresAt   DateTime? @map("expires_at")
+  revokedAt   DateTime? @map("revoked_at")
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([key])
+  @@index([keyPrefix])
+  @@map("api_keys")
+}
+
+model Approval {
+  id          String   @id @default(cuid())
+  approvalId  String   @unique @map("approval_id") // Custom ID for lookup
+  workflowId  String   @map("workflow_id")
+  executionId String?  @map("execution_id")
+  nodeId      String?  @map("node_id")
+  message     String   @db.Text
+  status      String   // "pending" | "approved" | "rejected"
+  userId      String?  @map("user_id") // Who needs to approve
+  createdBy   String?  @map("created_by")
+  
+  // Response
+  respondedAt DateTime? @map("responded_at")
+  respondedBy String?   @map("responded_by")
+  
+  // Timestamps
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([approvalId])
+  @@index([status])
+  @@index([userId])
+  @@index([workflowId])
+  @@index([executionId])
+  @@map("approvals")
+}
+

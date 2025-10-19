@@ -5,7 +5,35 @@ import { useState, useEffect, Suspense } from "react";
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
+import { useSession, signIn } from 'next-auth/react';
+
+// Quick wrapper components to replace Clerk
+const SignedIn = ({ children }: { children: React.ReactNode }) => {
+  const { data: session } = useSession();
+  return session ? <>{children}</> : null;
+};
+
+const SignedOut = ({ children }: { children: React.ReactNode }) => {
+  const { data: session } = useSession();
+  return !session ? <>{children}</> : null;
+};
+
+const SignInButton = ({ children, mode }: { children: React.ReactNode; mode?: string }) => {
+  return <div onClick={() => signIn()}>{children}</div>;
+};
+
+const UserButton = ({ appearance, afterSignOutUrl }: any) => {
+  const { data: session } = useSession();
+  return (
+    <button
+      onClick={() => window.location.href = '/api/auth/signout'}
+      className="w-32 h-32 rounded-full bg-heat-100 flex items-center justify-center text-white"
+      title={session?.user?.email || 'User'}
+    >
+      {session?.user?.email?.[0]?.toUpperCase() || 'U'}
+    </button>
+  );
+};
 
 // Import shared components
 import Button from "@/components/shared/button/Button";

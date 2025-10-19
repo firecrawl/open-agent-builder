@@ -8,7 +8,7 @@
 export interface LLMModel {
   id: string;
   name: string;
-  provider: 'anthropic' | 'openai' | 'groq';
+  provider: 'anthropic' | 'openai' | 'groq' | 'ollama';
   contextWindow: number;
   inputCostPer1M: number;
   outputCostPer1M: number;
@@ -114,12 +114,68 @@ export const llmProviders: LLMProvider[] = [
       },
     ],
   },
+  {
+    id: 'ollama',
+    name: 'Ollama (Local)',
+    envKey: 'OLLAMA_BASE_URL',
+    defaultModel: 'llama3.2:3b',
+    models: [
+      {
+        id: 'llama3.2:3b',
+        name: 'Llama 3.2 3B',
+        provider: 'ollama',
+        contextWindow: 128000,
+        inputCostPer1M: 0.0,
+        outputCostPer1M: 0.0,
+        supportsJSON: true,
+        supportsMCP: false,
+        maxTokens: 4096,
+        description: 'Fast local model, great for quick tasks (FREE)',
+      },
+      {
+        id: 'qwen2.5-coder:7b',
+        name: 'Qwen 2.5 Coder 7B',
+        provider: 'ollama',
+        contextWindow: 128000,
+        inputCostPer1M: 0.0,
+        outputCostPer1M: 0.0,
+        supportsJSON: true,
+        supportsMCP: false,
+        maxTokens: 4096,
+        description: 'Specialized coding model, excellent for development tasks (FREE)',
+      },
+      {
+        id: 'llama3.1:8b',
+        name: 'Llama 3.1 8B',
+        provider: 'ollama',
+        contextWindow: 128000,
+        inputCostPer1M: 0.0,
+        outputCostPer1M: 0.0,
+        supportsJSON: true,
+        supportsMCP: false,
+        maxTokens: 4096,
+        description: 'Balanced performance and speed (FREE - pull manually if needed)',
+      },
+      {
+        id: 'mistral:7b',
+        name: 'Mistral 7B',
+        provider: 'ollama',
+        contextWindow: 32768,
+        inputCostPer1M: 0.0,
+        outputCostPer1M: 0.0,
+        supportsJSON: true,
+        supportsMCP: false,
+        maxTokens: 4096,
+        description: 'Efficient general purpose model (FREE - pull manually if needed)',
+      },
+    ],
+  },
 ];
 
 /**
  * Get default model for a provider
  */
-export function getDefaultModel(provider: 'anthropic' | 'openai' | 'groq'): string {
+export function getDefaultModel(provider: 'anthropic' | 'openai' | 'groq' | 'ollama'): string {
   const config = llmProviders.find(p => p.id === provider);
   return config?.defaultModel || '';
 }
@@ -127,7 +183,7 @@ export function getDefaultModel(provider: 'anthropic' | 'openai' | 'groq'): stri
 /**
  * Get all models for a provider
  */
-export function getModelsForProvider(provider: 'anthropic' | 'openai' | 'groq'): LLMModel[] {
+export function getModelsForProvider(provider: 'anthropic' | 'openai' | 'groq' | 'ollama'): LLMModel[] {
   const config = llmProviders.find(p => p.id === provider);
   return config?.models || [];
 }
@@ -165,12 +221,17 @@ export function getAllModels(): Array<LLMModel & { fullId: string }> {
 /**
  * Check if provider API key is configured
  */
-export function isProviderConfigured(provider: 'anthropic' | 'openai' | 'groq'): boolean {
+export function isProviderConfigured(provider: 'anthropic' | 'openai' | 'groq' | 'ollama'): boolean {
   const config = llmProviders.find(p => p.id === provider);
   if (!config) return false;
 
   // This only works server-side
   if (typeof process === 'undefined') return false;
+
+  // Ollama is always available if OLLAMA_BASE_URL is set (defaults to local)
+  if (provider === 'ollama') {
+    return true; // Ollama is included in Docker setup
+  }
 
   return !!process.env[config.envKey];
 }

@@ -63,8 +63,6 @@ import type { WorkflowNode, WorkflowEdge } from "@/lib/workflow/types";
 import { nodeTypes } from "./CustomNodes";
 import { detectDuplicateCredentials } from "@/lib/workflow/duplicate-detection";
 import { cleanupInvalidEdges } from "@/lib/workflow/edge-cleanup";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 
 interface WorkflowBuilderProps {
   onBack: () => void;
@@ -238,12 +236,29 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [initialized, setInitialized] = useState(false);
   const [currentTemplateId, setCurrentTemplateId] = useState<string | null>(initialTemplateId ?? null);
+  const [template, setTemplate] = useState<any>(null);
 
-  // Convex queries and mutations for templates
-  const template = useQuery(api.workflows.getTemplateByCustomId,
-    currentTemplateId ? { customId: currentTemplateId } : "skip"
-  );
-  const updateTemplateStructure = useMutation(api.workflows.updateTemplateStructure);
+  // Fetch template via API
+  useEffect(() => {
+    if (currentTemplateId) {
+      fetch(`/api/workflows/${currentTemplateId}`)
+        .then(r => r.json())
+        .then(data => setTemplate(data.workflow))
+        .catch(err => console.error('Failed to fetch template:', err));
+    } else {
+      setTemplate(null);
+    }
+  }, [currentTemplateId]);
+
+  // Function to update template structure via API
+  const updateTemplateStructure = async (params: { customId: string; nodes: any; edges: any }) => {
+    const response = await fetch('/api/templates/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    return await response.json();
+  };
 
   // Function to seed templates via API
   const seedTemplates = async () => {

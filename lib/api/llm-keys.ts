@@ -27,9 +27,14 @@ const getConvexClient = () => {
  * @returns The API key or null if not found
  */
 export async function getLLMApiKey(
-  provider: 'anthropic' | 'openai' | 'groq',
+  provider: 'anthropic' | 'openai' | 'groq' | 'ollama',
   userId?: string
 ): Promise<string | null> {
+  // Ollama doesn't need an API key, return a placeholder
+  if (provider === 'ollama') {
+    return 'ollama-local';
+  }
+
   // First, try to get user-specific key if userId is provided
   if (userId) {
     try {
@@ -59,6 +64,7 @@ export async function getLLMApiKey(
     anthropic: 'ANTHROPIC_API_KEY',
     openai: 'OPENAI_API_KEY',
     groq: 'GROQ_API_KEY',
+    ollama: 'OLLAMA_BASE_URL',
   };
 
   const envKey = envKeyMap[provider];
@@ -75,7 +81,7 @@ export async function getLLMApiKey(
  * Check if a provider has an API key configured (either user or env)
  */
 export async function isProviderConfigured(
-  provider: 'anthropic' | 'openai' | 'groq',
+  provider: 'anthropic' | 'openai' | 'groq' | 'ollama',
   userId?: string
 ): Promise<boolean> {
   const apiKey = await getLLMApiKey(provider, userId);
@@ -86,7 +92,7 @@ export async function isProviderConfigured(
  * Get all configured providers for a user
  */
 export async function getConfiguredProviders(userId?: string): Promise<string[]> {
-  const providers: ('anthropic' | 'openai' | 'groq')[] = ['anthropic', 'openai', 'groq'];
+  const providers: ('anthropic' | 'openai' | 'groq' | 'ollama')[] = ['anthropic', 'openai', 'groq', 'ollama'];
   const configured: string[] = [];
 
   for (const provider of providers) {
@@ -103,7 +109,7 @@ export async function getConfiguredProviders(userId?: string): Promise<string[]>
  * This is a helper function that can be used by the execute routes
  */
 export async function initializeLLMClient(
-  provider: 'anthropic' | 'openai' | 'groq',
+  provider: 'anthropic' | 'openai' | 'groq' | 'ollama',
   userId?: string
 ): Promise<{ apiKey: string; provider: string }> {
   const apiKey = await getLLMApiKey(provider, userId);
@@ -113,7 +119,8 @@ export async function initializeLLMClient(
       `No API key found for ${provider}. Please configure your API key in Settings or set the ${
         provider === 'anthropic' ? 'ANTHROPIC_API_KEY' :
         provider === 'openai' ? 'OPENAI_API_KEY' :
-        'GROQ_API_KEY'
+        provider === 'groq' ? 'GROQ_API_KEY' :
+        'OLLAMA_BASE_URL'
       } environment variable.`
     );
   }

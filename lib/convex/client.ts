@@ -1,12 +1,13 @@
 /**
  * Convex Client for Server-Side Operations
  *
- * This replaces Upstash Redis for workflow storage
+ * NOTE: This is temporary while Convex is still used.
+ * Phase 1 will replace Convex entirely with PostgreSQL + Prisma.
+ * For now, Convex auth is disabled - auth is handled by NextAuth in API routes.
  */
 
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
-import { auth } from "@clerk/nextjs/server";
 
 let convexClient: ConvexHttpClient | null = null;
 
@@ -37,39 +38,20 @@ export function getConvexClient(): ConvexHttpClient {
 }
 
 /**
- * Get an authenticated Convex client with Clerk token
- * This ensures userId is properly set in Convex context
+ * Get a Convex client (no auth needed - handled by NextAuth in API routes)
+ * 
+ * NOTE: Convex auth is disabled during NextAuth migration.
+ * Use NextAuth's getAuthUser() in your API route to check auth,
+ * then pass userId explicitly to Convex queries/mutations.
+ * 
+ * Migration in progress:
+ * - Phase 2: Using NextAuth for auth (current)
+ * - Phase 1: Will replace Convex entirely with PostgreSQL
  */
 export async function getAuthenticatedConvexClient(): Promise<ConvexHttpClient> {
-  const url = process.env.NEXT_PUBLIC_CONVEX_URL;
-
-  if (!url) {
-    throw new Error(
-      'Convex URL not configured. ' +
-      'Please add NEXT_PUBLIC_CONVEX_URL to .env.local'
-    );
-  }
-
-  const client = new ConvexHttpClient(url);
-
-  try {
-    // Get Clerk auth token
-    const { getToken } = await auth();
-    const token = await getToken({ template: "convex" });
-
-    // Set the authentication token
-    if (token) {
-      client.setAuth(token);
-    } else {
-      console.warn('No Clerk token available - using unauthenticated client');
-    }
-  } catch (error) {
-    console.error('Failed to get Clerk token:', error);
-    // Continue with unauthenticated client instead of throwing
-    // This allows the app to function even if Clerk auth fails
-  }
-
-  return client;
+  // For now, just return unauthenticated client
+  // Auth checks should be done in API routes using NextAuth
+  return getConvexClient();
 }
 
 /**

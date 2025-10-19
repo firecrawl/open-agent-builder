@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Convex production deployment
+  convex-prod:
+    image: node:18-alpine
+    container_name: open-agent-builder-convex-prod
+    working_dir: /app
+    volumes:
+      - ./convex:/app/convex
+      - ./convex.json:/app/convex.json
+      - ./package.json:/app/package.json
+    env_file:
+      - .env
+    command: sh -c "npm install -g convex && npx convex deploy"
+    networks:
+      - agent-builder-network
+
+  # Next.js production application
+  nextjs-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: open-agent-builder-nextjs-prod
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped
+    depends_on:
+      convex-prod:
+        condition: service_completed_successfully
+    networks:
+      - agent-builder-network
+
+networks:
+  agent-builder-network:
+    driver: bridge
+

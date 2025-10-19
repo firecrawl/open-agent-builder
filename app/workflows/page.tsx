@@ -7,8 +7,8 @@ export default function WorkflowsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to home
-    router.push('/');
+    // Redirect to home with workflows view
+    router.push('/?view=workflows');
   }, [router]);
 
   return null;

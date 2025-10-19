@@ -1,12 +1,16 @@
 import { NextRequest } from 'next/server';
 import { LangGraphExecutor } from '@/lib/workflow/langgraph';
 import { Workflow } from '@/lib/workflow/types';
+import { createExecution, updateExecutionStatus } from '@/lib/db';
 
 /**
  * POST /api/workflow/execute
  * Execute a workflow and stream results via SSE
+ * Works with both Convex and PostgreSQL
  */
 export async function POST(req: NextRequest) {
+  let executionId: string | undefined;
+
   try {
     const body = await req.json();
     const { workflow, input } = body as { workflow: Workflow; input?: string };
@@ -18,14 +22,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Create execution record
+    executionId = await createExecution({
+      workflowId: workflow.id || 'temp-workflow',
+      input: input || '',
+      variables: {},
+    });
+
     // Create SSE stream
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
-        // Send initial event
+        // Send initial event with execution ID
         controller.enqueue(
           encoder.encode(`data: ${JSON.stringify({
             type: 'start',
+            executionId,
             workflow: workflow.name,
             input
           })}\n\n`)
@@ -59,14 +71,41 @@ export async function POST(req: NextRequest) {
           // Execute workflow
           const execution = await executor.execute(input || '');
 
+          // Update execution record
+          await updateExecutionStatus(
+            executionId!,
+            execution.status,
+            execution.nodeResults,
+            execution.output,
+            execution.error
+          );
+
           // Send completion event
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify({
               type: 'complete',
-              execution
+              execution: {
+                ...execution,
+                id: executionId,
+              }
             })}\n\n`)
           );
         } catch (error) {
+          // Update execution as failed
+          if (executionId) {
+            try {
+              await updateExecutionStatus(
+                executionId,
+                'failed',
+                {},
+                null,
+                error instanceof Error ? error.message : 'Unknown error'
+              );
+            } catch (updateError) {
+              console.error('Failed to update execution status:', updateError);
+            }
+          }
+
           // Send error event
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify({

@@ -1,23 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthenticatedConvexClient, api, isConvexConfigured } from '@/lib/convex/client';
+import { updateWorkflowStructure, getWorkflowByCustomId, getDatabaseProvider } from '@/lib/db';
 import { listTemplates, getTemplate } from '@/lib/workflow/templates';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * POST /api/templates/update - Update existing templates in Convex with latest changes
+ * POST /api/templates/update - Update existing templates with latest changes
+ * Works with both Convex and PostgreSQL
  */
 export async function POST(request: NextRequest) {
   try {
-    if (!isConvexConfigured()) {
-      return NextResponse.json({
-        success: false,
-        message: 'Convex not configured',
-      }, { status: 500 });
-    }
-
-    const convex = await getAuthenticatedConvexClient();
-
     // Get all templates from static file
     const templateList = listTemplates();
     const updatedTemplates: string[] = [];
@@ -28,22 +20,28 @@ export async function POST(request: NextRequest) {
       if (!template) continue;
 
       try {
-        const result = await convex.mutation(api.workflows.updateTemplateStructure, {
-          customId: template.id,
-          nodes: template.nodes,
-          edges: template.edges,
-        });
-
-        if (result.success) {
-          updatedTemplates.push(template.name);
-        } else {
+        // Check if template exists
+        const existing = await getWorkflowByCustomId(template.id);
+        if (!existing) {
           failedTemplates.push(template.name);
+          continue;
         }
+
+        // Update template structure
+        await updateWorkflowStructure(
+          existing._id || existing.id!,
+          template.nodes,
+          template.edges
+        );
+
+        updatedTemplates.push(template.name);
       } catch (error) {
         console.error(`Failed to update template ${template.name}:`, error);
         failedTemplates.push(template.name);
       }
     }
+
+    const provider = getDatabaseProvider();
 
     return NextResponse.json({
       success: true,
@@ -53,6 +51,7 @@ export async function POST(request: NextRequest) {
       updatedTemplates,
       failedTemplates,
       message: `Updated ${updatedTemplates.length} templates, ${failedTemplates.length} failed`,
+      source: provider,
     });
   } catch (error) {
     console.error('Error updating templates:', error);

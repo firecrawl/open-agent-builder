@@ -1,34 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createOrUpdateApprovalRecord } from '@/lib/approval/approval-store';
+import { createApproval, getDatabaseProvider } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * POST /api/approval - Create a new approval request
+ * Works with both Convex and PostgreSQL
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { approvalId, executionId, workflowId, nodeId, message, userId } = body;
 
-    if (!approvalId || !executionId || !workflowId || !nodeId) {
+    if (!approvalId || !workflowId) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, error: 'Missing required fields (approvalId, workflowId)' },
         { status: 400 }
       );
     }
 
-    const record = await createOrUpdateApprovalRecord({
+    const id = await createApproval({
       approvalId,
-      executionId,
       workflowId,
+      executionId,
       nodeId,
       message: message || 'Approval required',
       userId,
-      status: 'pending',
     });
 
-    return NextResponse.json({ success: true, record });
+    const provider = getDatabaseProvider();
+
+    return NextResponse.json({ 
+      success: true, 
+      id,
+      source: provider,
+    });
   } catch (error) {
     console.error('Failed to create approval record:', error);
     return NextResponse.json(

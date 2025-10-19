@@ -6,7 +6,7 @@ import { CheckCircle, XCircle, AlertCircle, Key, Copy, Trash2, Upload, Plug, Plu
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { Id } from "@/convex/_generated/dataModel";
 import PasteConfigModal from "./PasteConfigModal";
 
@@ -55,7 +55,8 @@ interface MCPCardProps {
 }
 
 export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const [serverConfig, setServerConfig] = useState<ServerAPIConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [newKeyName, setNewKeyName] = useState("");

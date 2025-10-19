@@ -10,7 +10,7 @@ import { resolveMCPServers, migrateMCPData } from '@/lib/mcp/resolver';
 export async function executeAgentNode(
   node: WorkflowNode,
   state: WorkflowState,
-  apiKeys?: { anthropic?: string; groq?: string; openai?: string; firecrawl?: string }
+  apiKeys?: { anthropic?: string; groq?: string; openai?: string; ollama?: string; firecrawl?: string }
 ): Promise<any> {
   const { data } = node;
 
@@ -378,6 +378,22 @@ export async function executeAgentNode(
         responseText = response.content as string;
         usage = response.response_metadata?.usage || {};
       }
+    } else if (provider === 'ollama') {
+      // Ollama local inference
+      const ollamaBaseUrl = process.env.OLLAMA_BASE_URL || 'http://ollama:11434';
+      const OpenAI = (await import('openai')).default;
+      const client = new OpenAI({
+        apiKey: 'ollama', // Ollama doesn't need a real API key
+        baseURL: ollamaBaseUrl + '/v1',
+      });
+
+      const response = await client.chat.completions.create({
+        model: modelName,
+        messages: messages as any,
+      });
+
+      responseText = response.choices[0]?.message?.content || '';
+      usage = (response.usage as unknown as LLMUsage) || ({} as LLMUsage);
     } else {
       throw new Error(`No API key available for provider: ${provider}`);
     }

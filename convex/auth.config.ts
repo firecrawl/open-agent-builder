@@ -1,17 +1,14 @@
 /**
  * Convex Authentication Configuration
  *
- * Configures Clerk as the authentication provider for Convex
- * The CLERK_JWT_ISSUER_DOMAIN is set via: npx convex env set
+ * NOTE: This is temporarily disabled while migrating from Clerk to NextAuth
+ * Phase 1 will replace Convex entirely with PostgreSQL + Prisma
+ * For now, Convex will work without authentication (use API routes for auth checks)
  */
 
 export default {
   providers: [
-    {
-      // This reads from Convex environment variable (not process.env)
-      // Set via: npx convex env set CLERK_JWT_ISSUER_DOMAIN "https://..."
-      domain: "https://oriented-quetzal-4.clerk.accounts.dev",
-      applicationID: "convex",
-    },
+    // Temporarily empty - NextAuth handles all authentication
+    // Phase 1 will migrate away from Convex entirely
   ],
 };
