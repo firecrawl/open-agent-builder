@@ -42,10 +42,10 @@ export async function POST(
     const userId = authResult.userId;
     
     const apiKeys = {
-      anthropic: userId ? await getLLMApiKey('anthropic', userId) : null || process.env.ANTHROPIC_API_KEY,
-      groq: userId ? await getLLMApiKey('groq', userId) : null || process.env.GROQ_API_KEY,
-      openai: userId ? await getLLMApiKey('openai', userId) : null || process.env.OPENAI_API_KEY,
-      firecrawl: process.env.FIRECRAWL_API_KEY, // Firecrawl keys are still environment-only for now
+      anthropic: (userId ? await getLLMApiKey('anthropic', userId) : null) ?? process.env.ANTHROPIC_API_KEY ?? undefined,
+      groq: (userId ? await getLLMApiKey('groq', userId) : null) ?? process.env.GROQ_API_KEY ?? undefined,
+      openai: (userId ? await getLLMApiKey('openai', userId) : null) ?? process.env.OPENAI_API_KEY ?? undefined,
+      firecrawl: process.env.FIRECRAWL_API_KEY,
       arcade: process.env.ARCADE_API_KEY,
     };
 
