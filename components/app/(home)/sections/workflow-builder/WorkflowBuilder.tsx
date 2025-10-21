@@ -249,11 +249,12 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
   const updateTemplateStructure = useMutation(api.workflows.updateTemplateStructure);
 
   // Function to seed templates via API
-  const seedTemplates = async () => {
+  const seedTemplates = useCallback(async () => {
     const response = await fetch('/api/templates/seed', { method: 'POST' });
     const data = await response.json();
     return data;
-  };
+  }, []);
+
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [showExecution, setShowExecution] = useState(false);
@@ -289,6 +290,57 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
 
   // Workflow management
   const { workflow, convexId, updateNodes, updateEdges, saveWorkflow, saveWorkflowImmediate, deleteWorkflow, createNewWorkflow } = useWorkflow(initialWorkflowId || undefined);
+
+  // Helper functions defined early to avoid hoisting issues
+  const getNodeColor = useCallback((type: string): string => {
+    const colorMap: Record<string, string> = {
+      'agent': 'bg-blue-500',
+      'mcp': 'bg-[#FFEFA4] dark:bg-[#FFDD40]',
+      'firecrawl': 'bg-heat-100',
+      'if-else': 'bg-[#FEE7C2] dark:bg-[#FFAE2B]',
+      'while': 'bg-[#FEE7C2] dark:bg-[#FFAE2B]',
+      'user-approval': 'bg-[#E5E7EB] dark:bg-[#9CA3AF]',
+      'transform': 'bg-[#ECE3FF] dark:bg-[#9665FF]',
+      'set-state': 'bg-[#ECE3FF] dark:bg-[#9665FF]',
+      'file-search': 'bg-indigo-500',
+      'extract': 'bg-purple-500',
+      'note': 'bg-[#E4E4E7] dark:bg-[#52525B]',
+      'end': 'bg-teal-500',
+      'start': 'bg-gray-600',
+    };
+    return colorMap[type] || 'bg-gray-500';
+  }, []);
+
+  const createNodeLabel = useCallback((label: string, color: string, nodeType?: string) => {
+    // Get icon for this node type
+    const nodeCategory = nodeCategories.find(cat =>
+      cat.nodes.some(n => n.type === nodeType || n.label === label)
+    );
+    const nodeConfig = nodeCategory?.nodes.find(n => n.type === nodeType || n.label === label);
+    const IconComponent = nodeConfig?.icon;
+
+    // Determine text color based on node type
+    const getTextColor = () => {
+      if (nodeType === 'note') return 'text-white'; // White text for note nodes (yellow background)
+      if (nodeType === 'if-else' || nodeType === 'while' || nodeType === 'user-approval') {
+        return 'text-[#18181b]'; // Dark text for orange background nodes
+      }
+      return 'text-[#18181b]'; // Default dark text
+    };
+
+    return (
+      <div className="flex items-center gap-8">
+        <div className={`w-32 h-32 rounded-8 ${color} flex items-center justify-center flex-shrink-0`}>
+          {IconComponent ? (
+            <IconComponent className="w-18 h-18 text-white" strokeWidth={2} />
+          ) : (
+            <div className="w-16 h-16 bg-white rounded-2" />
+          )}
+        </div>
+        <span className={`text-sm font-medium ${getTextColor()}`}>{label}</span>
+      </div>
+    );
+  }, []);
 
   // AUTO-SAVE DISABLED - Use manual Save button instead
   // Smart auto-save: only save when nodes/edges actually change, with debounce
@@ -369,6 +421,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
   useEffect(() => {
     setEnvironment('draft');
     setShowTestEndpoint(false); // Close API panel when switching workflows
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workflow?.id]);
 
   const handleDuplicateWorkflow = useCallback(() => {
@@ -459,11 +512,20 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
   }, [workflow, deleteWorkflow, setConfirmDialog, setShowWorkflowMenu]);
   const { runWorkflow, stopWorkflow, isRunning, nodeResults, execution, currentNodeId, pendingAuth, resumeWorkflow } = useWorkflowExecution();
 
+  // Track what we've already loaded to prevent re-processing
+  const loadedTemplateRef = useRef<string | null>(null);
+  const loadedWorkflowRef = useRef<string | null>(null);
+
   // Load template or workflow on mount
   useEffect(() => {
     if (initialized) return;
 
     if (initialTemplateId) {
+      // Skip if we've already processed this template
+      if (loadedTemplateRef.current === initialTemplateId) {
+        return;
+      }
+
       // Check if template is loading from Convex
       if (template === undefined) {
         // Still loading from Convex
@@ -487,6 +549,9 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
 
       if (template) {
         console.log('Loading template from Convex:', template);
+
+        // Mark this template as loaded to prevent re-processing
+        loadedTemplateRef.current = initialTemplateId;
 
         // Clean up any invalid edges in the template
         const cleaned = cleanupInvalidEdges(template.nodes, template.edges);
@@ -546,6 +611,11 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         setInitialized(true);
       }
     } else if (initialWorkflowId && workflow && !initialized) {
+      // Skip if we've already processed this workflow
+      if (loadedWorkflowRef.current === initialWorkflowId) {
+        return;
+      }
+
       // Use workflow data from useWorkflow hook (loaded via API)
       console.log('Loading workflow from hook:', {
         id: workflow.id,
@@ -553,6 +623,9 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         nodeCount: workflow.nodes?.length,
         nodes: workflow.nodes?.map((n: any) => ({ id: n.id, type: n.type }))
       });
+
+      // Mark this workflow as loaded to prevent re-processing
+      loadedWorkflowRef.current = initialWorkflowId;
 
       // Clean up any invalid edges before rendering
       const cleaned = cleanupInvalidEdges(workflow.nodes, workflow.edges);
@@ -597,57 +670,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
       // For new workflows, don't select any node by default
       // User can click the start node or drag new nodes to build their workflow
     }
-  }, [initialTemplateId, initialWorkflowId, initialized, setNodes, setEdges, saveWorkflow, template, seedTemplates, workflow]);
-
-  const createNodeLabel = (label: string, color: string, nodeType?: string) => {
-    // Get icon for this node type
-    const nodeCategory = nodeCategories.find(cat =>
-      cat.nodes.some(n => n.type === nodeType || n.label === label)
-    );
-    const nodeConfig = nodeCategory?.nodes.find(n => n.type === nodeType || n.label === label);
-    const IconComponent = nodeConfig?.icon;
-
-    // Determine text color based on node type
-    const getTextColor = () => {
-      if (nodeType === 'note') return 'text-white'; // White text for note nodes (yellow background)
-      if (nodeType === 'if-else' || nodeType === 'while' || nodeType === 'user-approval') {
-        return 'text-[#18181b]'; // Dark text for orange background nodes
-      }
-      return 'text-[#18181b]'; // Default dark text
-    };
-
-    return (
-      <div className="flex items-center gap-8">
-        <div className={`w-32 h-32 rounded-8 ${color} flex items-center justify-center flex-shrink-0`}>
-          {IconComponent ? (
-            <IconComponent className="w-18 h-18 text-white" strokeWidth={2} />
-          ) : (
-            <div className="w-16 h-16 bg-white rounded-2" />
-          )}
-        </div>
-        <span className={`text-sm font-medium ${getTextColor()}`}>{label}</span>
-      </div>
-    );
-  };
-
-  const getNodeColor = (type: string): string => {
-    const colorMap: Record<string, string> = {
-      'agent': 'bg-blue-500',
-      'mcp': 'bg-[#FFEFA4] dark:bg-[#FFDD40]',
-      'firecrawl': 'bg-heat-100',
-      'if-else': 'bg-[#FEE7C2] dark:bg-[#FFAE2B]',
-      'while': 'bg-[#FEE7C2] dark:bg-[#FFAE2B]',
-      'user-approval': 'bg-[#E5E7EB] dark:bg-[#9CA3AF]',
-      'transform': 'bg-[#ECE3FF] dark:bg-[#9665FF]',
-      'set-state': 'bg-[#ECE3FF] dark:bg-[#9665FF]',
-      'file-search': 'bg-indigo-500',
-      'extract': 'bg-purple-500',
-      'note': 'bg-[#E4E4E7] dark:bg-[#52525B]',
-      'end': 'bg-teal-500',
-      'start': 'bg-gray-600',
-    };
-    return colorMap[type] || 'bg-gray-500';
-  };
+  }, [initialTemplateId, initialWorkflowId, initialized, setNodes, setEdges, saveWorkflow, template, workflow, createNodeLabel, getNodeColor, seedTemplates]);
 
   // Detect duplicate credentials
   useEffect(() => {
@@ -663,6 +686,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workflow?.nodes, workflow?.edges]);
 
   // Sync React Flow state with workflow state (debounced to avoid loops)
@@ -674,9 +698,12 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
   // Cleanup timeouts on unmount to prevent memory leaks
   useEffect(() => {
     return () => {
-      if (nodesSaveTimeoutRef.current) clearTimeout(nodesSaveTimeoutRef.current);
-      if (edgesSaveTimeoutRef.current) clearTimeout(edgesSaveTimeoutRef.current);
+      const nodesSaveTimeout = nodesSaveTimeoutRef.current;
+      const edgesSaveTimeout = edgesSaveTimeoutRef.current;
+      if (nodesSaveTimeout) clearTimeout(nodesSaveTimeout);
+      if (edgesSaveTimeout) clearTimeout(edgesSaveTimeout);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -1159,6 +1186,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedNode, selectedEdgeId, nodes, edges, handleDeleteNode, setNodes, setEdges, isRunning, handleAutoArrange]);
 
   const handleRunWithInput = useCallback(async (input: string) => {
@@ -1355,6 +1383,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         return node;
       })
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodes.length]); // Only re-run when node count changes
 
   return (
