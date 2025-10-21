@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true && next dev",
+    "dev:windows": "powershell -Command \"try { Get-NetTCPConnection -LocalPort 3000,3001 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } } catch {}; next dev\"",
     "dev:all": "concurrently \"npx convex dev\" \"npm run dev\"",
     "build": "next build",
     "start": "next start",

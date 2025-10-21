@@ -1,21 +1,25 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { Node } from "@xyflow/react";
 
 interface ExtractNodePanelProps {
-  nodeData: any;
+  node: Node | null;
+  nodes: Node[];
   onUpdate: (nodeId: string, updates: any) => void;
   onClose: () => void;
-  onAddMCP: () => void;
+  onDelete: (nodeId: string) => void;
 }
 
 export default function ExtractNodePanel({
-  nodeData,
+  node,
+  nodes,
   onUpdate,
   onClose,
-  onAddMCP,
+  onDelete,
 }: ExtractNodePanelProps) {
+  const nodeData = node?.data as any;
   const [instructions, setInstructions] = useState(nodeData?.instructions || 'Extract information from the input');
   const [model, setModel] = useState(nodeData?.model || 'gpt-4o');
   const [customModel, setCustomModel] = useState('');
@@ -30,6 +34,7 @@ export default function ExtractNodePanel({
     }, null, 2)
   );
   const [schemaError, setSchemaError] = useState('');
+  const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Validate JSON schema
   useEffect(() => {
@@ -41,41 +46,69 @@ export default function ExtractNodePanel({
     }
   }, [jsonSchema]);
 
+  // Debounced update to prevent infinite loops
   useEffect(() => {
-    onUpdate(nodeData?.id, {
-      instructions,
-      model,
-      jsonSchema,
-      nodeType: 'extract',
-    });
-  }, [instructions, model, jsonSchema, nodeData?.id, onUpdate]);
+    // Clear any pending updates
+    if (updateTimeoutRef.current) {
+      clearTimeout(updateTimeoutRef.current);
+    }
+
+    // Debounce the update
+    updateTimeoutRef.current = setTimeout(() => {
+      onUpdate(nodeData?.id, {
+        instructions,
+        model,
+        jsonSchema,
+        nodeType: 'extract',
+      });
+    }, 300); // 300ms debounce
+
+    // Cleanup on unmount
+    return () => {
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
+    };
+  }, [instructions, model, jsonSchema, nodeData?.id]); // Remove onUpdate from deps to prevent loop
 
   return (
     <AnimatePresence>
-      <motion.aside
-        initial={{ x: 400, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: 400, opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-accent-white border border-border-faint shadow-lg overflow-hidden z-50 rounded-16 flex flex-col"
-      >
-        {/* Header */}
-        <div className="p-20 border-b border-border-faint flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <h2 className="text-title-h3 text-accent-black">Extract (Schema)</h2>
-            <button
-              onClick={onClose}
-              className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
-            >
-              <svg className="w-16 h-16 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+      {node && (
+        <motion.aside
+          initial={{ x: 400, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: 400, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-accent-white border border-border-faint shadow-lg overflow-hidden z-50 rounded-16 flex flex-col"
+        >
+          {/* Header */}
+          <div className="p-20 border-b border-border-faint flex-shrink-0">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-title-h3 text-accent-black">Extract (Schema)</h2>
+              <div className="flex items-center gap-8">
+                <button
+                  onClick={() => onDelete(node.id)}
+                  className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center group"
+                  title="Delete node"
+                >
+                  <svg className="w-16 h-16 text-black-alpha-48 group-hover:text-black-alpha-64" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+                <button
+                  onClick={onClose}
+                  className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
+                >
+                  <svg className="w-16 h-16 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p className="text-body-small text-black-alpha-48 mt-4">
+              Use LLM to extract structured data with a JSON schema
+            </p>
           </div>
-          <p className="text-body-small text-black-alpha-48 mt-4">
-            Use LLM to extract structured data with a JSON schema
-          </p>
-        </div>
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-20 space-y-24">
@@ -141,21 +174,12 @@ export default function ExtractNodePanel({
             </p>
           </div>
 
-          {/* MCP Tools */}
-          <div>
+          {/* MCP Tools - Hidden for now since Extract nodes don't use MCP */}
+          {/* <div>
             <div className="flex items-center justify-between mb-8">
               <label className="block text-label-small text-black-alpha-48">
                 MCP Tools (Optional)
               </label>
-              <button
-                onClick={onAddMCP}
-                className="px-10 py-6 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small text-accent-black transition-colors flex items-center gap-6"
-              >
-                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Add MCP
-              </button>
             </div>
 
             {nodeData?.mcpTools && nodeData.mcpTools.length > 0 ? (
@@ -191,16 +215,17 @@ export default function ExtractNodePanel({
                 </p>
               </div>
             )}
-          </div>
+          </div> */}
 
           {/* Info Box */}
           <div className="p-16 bg-accent-white rounded-12 border border-border-faint">
             <p className="text-body-small text-accent-black">
-              <strong>How it works:</strong> The LLM analyzes the input and extracts data matching your JSON schema. Use MCP tools to give the agent access to external data sources like web search.
+              <strong>How it works:</strong> The LLM analyzes the input and extracts data matching your JSON schema.
             </p>
           </div>
         </div>
       </motion.aside>
+      )}
     </AnimatePresence>
   );
 }
