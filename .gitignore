@@ -47,3 +47,13 @@ post_migrator.py
 
 # Server
 firecrawl-responses-api/.env
+
+# convex generated files
+convex/_generated/api.d.ts
+convex/_generated/api.js
+convex/_generated/dataModel.d.ts
+convex/_generated/server.d.ts
+convex/_generated/server.js
+convex/tsconfig.tsbuildinfo
+convex.json
+convex/tsconfig.tsbuildinfo
