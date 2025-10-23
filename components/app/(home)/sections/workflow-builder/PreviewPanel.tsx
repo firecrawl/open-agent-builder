@@ -18,17 +18,17 @@ export default function PreviewPanel({ execution, nodeResults, isRunning, onClos
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 400, opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="fixed right-20 top-80 h-[calc(100vh-100px)] w-480 bg-accent-white border border-border-faint shadow-lg overflow-y-auto z-50 rounded-16"
+        className="fixed right-20 top-80 h-[calc(100vh-100px)] w-480 bg-card shadow-lg overflow-y-auto z-50 rounded-16"
       >
         {/* Header */}
-        <div className="p-20 border-b border-border-faint sticky top-0 bg-accent-white">
+        <div className="p-20 border-b border-border-faint sticky top-0 bg-card">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-title-h3 text-accent-black">Workflow Preview</h2>
+            <h2 className="text-title-h3 text-foreground">Workflow Preview</h2>
             <button
               onClick={onClose}
               className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
             >
-              <svg className="w-16 h-16 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-16 h-16 text-black-alpha-72 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -39,8 +39,8 @@ export default function PreviewPanel({ execution, nodeResults, isRunning, onClos
             <div className={`inline-flex items-center gap-8 px-12 py-6 rounded-8 text-body-small ${
               execution.status === 'running' ? 'bg-heat-4 text-heat-100' :
               execution.status === 'completed' ? 'bg-heat-4 text-heat-100' :
-              execution.status === 'failed' ? 'bg-black-alpha-4 text-accent-black' :
-              'bg-gray-50 text-gray-600'
+              execution.status === 'failed' ? 'bg-black-alpha-4 text-foreground' :
+              'bg-muted text-muted-foreground'
             }`}>
               {execution.status === 'running' && (
                 <svg className="w-12 h-12 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,17 +72,17 @@ export default function PreviewPanel({ execution, nodeResults, isRunning, onClos
           ) : (
             <div className="space-y-16">
               {Object.entries(nodeResults).map(([nodeId, result]) => (
-                <div key={nodeId} className="bg-background-base rounded-12 p-16 border border-border-faint">
+                <div key={nodeId} className="bg-background-base dark:bg-[#1c1d24] rounded-12 p-16 border border-border-faint">
                   {/* Node Header */}
                   <div className="flex items-center justify-between mb-12">
-                    <h3 className="text-label-medium text-accent-black font-medium">
+                    <h3 className="text-label-medium text-foreground font-medium">
                       {nodeId}
                     </h3>
                     <span className={`text-body-small px-8 py-4 rounded-6 ${
                       result.status === 'running' ? 'bg-heat-4 text-heat-100' :
                       result.status === 'completed' ? 'bg-heat-4 text-heat-100' :
-                      result.status === 'failed' ? 'bg-black-alpha-4 text-accent-black' :
-                      'bg-gray-50 text-gray-600'
+                      result.status === 'failed' ? 'bg-black-alpha-4 text-foreground' :
+                      'bg-muted text-muted-foreground'
                     }`}>
                       {result.status}
                     </span>
@@ -92,8 +92,8 @@ export default function PreviewPanel({ execution, nodeResults, isRunning, onClos
                   {result.output && (
                     <div className="mt-12">
                       <p className="text-body-small text-black-alpha-48 mb-8">Output:</p>
-                      <div className="bg-accent-white rounded-8 p-12 border border-border-faint">
-                        <pre className="text-body-small text-accent-black whitespace-pre-wrap overflow-auto max-h-200">
+                      <div className="bg-card rounded-8 p-12 border border-border-faint">
+                        <pre className="text-body-small text-foreground whitespace-pre-wrap overflow-auto max-h-200">
                           {typeof result.output === 'string'
                             ? result.output
                             : JSON.stringify(result.output, null, 2)}
@@ -105,9 +105,9 @@ export default function PreviewPanel({ execution, nodeResults, isRunning, onClos
                   {/* Error */}
                   {result.error && (
                     <div className="mt-12">
-                      <p className="text-body-small text-accent-black mb-8">Error:</p>
+                      <p className="text-body-small text-foreground mb-8">Error:</p>
                       <div className="bg-black-alpha-4 rounded-8 p-12 border border-border-faint">
-                        <pre className="text-body-small text-accent-black whitespace-pre-wrap">
+                        <pre className="text-body-small text-foreground whitespace-pre-wrap">
                           {result.error}
                         </pre>
                       </div>

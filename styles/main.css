@@ -50,38 +50,57 @@
     --ring: 240 10% 3.9%;
 
     --radius: 0.5rem;
+
+    --workflow-node-bg: #ffffff;
+    --workflow-node-text: #18181b;
+    --workflow-node-border: #d1d5db;
+    --workflow-node-outline: rgba(24, 24, 27, 0.24);
+    --workflow-node-handle-border: #ffffff;
+    --workflow-node-handle-fill: #9ca3af;
+    --panel-surface: #ffffff;
+    --panel-border: #e5e7eb;
+    --panel-foreground: #18181b;
   }
 
-  /* Temporarily disable dark mode until we migrate to semantic colors */
-  /* .dark {
+  .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
 
-    --card: 240 10% 3.9%;
+    --card: 220 13% 15%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 240 10% 3.9%;
+    --popover: 220 13% 15%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
 
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 220 10% 20%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 220 10% 20%;
+    --muted-foreground: 220 6% 65%;
 
-    --accent: 240 3.7% 15.9%;
+    --accent: 220 10% 22%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-  } */
+    --border: 220 12% 28%;
+    --input: 220 12% 28%;
+    --ring: 220 15% 60%;
+
+    --workflow-node-bg: #26272f;
+    --workflow-node-text: rgba(248, 249, 252, 0.96);
+    --workflow-node-border: #3a3b46;
+    --workflow-node-outline: rgba(250, 93, 25, 0.24);
+    --workflow-node-handle-border: #1b1c23;
+    --workflow-node-handle-fill: #c7c7d1;
+    --panel-surface: #1c1d24;
+    --panel-border: #2a2b33;
+    --panel-foreground: #f4f4f8;
+  }
 }
 
 @layer utilities {

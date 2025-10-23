@@ -95,3 +95,38 @@
 .react-flow__viewport {
   transition: none;
 }
+
+/* React Flow Controls Dark Mode */
+.dark .react-flow__controls {
+  background-color: #18181b !important;
+  border-color: #2a2a2a !important;
+}
+
+.dark .react-flow__controls-button {
+  background-color: #18181b !important;
+  border-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+.dark .react-flow__controls-button:hover {
+  background-color: #27272a !important;
+}
+
+.dark .react-flow__controls-button svg {
+  fill: #ffffff !important;
+}
+
+/* React Flow MiniMap Dark Mode */
+.dark .react-flow__minimap {
+  background-color: #18181b !important;
+  border-color: #2a2a2a !important;
+}
+
+.dark .react-flow__minimap-mask {
+  fill: #27272a !important;
+}
+
+.dark .react-flow__minimap-node {
+  fill: #3f3f46 !important;
+  stroke: #52525b !important;
+}

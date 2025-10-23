@@ -49,6 +49,7 @@ import HTTPNodePanel from "./HTTPNodePanel";
 import ExtractNodePanel from "./ExtractNodePanel";
 import StartNodePanel from "./StartNodePanel";
 import WorkflowNameEditor from "./WorkflowNameEditor";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import SettingsPanel from "./SettingsPanelSimple";
 import ConfirmDialog from "./ConfirmDialog";
 import EdgeLabelModal from "./EdgeLabelModal";
@@ -101,7 +102,7 @@ const initialNodes: Node[] = [
           <div className="w-32 h-32 rounded-8 bg-gray-600 flex items-center justify-center flex-shrink-0">
             <Play className="w-18 h-18 text-white" strokeWidth={2} />
           </div>
-          <span className="text-sm font-medium text-[#18181b]">Start</span>
+          <span className="text-sm font-medium text-[#18181b] dark:text-white">Start</span>
         </div>
       ),
       nodeType: 'start',
@@ -118,30 +119,30 @@ const nodeCategories = [
     nodes: [
       { type: "agent", label: "Agent", color: "bg-blue-500", icon: MousePointer2 },
       { type: "end", label: "End", color: "bg-teal-500", icon: StopCircle },
-      { type: "note", label: "Note", color: "bg-[#E4E4E7] dark:bg-[#52525B]", icon: FileText },
+      { type: "note", label: "Note", color: "bg-gray-400 dark:bg-[#52525B]", icon: FileText },
     ],
   },
   {
     category: "Tools",
     nodes: [
-      { type: "mcp", label: "MCP", color: "bg-[#FFEFA4] dark:bg-[#FFDD40]", icon: Plug },
+      { type: "mcp", label: "MCP", color: "bg-yellow-400 dark:bg-[#FFDD40]", icon: Plug },
     ],
   },
   {
     category: "Logic",
     nodes: [
-      { type: "if-else", label: "Condition", color: "bg-[#FEE7C2] dark:bg-[#FFAE2B]", icon: GitBranch },
-      { type: "while", label: "While", color: "bg-[#FEE7C2] dark:bg-[#FFAE2B]", icon: Repeat },
-      { type: "user-approval", label: "User approval", color: "bg-[#E5E7EB] dark:bg-[#9CA3AF]", icon: CheckCircle },
+      { type: "if-else", label: "Condition", color: "bg-orange-400 dark:bg-[#FFAE2B]", icon: GitBranch },
+      { type: "while", label: "While", color: "bg-orange-400 dark:bg-[#FFAE2B]", icon: Repeat },
+      { type: "user-approval", label: "User approval", color: "bg-gray-500 dark:bg-[#9CA3AF]", icon: CheckCircle },
     ],
   },
   {
     category: "Data",
     nodes: [
-      { type: "transform", label: "Transform", color: "bg-[#ECE3FF] dark:bg-[#9665FF]", icon: Braces },
-      { type: "extract", label: "Extract", color: "bg-[#ECE3FF] dark:bg-[#9665FF]", icon: Search },
-      { type: "http", label: "HTTP", color: "bg-[#ECE3FF] dark:bg-[#9665FF]", icon: Server },
-      { type: "set-state", label: "Set state", color: "bg-[#ECE3FF] dark:bg-[#9665FF]", icon: Braces },
+      { type: "transform", label: "Transform", color: "bg-purple-400 dark:bg-[#9665FF]", icon: Braces },
+      { type: "extract", label: "Extract", color: "bg-purple-400 dark:bg-[#9665FF]", icon: Search },
+      { type: "http", label: "HTTP", color: "bg-purple-400 dark:bg-[#9665FF]", icon: Server },
+      { type: "set-state", label: "Set state", color: "bg-purple-400 dark:bg-[#9665FF]", icon: Braces },
     ],
   },
 ];
@@ -284,11 +285,96 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
   const workflowMenuRef = useRef<HTMLDivElement>(null);
   const [renameTrigger, setRenameTrigger] = useState(0);
   const [environment, setEnvironment] = useState<'draft' | 'production'>('draft');
+  const [showCanvasSettings, setShowCanvasSettings] = useState(false);
+  const [showDots, setShowDots] = useState(true);
+  const [dotsColor, setDotsColor] = useState('#d1d5db');
+  const canvasSettingsRef = useRef<HTMLDivElement>(null);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { screenToFlowPosition, getNode, setCenter } = useReactFlow();
 
+  // Smart dots color - adapts to theme
+  useEffect(() => {
+    const updateDotsColor = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setDotsColor(isDark ? '#2a2a2a' : '#d1d5db');
+    };
+
+    // Set initial color
+    updateDotsColor();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateDotsColor);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   // Workflow management
   const { workflow, convexId, updateNodes, updateEdges, saveWorkflow, saveWorkflowImmediate, deleteWorkflow, createNewWorkflow } = useWorkflow(initialWorkflowId || undefined);
+
+  // Node update handler - defined early so it can be used in initialization and callbacks
+  const handleUpdateNodeData = useCallback((nodeId: string, data: any) => {
+    try {
+      setNodes((nds) => {
+        const updated = nds.map((node) => {
+          if (node.id === nodeId) {
+            const updatedData = {
+              ...node.data,
+              ...data,
+            };
+
+            // If name is being updated, also update the label
+            if (data.name && data.name !== (node.data as any).nodeName) {
+              const nodeType = (node.data as any).nodeType;
+
+              // Find the node configuration to get the icon and color
+              let IconComponent: any = null;
+              let color = "bg-gray-500";
+
+              for (const category of nodeCategories) {
+                const nodeConfig = category.nodes.find(n => n.type === nodeType);
+                if (nodeConfig) {
+                  IconComponent = nodeConfig.icon;
+                  color = nodeConfig.color;
+                  break;
+                }
+              }
+
+              // Create the new label with the updated name
+              updatedData.label = (
+                <div className="flex items-center gap-8">
+                  <div className={`w-32 h-32 rounded-8 ${color} flex items-center justify-center flex-shrink-0`}>
+                    {IconComponent ? (
+                      <IconComponent className="w-18 h-18 text-white" strokeWidth={2} />
+                    ) : (
+                      <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2" />
+                    )}
+                  </div>
+                  <span className="text-sm font-medium text-[#18181b] dark:text-white">{data.name}</span>
+                </div>
+              );
+            }
+
+            return {
+              ...node,
+              data: updatedData,
+            };
+          }
+          return node;
+        });
+
+        return updated;
+      });
+    } catch (error) {
+      console.error('Error updating node data:', error);
+      toast.error('Failed to update node', {
+        description: error instanceof Error ? error.message : 'Unable to save node changes',
+      });
+    }
+  }, [setNodes]);
 
   // AUTO-SAVE DISABLED - Use manual Save button instead
   // Smart auto-save: only save when nodes/edges actually change, with debounce
@@ -360,6 +446,9 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
     const handleClickOutside = (event: MouseEvent) => {
       if (workflowMenuRef.current && !workflowMenuRef.current.contains(event.target as any)) {
         setShowWorkflowMenu(false);
+      }
+      if (canvasSettingsRef.current && !canvasSettingsRef.current.contains(event.target as any)) {
+        setShowCanvasSettings(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -508,6 +597,10 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
             data: {
               ...n.data,
               label: createNodeLabel(nodeData.nodeName || nodeData.label as string, getNodeColor(n.type), n.type),
+              // Inject onUpdate callback for note nodes
+              ...(n.type === 'note' && {
+                onUpdate: (updates: any) => handleUpdateNodeData(n.id, updates),
+              }),
             },
           };
         });
@@ -578,6 +671,10 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
             ...n.data,
             // Create the label JSX element
             label: createNodeLabel(labelText, getNodeColor(n.type), n.type),
+            // Inject onUpdate callback for note nodes
+            ...(n.type === 'note' && {
+              onUpdate: (updates: any) => handleUpdateNodeData(n.id, updates),
+            }),
           },
         };
       });
@@ -611,9 +708,9 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
     const getTextColor = () => {
       if (nodeType === 'note') return 'text-white'; // White text for note nodes (yellow background)
       if (nodeType === 'if-else' || nodeType === 'while' || nodeType === 'user-approval') {
-        return 'text-[#18181b]'; // Dark text for orange background nodes
+        return 'text-[#18181b] dark:text-white'; // Dark text for orange background nodes
       }
-      return 'text-[#18181b]'; // Default dark text
+      return 'text-[#18181b] dark:text-white'; // Default dark text
     };
 
     return (
@@ -622,7 +719,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
           {IconComponent ? (
             <IconComponent className="w-18 h-18 text-white" strokeWidth={2} />
           ) : (
-            <div className="w-16 h-16 bg-white rounded-2" />
+            <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2" />
           )}
         </div>
         <span className={`text-sm font-medium ${getTextColor()}`}>{label}</span>
@@ -633,16 +730,16 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
   const getNodeColor = (type: string): string => {
     const colorMap: Record<string, string> = {
       'agent': 'bg-blue-500',
-      'mcp': 'bg-[#FFEFA4] dark:bg-[#FFDD40]',
+      'mcp': 'bg-yellow-400 dark:bg-[#FFDD40]',
       'firecrawl': 'bg-heat-100',
-      'if-else': 'bg-[#FEE7C2] dark:bg-[#FFAE2B]',
-      'while': 'bg-[#FEE7C2] dark:bg-[#FFAE2B]',
-      'user-approval': 'bg-[#E5E7EB] dark:bg-[#9CA3AF]',
-      'transform': 'bg-[#ECE3FF] dark:bg-[#9665FF]',
-      'set-state': 'bg-[#ECE3FF] dark:bg-[#9665FF]',
+      'if-else': 'bg-orange-400 dark:bg-[#FFAE2B]',
+      'while': 'bg-orange-400 dark:bg-[#FFAE2B]',
+      'user-approval': 'bg-gray-500 dark:bg-[#9CA3AF]',
+      'transform': 'bg-purple-400 dark:bg-[#9665FF]',
+      'set-state': 'bg-purple-400 dark:bg-[#9665FF]',
       'file-search': 'bg-indigo-500',
       'extract': 'bg-purple-500',
-      'note': 'bg-[#E4E4E7] dark:bg-[#52525B]',
+      'note': 'bg-gray-400 dark:bg-[#52525B]',
       'end': 'bg-teal-500',
       'start': 'bg-gray-600',
     };
@@ -838,7 +935,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         };
       })
     );
-  }, [currentNodeId, nodeResults, selectedEdgeId, setNodes, setEdges]);
+  }, [currentNodeId, nodeResults, selectedEdgeId]);
 
   // Auto-track executing node
   useEffect(() => {
@@ -898,8 +995,9 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
       const nodeConfig = nodeCategory?.nodes.find(n => n.type === type);
       const IconComponent = nodeConfig?.icon;
 
+      const nodeId = getId();
       const newNode: Node = {
-        id: getId(),
+        id: nodeId,
         type: type === 'firecrawl' ? 'mcp' : type,
         position,
         data: {
@@ -909,10 +1007,10 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
                 {IconComponent ? (
                   <IconComponent className="w-18 h-18 text-white" strokeWidth={2} />
                 ) : (
-                  <div className="w-16 h-16 bg-white rounded-2" />
+                  <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-2" />
                 )}
               </div>
-              <span className="text-sm font-medium text-[#18181b]">{label}</span>
+              <span className="text-sm font-medium text-[#18181b] dark:text-white">{label}</span>
             </div>
           ),
           nodeType: type === 'firecrawl' ? 'mcp' : type,
@@ -929,12 +1027,16 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
               },
             ],
           }),
+          // Inject onUpdate callback for note nodes
+          ...(type === 'note' && {
+            onUpdate: (updates: any) => handleUpdateNodeData(nodeId, updates),
+          }),
         },
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [screenToFlowPosition, setNodes],
+    [screenToFlowPosition, setNodes, handleUpdateNodeData],
   );
 
   const onDragStart = (event: DragEvent, nodeType: string, nodeLabel: string, nodeColor: string) => {
@@ -1031,19 +1133,27 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
     if (contextMenu) {
       const nodeToDuplicate = nodes.find(n => n.id === contextMenu.nodeId);
       if (nodeToDuplicate) {
+        const newNodeId = getId();
         const newNode = {
           ...nodeToDuplicate,
-          id: getId(),
+          id: newNodeId,
           position: {
             x: nodeToDuplicate.position.x + 300,
             y: nodeToDuplicate.position.y,
+          },
+          data: {
+            ...nodeToDuplicate.data,
+            // Inject new onUpdate callback for note nodes with new ID
+            ...((nodeToDuplicate.data as any)?.nodeType === 'note' && {
+              onUpdate: (updates: any) => handleUpdateNodeData(newNodeId, updates),
+            }),
           },
         };
         setNodes((nds) => nds.concat(newNode));
       }
       setContextMenu(null);
     }
-  }, [contextMenu, nodes, setNodes]);
+  }, [contextMenu, nodes, setNodes, handleUpdateNodeData]);
 
   // Close context menu on click outside
   useEffect(() => {
@@ -1110,12 +1220,20 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         if (copiedNodeStr) {
           try {
             const copiedNode = JSON.parse(copiedNodeStr);
+            const newNodeId = getId();
             const newNode = {
               ...copiedNode,
-              id: getId(),
+              id: newNodeId,
               position: {
                 x: copiedNode.position.x + 200,
                 y: copiedNode.position.y,
+              },
+              data: {
+                ...copiedNode.data,
+                // Inject new onUpdate callback for note nodes with new ID
+                ...((copiedNode.data as any)?.nodeType === 'note' && {
+                  onUpdate: (updates: any) => handleUpdateNodeData(newNodeId, updates),
+                }),
               },
             };
             setNodes((nds) => nds.concat(newNode));
@@ -1130,12 +1248,20 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         e.preventDefault();
         const nodeToDuplicate = nodes.find(n => n.id === selectedNode.id);
         if (nodeToDuplicate) {
+          const newNodeId = getId();
           const newNode = {
             ...nodeToDuplicate,
-            id: getId(),
+            id: newNodeId,
             position: {
               x: nodeToDuplicate.position.x + 200,
               y: nodeToDuplicate.position.y,
+            },
+            data: {
+              ...nodeToDuplicate.data,
+              // Inject new onUpdate callback for note nodes with new ID
+              ...((nodeToDuplicate.data as any)?.nodeType === 'note' && {
+                onUpdate: (updates: any) => handleUpdateNodeData(newNodeId, updates),
+              }),
             },
           };
           setNodes((nds) => nds.concat(newNode));
@@ -1273,96 +1399,12 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
     });
   }, [workflow, nodes, edges, saveWorkflow]);
 
-  const handleUpdateNodeData = useCallback((nodeId: string, data: any) => {
-    try {
-      setNodes((nds) => {
-        const updated = nds.map((node) => {
-          if (node.id === nodeId) {
-            const updatedData = {
-              ...node.data,
-              ...data,
-            };
-
-            // If name is being updated, also update the label
-            if (data.name && data.name !== (node.data as any).nodeName) {
-              const nodeType = (node.data as any).nodeType;
-
-              // Find the node configuration to get the icon and color
-              let IconComponent: any = null;
-              let color = "bg-gray-500";
-
-              for (const category of nodeCategories) {
-                const nodeConfig = category.nodes.find(n => n.type === nodeType);
-                if (nodeConfig) {
-                  IconComponent = nodeConfig.icon;
-                  color = nodeConfig.color;
-                  break;
-                }
-              }
-
-              // Create the new label with the updated name
-              updatedData.label = (
-                <div className="flex items-center gap-8">
-                  <div className={`w-32 h-32 rounded-8 ${color} flex items-center justify-center flex-shrink-0`}>
-                    {IconComponent ? (
-                      <IconComponent className="w-18 h-18 text-white" strokeWidth={2} />
-                    ) : (
-                      <div className="w-16 h-16 bg-white rounded-2" />
-                    )}
-                  </div>
-                  <span className="text-sm font-medium text-[#18181b]">{data.name}</span>
-                </div>
-              );
-            }
-
-            return {
-              ...node,
-              data: updatedData,
-            };
-          }
-          return node;
-        });
-
-        // Immediately persist to Convex after updating React state
-        if (workflow) {
-          updateNodes(updated as any);
-        }
-
-        return updated;
-      });
-    } catch (error) {
-      console.error('Error updating node data:', error);
-      toast.error('Failed to update node', {
-        description: error instanceof Error ? error.message : 'Unable to save node changes',
-      });
-    }
-  }, [setNodes, workflow, updateNodes]);
-
-  // Inject onUpdate callback into note nodes for inline editing
-  useEffect(() => {
-    setNodes((nds) =>
-      nds.map((node) => {
-        const nodeType = (node.data as any)?.nodeType;
-        if (nodeType === 'note' && !(node.data as any).onUpdate) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              onUpdate: (updates: any) => handleUpdateNodeData(node.id, updates),
-            },
-          };
-        }
-        return node;
-      })
-    );
-  }, [nodes.length]); // Only re-run when node count changes
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="fixed inset-0 bg-background-base flex flex-col"
+      className="fixed inset-0 bg-background flex flex-col"
     >
       {/* Workflow Name Editor */}
       <WorkflowNameEditor
@@ -1370,11 +1412,11 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         onUpdate={saveWorkflow}
         renameTrigger={renameTrigger}
         rightAccessory={(
-          <div className="flex items-center gap-0 border border-border-faint rounded-8 overflow-hidden bg-background-base">
+          <div className="flex items-center gap-0 border border-border rounded-8 overflow-hidden bg-card">
             <button
               type="button"
               onClick={() => setEnvironment('draft')}
-              className={`px-12 py-6 text-label-small transition-colors ${environment === 'draft' ? 'bg-heat-100 text-white shadow-sm' : 'text-black-alpha-48 hover:text-accent-black'}`}
+              className={`px-12 py-6 text-label-small transition-colors ${environment === 'draft' ? 'bg-heat-100 text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Draft
             </button>
@@ -1397,7 +1439,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
                 }
                 setEnvironment('production');
               }}
-              className={`px-12 py-6 text-label-small transition-colors ${environment === 'production' ? 'bg-heat-100 text-white shadow-sm' : 'text-black-alpha-48 hover:text-accent-black'}`}
+              className={`px-12 py-6 text-label-small transition-colors ${environment === 'production' ? 'bg-heat-100 text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Production
             </button>
@@ -1412,6 +1454,65 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         transition={{ duration: 0.5, delay: 0.1 }}
         className="fixed top-20 right-20 flex items-center gap-8 z-[60]"
       >
+        <ThemeToggle size="lg" />
+
+        {/* Canvas Settings */}
+        <div className="relative" ref={canvasSettingsRef}>
+          <button
+            onClick={() => setShowCanvasSettings(prev => !prev)}
+            className="w-36 h-36 border border-border rounded-8 bg-card hover:bg-muted text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+            title="Canvas settings"
+          >
+            <svg className="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+            </svg>
+          </button>
+          {showCanvasSettings && (
+            <div className="absolute right-0 mt-4 w-240 bg-card border border-border rounded-12 shadow-lg z-50 overflow-hidden p-16">
+              <h4 className="text-sm font-semibold text-foreground mb-12">Canvas Settings</h4>
+
+              {/* Dots Toggle */}
+              <div className="flex items-center justify-between py-8 mb-12">
+                <label className="text-sm text-foreground">Show Dots</label>
+                <button
+                  onClick={() => setShowDots(!showDots)}
+                  className={`w-48 h-28 rounded-full transition-colors relative ${
+                    showDots ? "bg-heat-100" : "bg-black-alpha-12 dark:bg-gray-700"
+                  }`}
+                >
+                  <motion.div
+                    className="w-24 h-24 bg-white rounded-full absolute top-2 shadow-sm"
+                    animate={{ left: showDots ? "22px" : "2px" }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </button>
+              </div>
+
+              {/* Dots Color Picker */}
+              {showDots && (
+                <div className="flex items-center justify-between py-8">
+                  <label className="text-sm text-foreground">Dots Color</label>
+                  <div className="relative">
+                    <input
+                      type="color"
+                      value={dotsColor}
+                      onChange={(e) => setDotsColor(e.target.value)}
+                      className="sr-only"
+                      id="dots-color-picker"
+                    />
+                    <label
+                      htmlFor="dots-color-picker"
+                      className="w-32 h-32 rounded-6 border-2 border-border cursor-pointer block shadow-sm hover:scale-110 transition-transform"
+                      style={{ backgroundColor: dotsColor }}
+                      title="Click to change dots color"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
         {/* Duplicate Credential Warning */}
         {duplicateWarnings.length > 0 && (
           <button
@@ -1449,13 +1550,13 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         <div className="relative" ref={workflowMenuRef}>
           <button
             onClick={() => setShowWorkflowMenu(prev => !prev)}
-            className="w-36 h-36 border border-border-faint rounded-8 bg-accent-white hover:bg-black-alpha-4 text-black-alpha-48 hover:text-accent-black transition-colors flex items-center justify-center"
+            className="w-36 h-36 border border-border rounded-8 bg-card hover:bg-muted text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
             title="Workflow actions"
           >
             <MoreHorizontal className="w-18 h-18" />
           </button>
           {showWorkflowMenu && (
-            <div className="absolute right-0 mt-4 w-200 bg-accent-white border border-border-faint rounded-12 shadow-lg z-50 overflow-hidden">
+            <div className="absolute right-0 mt-4 w-200 bg-card border border-border rounded-12 shadow-lg z-50 overflow-hidden">
               <button
                 onClick={handleDuplicateWorkflow}
                 className="w-full px-16 py-10 text-left text-body-small hover:bg-black-alpha-4 transition-colors"
@@ -1506,7 +1607,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         </div>
         <button
           onClick={() => setShowSettings(true)}
-          className="px-16 py-8 bg-accent-white hover:bg-black-alpha-4 border border-border-faint rounded-8 text-body-medium text-accent-black transition-colors flex items-center gap-8"
+          className="px-16 py-8 bg-card hover:bg-muted border border-border rounded-8 text-body-medium text-foreground transition-colors flex items-center gap-8"
           title="API Settings"
         >
           <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1518,7 +1619,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         {environment === 'production' && (
           <button
             onClick={handleShowTestAPI}
-            className="px-16 py-8 bg-accent-white hover:bg-black-alpha-4 border border-border-faint rounded-8 text-body-medium text-accent-black transition-colors flex items-center gap-8"
+            className="px-16 py-8 bg-card hover:bg-muted border border-border rounded-8 text-body-medium text-foreground transition-colors flex items-center gap-8"
             title="Test API"
           >
             <Server className="w-16 h-16" strokeWidth={2} />
@@ -1531,7 +1632,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
             className={`px-16 py-8 border rounded-8 text-body-medium transition-colors flex items-center gap-8 ${
               showExecution
                 ? 'bg-heat-100 text-white border-heat-100'
-                : 'bg-accent-white text-accent-black border-border-faint hover:bg-black-alpha-4'
+                : 'bg-card text-foreground border-border hover:bg-muted'
             }`}
           >
             <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1543,7 +1644,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         ) : (
           <button
             onClick={stopWorkflow}
-            className="px-16 py-8 border border-border-faint rounded-8 text-body-medium transition-colors flex items-center gap-8 bg-accent-white text-accent-black hover:bg-black-alpha-4"
+            className="px-16 py-8 border border-border rounded-8 text-body-medium transition-colors flex items-center gap-8 bg-card text-foreground hover:bg-muted"
           >
             <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <rect x="6" y="6" width="12" height="12" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
@@ -1569,14 +1670,14 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
           initial={{ x: -300, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-200 lg:w-200 md:w-180 sm:w-160 m-20 rounded-16 border border-border-faint bg-accent-white p-16 shadow-lg flex-shrink-0 z-10 self-start max-h-[calc(100vh-80px)] overflow-y-auto"
+          className="w-200 lg:w-200 md:w-180 sm:w-160 m-20 rounded-16 border border-border bg-card p-16 shadow-lg flex-shrink-0 z-10 self-start max-h-[calc(100vh-80px)] overflow-y-auto"
         >
         <div className="mb-24">
           <button
             onClick={onBack}
-            className="text-body-small text-black-alpha-48 hover:text-accent-black transition-colors flex items-center gap-8"
+            className="text-body-small text-black-alpha-48 dark:text-gray-300 hover:text-accent-black dark:hover:text-white transition-colors flex items-center gap-8"
           >
-            <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-16 h-16 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back
@@ -1587,7 +1688,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
         <div className="space-y-12">
           {nodeCategories.map((category) => (
             <div key={category.category}>
-              <h3 className="text-xs font-semibold text-black-alpha-64 uppercase tracking-wide mb-8">
+              <h3 className="text-xs font-semibold text-black-alpha-88 dark:text-white uppercase tracking-wide mb-8">
                 {category.category}
               </h3>
               <div className="space-y-2">
@@ -1604,7 +1705,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
                       <div className={`w-24 h-24 rounded-6 ${node.color} flex items-center justify-center flex-shrink-0`}>
                         <Icon className="w-14 h-14 text-white" strokeWidth={2.5} />
                       </div>
-                      <span className="text-sm font-medium text-accent-black">{node.label}</span>
+                      <span className="text-sm font-medium text-accent-black dark:text-white">{node.label}</span>
                     </motion.div>
                   );
                 })}
@@ -1643,19 +1744,21 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
             style: { strokeWidth: 2, cursor: 'pointer' },
             interactionWidth: 20, // Make edges easier to click
           }}
-          className="bg-background-base"
+          className="bg-gray-100 dark:bg-black"
           proOptions={{ hideAttribution: true }}
         >
-          <Background
-            color="#E5E5E5"
-            gap={20}
-            size={1}
-          />
+          {showDots && (
+            <Background
+              color={dotsColor}
+              gap={16}
+              size={1}
+            />
+          )}
           <Controls
-            className="!bg-accent-white !border-border-faint"
+            className="!bg-white dark:!bg-[#18181b] !border-gray-200 dark:!border-[#2a2a2a]"
           />
           <MiniMap
-            className="!bg-accent-white !border-border-faint"
+            className="!bg-white dark:!bg-[#18181b] !border-gray-200 dark:!border-[#2a2a2a]"
             nodeColor="#FA5D19"
           />
         </ReactFlow>
@@ -1843,7 +1946,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-accent-white rounded-16 shadow-2xl w-[480px] overflow-hidden"
+            className="bg-card rounded-16 shadow-2xl w-[480px] overflow-hidden"
           >
             <div className="p-24 border-b border-border-faint">
               <div className="flex items-center justify-between">
@@ -1854,7 +1957,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
                   onClick={() => setShowComingSoonModal(false)}
                   className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
                 >
-                  <svg className="w-18 h-18 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-18 h-18 text-black-alpha-48 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -1870,13 +1973,13 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
                   <h4 className="text-lg font-medium text-accent-black mb-4">
                     File Search Node
                   </h4>
-                  <p className="text-sm text-black-alpha-48">
+                  <p className="text-sm text-black-alpha-48 dark:text-gray-300">
                     This feature is currently in development
                   </p>
                 </div>
               </div>
 
-              <p className="text-body-medium text-black-alpha-64 mb-20">
+              <p className="text-body-medium text-black-alpha-64 dark:text-gray-400 mb-20">
                 The File Search node will allow you to search through files and code in your workflows. Stay tuned for updates!
               </p>
 
@@ -1916,7 +2019,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
-          className="fixed bottom-80 left-1/2 -translate-x-1/2 z-50 flex items-center gap-8 px-16 py-12 bg-accent-white border border-border-faint rounded-12 shadow-2xl"
+          className="fixed bottom-80 left-1/2 -translate-x-1/2 z-50 flex items-center gap-8 px-16 py-12 bg-card border border-border rounded-12 shadow-2xl"
         >
           <div className="flex items-center gap-8 pr-12 border-r border-border-faint">
             <svg className="w-16 h-16 text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1929,7 +2032,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
               const edge = edges.find(e => e.id === selectedEdgeId);
               if (edge) setEditingEdge(edge);
             }}
-            className="px-12 py-6 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small text-accent-black transition-colors flex items-center gap-6"
+            className="px-12 py-6 bg-background-base dark:bg-[#1c1d24] hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small text-accent-black transition-colors flex items-center gap-6"
           >
             <svg className="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -1954,7 +2057,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
               onClick={() => setSelectedEdgeId(null)}
               className="w-24 h-24 rounded-4 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
             >
-              <svg className="w-12 h-12 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-12 h-12 text-black-alpha-48 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -1971,7 +2074,7 @@ function WorkflowBuilderInner({ onBack, initialWorkflowId, initialTemplateId }: 
             top: contextMenu.y,
             zIndex: 1000,
           }}
-          className="bg-accent-white border border-border-faint rounded-8 shadow-lg overflow-hidden min-w-160"
+          className="bg-card border border-border rounded-8 shadow-lg overflow-hidden min-w-160"
         >
           <button
             onClick={handleContextMenuDuplicate}

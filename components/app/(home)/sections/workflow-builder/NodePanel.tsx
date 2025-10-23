@@ -361,22 +361,22 @@ export default function NodePanel({
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 400, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-accent-white border border-border-faint shadow-lg overflow-y-auto z-50 rounded-16"
+          className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-card border border-gray-200 dark:border-gray-900 shadow-lg overflow-y-auto z-50 rounded-16"
         >
           {/* Header */}
-          <div className="p-20 border-b border-border-faint">
+          <div className="p-20 border-b border-gray-200 dark:border-gray-900">
             <div className="flex items-center justify-between mb-8">
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="text-label-large font-medium text-accent-black bg-transparent border-none outline-none focus:outline-none hover:bg-black-alpha-4 px-2 -ml-2 rounded-4 transition-colors"
+                className="text-label-large font-medium text-accent-black dark:text-white bg-transparent border-none outline-none focus:outline-none hover:bg-black-alpha-4 px-2 -ml-2 rounded-4 transition-colors"
                 placeholder="Enter node name..."
               />
               <div className="flex items-center gap-8">
                 <button className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center">
                   <svg
-                    className="w-18 h-18 text-black-alpha-48"
+                    className="w-18 h-18 text-black-alpha-72 dark:text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -395,7 +395,7 @@ export default function NodePanel({
                   title="Delete node"
                 >
                   <svg
-                    className="w-18 h-18 text-black-alpha-48 group-hover:text-black-alpha-64"
+                    className="w-18 h-18 text-black-alpha-48 group-hover:text-black-alpha-64 dark:text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -413,7 +413,7 @@ export default function NodePanel({
                   className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
                 >
                   <svg
-                    className="w-18 h-18 text-black-alpha-48"
+                    className="w-18 h-18 text-black-alpha-72 dark:text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -428,7 +428,7 @@ export default function NodePanel({
                 </button>
               </div>
             </div>
-            <p className="text-sm text-black-alpha-48">
+            <p className="text-sm text-black-alpha-48 dark:text-gray-400">
               Call the model with your instructions and tools
             </p>
           </div>
@@ -439,7 +439,7 @@ export default function NodePanel({
             {/* Instructions Field */}
             <div>
               <div className="flex items-center justify-between mb-8">
-                <label className="block text-sm font-medium text-black-alpha-48">
+                <label className="block text-sm font-medium text-black-alpha-48 dark:text-gray-400">
                   Instructions
                 </label>
                 <div className="flex items-center gap-8">
@@ -459,16 +459,16 @@ export default function NodePanel({
                 onChange={(e) => setInstructions(e.target.value)}
                 placeholder="Enter agent instructions..."
                 rows={8}
-                className="w-full px-14 py-10 bg-background-base border border-border-faint rounded-10 text-sm text-accent-black placeholder-black-alpha-32 focus:outline-none focus:border-heat-100 transition-colors resize-y"
+                className="w-full px-14 py-10 bg-background-base dark:bg-[#1c1d24] rounded-10 text-sm text-accent-black dark:text-white placeholder-black-alpha-32 focus:outline-none transition-colors resize-y"
               />
-              <p className="text-xs text-black-alpha-48 mt-6">
-                Use <code className="px-4 py-1 bg-background-base rounded text-heat-100 font-mono text-xs">{`{{variable}}`}</code> syntax to reference data
+              <p className="text-xs text-black-alpha-48 dark:text-gray-400 mt-6">
+                Use <code className="px-4 py-1 bg-background-base dark:bg-[#1c1d24] rounded text-heat-100 font-mono text-xs">{`{{variable}}`}</code> syntax to reference data
               </p>
             </div>
 
             {/* Include chat history toggle */}
             <div className="flex items-center justify-between py-8">
-              <label className="text-sm font-medium text-accent-black">
+              <label className="text-sm font-medium text-accent-black dark:text-white">
                 Include chat history
               </label>
               <button
@@ -478,7 +478,7 @@ export default function NodePanel({
                 }`}
               >
                 <motion.div
-                  className="w-24 h-24 bg-white rounded-full absolute top-2 shadow-sm"
+                  className="w-24 h-24 bg-white dark:bg-gray-700 rounded-full absolute top-2 shadow-sm"
                   animate={{ left: includeChatHistory ? "22px" : "2px" }}
                   transition={{ duration: 0.2 }}
                 />
@@ -487,12 +487,12 @@ export default function NodePanel({
 
             {/* Model Field */}
             <div>
-              <label className="block text-sm font-medium text-black-alpha-48 mb-8">
+              <label className="block text-sm font-medium text-black-alpha-48 dark:text-gray-400 mb-8">
                 Model
               </label>
               <button
                 onClick={() => setShowModelsDropdown(!showModelsDropdown)}
-                className="w-full px-14 py-10 bg-background-base border border-border-faint rounded-10 text-sm text-accent-black focus:outline-none focus:border-heat-100 transition-colors flex items-center justify-between hover:bg-black-alpha-4"
+                className="w-full px-14 py-10 bg-background-base dark:bg-[#1c1d24] rounded-10 text-sm text-accent-black dark:text-white focus:outline-none transition-colors flex items-center justify-between hover:bg-black-alpha-4"
               >
                 <span className="truncate">
                   {model ? (
@@ -511,10 +511,10 @@ export default function NodePanel({
               </button>
 
               {showModelsDropdown && (
-                <div className="mt-8 p-8 bg-background-base border border-border-faint rounded-10 space-y-8 max-h-[300px] overflow-y-auto">
+                <div className="mt-8 p-8 bg-background-base dark:bg-[#1c1d24] rounded-10 space-y-8 max-h-[300px] overflow-y-auto">
                   {getAvailableModels().length === 0 ? (
                     <div className="p-16 text-center">
-                      <p className="text-sm text-black-alpha-48 mb-12">
+                      <p className="text-sm text-black-alpha-48 dark:text-gray-400 mb-12">
                         No API keys configured
                       </p>
                       <button
@@ -544,7 +544,7 @@ export default function NodePanel({
                               className={`w-full text-left px-8 py-6 rounded-6 text-sm transition-colors ${
                                 model === modelOption.id
                                   ? 'bg-heat-100 text-white'
-                                  : 'hover:bg-black-alpha-4 text-accent-black'
+                                  : 'hover:bg-black-alpha-4 text-accent-black dark:text-white'
                               }`}
                             >
                               {modelOption.name}
@@ -552,7 +552,7 @@ export default function NodePanel({
                           ))}
                         </div>
                       ))}
-                      <div className="pt-8 mt-8 border-t border-border-faint">
+                      <div className="pt-8 mt-8 border-t border-border-faint dark:border-gray-800">
                         <button
                           onClick={() => {
                             setModel("custom");
@@ -561,7 +561,7 @@ export default function NodePanel({
                           className={`w-full text-left px-8 py-6 rounded-6 text-sm transition-colors ${
                             model === "custom"
                               ? 'bg-heat-100 text-white'
-                              : 'hover:bg-black-alpha-4 text-accent-black'
+                              : 'hover:bg-black-alpha-4 text-accent-black dark:text-white'
                           }`}
                         >
                           Custom Model...
@@ -581,7 +581,7 @@ export default function NodePanel({
                     setModel(e.target.value);
                   }}
                   placeholder="provider/model-name"
-                  className="w-full px-14 py-10 bg-background-base border border-border-faint rounded-10 text-sm text-accent-black placeholder-black-alpha-32 font-mono focus:outline-none focus:border-heat-100 transition-colors mt-8"
+                  className="w-full px-14 py-10 bg-background-base rounded-10 text-sm text-accent-black dark:text-white placeholder-black-alpha-32 font-mono focus:outline-none transition-colors mt-8"
                 />
               )}
             </div>
@@ -589,7 +589,7 @@ export default function NodePanel({
             {/* MCP Tools Field */}
             <div>
               <div className="flex items-center justify-between mb-8">
-                <label className="block text-sm font-medium text-black-alpha-48">
+                <label className="block text-sm font-medium text-black-alpha-48 dark:text-gray-400">
                   Tools
                 </label>
                 <div className="flex items-center gap-8">
@@ -614,7 +614,7 @@ export default function NodePanel({
                     title="Add tools"
                   >
                     <svg
-                      className="w-18 h-18 text-black-alpha-48"
+                      className="w-18 h-18 text-black-alpha-48 dark:text-gray-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -634,7 +634,7 @@ export default function NodePanel({
                       title="Configure MCPs in Settings"
                     >
                       <svg
-                        className="w-18 h-18 text-black-alpha-48"
+                        className="w-18 h-18 text-black-alpha-48 dark:text-gray-400"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -657,10 +657,10 @@ export default function NodePanel({
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="mb-12 p-16 bg-[#f4f4f5] rounded-12 border border-border-faint"
+                  className="mb-12 p-16 bg-[#f4f4f5] dark:bg-[#1c1d24] rounded-12"
                 >
                   <div className="flex items-center justify-between mb-12">
-                    <h4 className="text-sm font-semibold text-accent-black">
+                    <h4 className="text-sm font-semibold text-accent-black dark:text-white">
                       MCP Registry
                     </h4>
                     <button
@@ -671,7 +671,7 @@ export default function NodePanel({
                       className="w-20 h-20 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
                     >
                       <svg
-                        className="w-14 h-14 text-black-alpha-48"
+                        className="w-14 h-14 text-black-alpha-72 dark:text-white"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -688,7 +688,7 @@ export default function NodePanel({
                   <div className="space-y-12">
                     {!mcpServers || mcpServers.length === 0 ? (
                       <div className="text-center py-16">
-                        <p className="text-xs text-black-alpha-48 mb-8">
+                        <p className="text-xs text-black-alpha-48 dark:text-gray-400 mb-8">
                           No MCP servers configured in your registry.
                         </p>
                         <button
@@ -708,13 +708,13 @@ export default function NodePanel({
                         const isFirecrawl = server.name === 'Firecrawl' && server.isOfficial;
 
                         return (
-                          <div key={server._id} className="rounded-12 border border-border-faint overflow-hidden bg-accent-white">
+                          <div key={server._id} className="rounded-12 overflow-hidden bg-card">
                             <button
                               onClick={() => setExpandedMcpId(isExpanded ? null : server._id)}
                               className="w-full px-16 py-12 flex items-center justify-between text-left hover:bg-black-alpha-4 transition-colors"
                             >
                               <div className="flex items-center gap-8">
-                                <span className="text-sm font-medium text-accent-black">{server.name}</span>
+                                <span className="text-sm font-medium text-accent-black dark:text-white">{server.name}</span>
                                 {isFirecrawl && (
                                   <span className="px-6 py-2 bg-heat-4 text-heat-100 rounded-6 text-xs border border-heat-100 font-medium">
                                     API Key Required
@@ -726,7 +726,7 @@ export default function NodePanel({
                                   </span>
                                 )}
                                 {server.tools && (
-                                  <span className="px-6 py-2 bg-background-base text-black-alpha-48 rounded-6 text-xs border border-border-faint">
+                                  <span className="px-6 py-2 bg-background-base dark:bg-[#1c1d24] text-black-alpha-48 rounded-6 text-xs">
                                     {server.tools.length} tools
                                   </span>
                                 )}
@@ -741,7 +741,7 @@ export default function NodePanel({
                               </svg>
                             </button>
                             {isExpanded && (
-                              <div className="px-16 pb-16 space-y-10 bg-accent-white border-t border-border-faint">
+                              <div className="px-16 pb-16 space-y-10 bg-card border-t border-border-faint dark:border-gray-800">
                                 {server.description && (
                                   <p className="pt-12 text-xs text-black-alpha-64">{server.description}</p>
                                 )}
@@ -760,7 +760,7 @@ export default function NodePanel({
                                     <p className="text-xs text-black-alpha-64 font-medium">Available Tools:</p>
                                     <div className="flex flex-wrap gap-4">
                                       {server.tools.map((tool: string) => (
-                                        <span key={tool} className="px-6 py-2 bg-background-base text-black-alpha-64 rounded-4 text-xs border border-border-faint">
+                                        <span key={tool} className="px-6 py-2 bg-background-base dark:bg-[#1c1d24] text-black-alpha-64 rounded-4 text-xs">
                                           {tool}
                                         </span>
                                       ))}
@@ -784,7 +784,7 @@ export default function NodePanel({
                                     }}
                                     className={`px-12 py-8 rounded-8 text-xs font-medium transition-colors ${
                                       isConnected
-                                        ? 'bg-accent-white border border-border-faint text-accent-black hover:bg-black-alpha-4'
+                                        ? 'bg-accent-white border border-border-faint dark:border-gray-800 text-accent-black dark:text-white hover:bg-black-alpha-4'
                                         : 'bg-heat-100 text-white hover:bg-heat-200'
                                     }`}
                                   >
@@ -797,13 +797,13 @@ export default function NodePanel({
                         );
                       })
                     )}
-                    <div className="rounded-12 border border-border-faint overflow-hidden bg-accent-white">
+                    <div className="rounded-12 overflow-hidden bg-card">
                       <button
                         onClick={() => setExpandedMcpId(expandedMcpId === 'custom' ? null : 'custom')}
                         className="w-full px-16 py-12 flex items-center justify-between text-left hover:bg-black-alpha-4 transition-colors"
                       >
                         <div className="flex items-center gap-8">
-                          <span className="text-sm font-medium text-accent-black">Add New MCP Server</span>
+                          <span className="text-sm font-medium text-accent-black dark:text-white">Add New MCP Server</span>
                           <span className="px-6 py-2 bg-heat-4 text-heat-100 rounded-6 text-xs border border-heat-100">
                             Settings
                           </span>
@@ -818,8 +818,8 @@ export default function NodePanel({
                         </svg>
                       </button>
                       {expandedMcpId === 'custom' && (
-                        <div className="px-16 pb-16 space-y-10 bg-[#f4f4f5]">
-                          <p className="text-xs text-black-alpha-48">
+                        <div className="px-16 pb-16 space-y-10 bg-[#f4f4f5] dark:bg-[#1c1d24]">
+                          <p className="text-xs text-black-alpha-48 dark:text-gray-400">
                             Add new MCP servers to your registry in Settings. Once added, they'll appear here for all your agents to use.
                           </p>
                           <button
@@ -848,10 +848,10 @@ export default function NodePanel({
                     return (
                       <div
                         key={serverId}
-                        className="px-14 py-10 bg-background-base rounded-10 border border-border-faint flex items-center justify-between group hover:border-heat-100 transition-colors"
+                        className="px-14 py-10 bg-background-base dark:bg-[#1c1d24] rounded-10 flex items-center justify-between group transition-colors"
                       >
                         <div className="flex items-center gap-8">
-                          <span className="text-sm text-accent-black font-mono">
+                          <span className="text-sm text-accent-black dark:text-white font-mono">
                             {server.name}
                           </span>
                           {server.tools && (
@@ -869,7 +869,7 @@ export default function NodePanel({
                           className="w-20 h-20 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100"
                         >
                           <svg
-                            className="w-14 h-14 text-black-alpha-48 hover:text-black-alpha-64"
+                            className="w-14 h-14 text-black-alpha-48 hover:text-black-alpha-64 dark:text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -887,21 +887,21 @@ export default function NodePanel({
                   })}
                 </div>
               ) : (
-                <div className="p-16 bg-background-base rounded-10 border border-border-faint text-center">
-                  <p className="text-sm text-black-alpha-48">No MCP servers connected</p>
+                <div className="p-16 bg-background-base dark:bg-[#1c1d24] rounded-10 border border-border-faint dark:border-gray-800 text-center">
+                  <p className="text-sm text-black-alpha-48 dark:text-gray-400">No MCP servers connected</p>
                 </div>
               )}
             </div>
 
             {/* Output Format Field */}
             <div>
-              <label className="block text-sm font-medium text-black-alpha-48 mb-8">
+              <label className="block text-sm font-medium text-black-alpha-48 dark:text-gray-400 mb-8">
                 Output format
               </label>
               <select
                 value={outputFormat}
                 onChange={(e) => setOutputFormat(e.target.value)}
-                className="w-full px-14 py-10 bg-background-base border border-border-faint rounded-10 text-sm text-accent-black focus:outline-none focus:border-heat-100 transition-colors appearance-none cursor-pointer"
+                className="w-full px-14 py-10 bg-background-base dark:bg-[#1c1d24] rounded-10 text-sm text-accent-black dark:text-white focus:outline-none transition-colors appearance-none cursor-pointer"
               >
                 <option value="Text">Text</option>
                 <option value="JSON">JSON</option>
@@ -912,7 +912,7 @@ export default function NodePanel({
             {outputFormat === "JSON" && (
               <div>
                 <div className="flex items-center justify-between mb-12">
-                  <label className="block text-sm font-medium text-black-alpha-48">
+                  <label className="block text-sm font-medium text-black-alpha-48 dark:text-gray-400">
                     Output Schema Builder
                   </label>
                   <button
@@ -947,16 +947,16 @@ export default function NodePanel({
                 {/* Visual Schema Builder */}
                 <div className="space-y-8 mb-12">
                   {schemaFields.length === 0 ? (
-                    <div className="p-16 bg-background-base rounded-10 border border-border-faint text-center">
-                      <p className="text-sm text-black-alpha-48">
+                    <div className="p-16 bg-background-base dark:bg-[#1c1d24] rounded-10 text-center">
+                      <p className="text-sm text-black-alpha-48 dark:text-gray-400">
                         No fields added yet
                       </p>
-                      <p className="text-xs text-black-alpha-32 mt-4">
+                      <p className="text-xs text-black-alpha-32 dark:text-gray-500 mt-4">
                         Click "Add Field" to start building your schema
                       </p>
                     </div>
                   ) : (
-                    <div className="p-12 bg-background-base rounded-10 border border-border-faint space-y-10">
+                    <div className="p-12 bg-background-base dark:bg-[#1c1d24] rounded-10 space-y-10">
                       {schemaFields.map((field, index) => (
                         <div
                           key={`field-${index}-${field.name}`}
@@ -972,7 +972,7 @@ export default function NodePanel({
                               updateSchemaFromFields(updated);
                             }}
                             placeholder="Field name"
-                            className="flex-1 px-10 py-6 bg-accent-white border border-border-faint rounded-6 text-sm text-accent-black placeholder-black-alpha-32 focus:outline-none focus:border-heat-100"
+                            className="flex-1 px-10 py-6 bg-card rounded-6 text-sm text-accent-black dark:text-white placeholder-black-alpha-32 focus:outline-none"
                           />
                           <select
                             value={field.type}
@@ -982,7 +982,7 @@ export default function NodePanel({
                               setSchemaFields(updated);
                               updateSchemaFromFields(updated);
                             }}
-                            className="px-10 py-6 bg-accent-white border border-border-faint rounded-6 text-sm text-accent-black focus:outline-none focus:border-heat-100"
+                            className="px-10 py-6 bg-card rounded-6 text-sm text-accent-black dark:text-white focus:outline-none"
                           >
                             <option value="string">string</option>
                             <option value="number">number</option>
@@ -1001,7 +1001,7 @@ export default function NodePanel({
                             className="w-24 h-24 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
                           >
                             <svg
-                              className="w-14 h-14 text-black-alpha-48"
+                              className="w-14 h-14 text-black-alpha-72 dark:text-white"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -1043,7 +1043,7 @@ export default function NodePanel({
                     onChange={(e) => setJsonOutputSchema(e.target.value)}
                     rows={6}
                     placeholder='{"type": "object", "properties": {...}}'
-                    className="w-full px-14 py-10 bg-gray-900 text-heat-100 border border-border-faint rounded-10 text-xs font-mono focus:outline-none focus:border-heat-100 transition-colors resize-y"
+                    className="w-full px-14 py-10 bg-gray-900 text-heat-100 rounded-10 text-xs font-mono focus:outline-none transition-colors resize-y"
                   />
                 </details>
               </div>
@@ -1056,7 +1056,7 @@ export default function NodePanel({
                   e.preventDefault();
                   setShowAdvanced(!showAdvanced);
                 }}
-                className="flex items-center justify-between cursor-pointer list-none text-sm font-medium text-black-alpha-48 hover:text-accent-black transition-colors py-12"
+                className="flex items-center justify-between cursor-pointer list-none text-sm font-medium text-black-alpha-48 dark:text-gray-400 hover:text-accent-black dark:hover:text-white transition-colors py-12"
               >
                 <span>Advanced</span>
                 <svg
@@ -1075,7 +1075,7 @@ export default function NodePanel({
               </summary>
 
               {showAdvanced && (
-                <div className="space-y-16 pt-16 border-t border-border-faint">
+                <div className="space-y-16 pt-16 border-t border-border-faint dark:border-gray-800">
                   {/* Advanced settings section - reserved for future options */}
                 </div>
               )}

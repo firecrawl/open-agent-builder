@@ -91,13 +91,13 @@ while (true) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 m-auto w-full max-w-3xl h-fit bg-accent-white rounded-16 border border-border-faint shadow-2xl z-[201] max-h-[90vh] overflow-y-auto"
+            className="fixed inset-0 m-auto w-full max-w-3xl h-fit bg-card rounded-16 border border-border-faint shadow-2xl z-[201] max-h-[90vh] overflow-y-auto"
           >
             {/* Header */}
-            <div className="p-24 border-b border-border-faint sticky top-0 bg-accent-white rounded-t-16">
+            <div className="p-24 border-b border-border-faint sticky top-0 bg-card rounded-t-16">
               <div className="flex items-center justify-between mb-12">
                 <div>
-                  <h2 className="text-title-h3 text-accent-black mb-4">Workflow Saved!</h2>
+                  <h2 className="text-title-h3 text-foreground mb-4">Workflow Saved!</h2>
                   <p className="text-body-medium text-black-alpha-48">
                     Your workflow is ready to use via API
                   </p>
@@ -119,12 +119,12 @@ while (true) {
               <div className="space-y-16">
                 <div>
                   <div className="flex items-center justify-between mb-8">
-                    <label className="text-label-medium text-accent-black font-medium">
+                    <label className="text-label-medium text-foreground font-medium">
                       Standard Execution
                     </label>
                     <button
                       onClick={() => handleCopy(executeUrl, 'url')}
-                      className="px-12 py-6 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small transition-colors"
+                      className="px-12 py-6 bg-card hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small transition-colors"
                     >
                       {copied === 'url' ? 'Copied!' : 'Copy'}
                     </button>
@@ -133,18 +133,18 @@ while (true) {
                     type="text"
                     value={executeUrl}
                     readOnly
-                    className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-small text-accent-black font-mono"
+                    className="w-full px-12 py-10 bg-card rounded-8 text-body-small text-foreground font-mono"
                   />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-8">
-                    <label className="text-label-medium text-accent-black font-medium">
+                    <label className="text-label-medium text-foreground font-medium">
                       Streaming Execution
                     </label>
                     <button
                       onClick={() => handleCopy(streamUrl, 'stream-url')}
-                      className="px-12 py-6 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small transition-colors"
+                      className="px-12 py-6 bg-card hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small transition-colors"
                     >
                       {copied === 'stream-url' ? 'Copied!' : 'Copy'}
                     </button>
@@ -153,7 +153,7 @@ while (true) {
                     type="text"
                     value={streamUrl}
                     readOnly
-                    className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-small text-accent-black font-mono"
+                    className="w-full px-12 py-10 bg-card rounded-8 text-body-small text-foreground font-mono"
                   />
                   <p className="text-body-small text-black-alpha-48 mt-6">Real-time updates as each node executes</p>
                 </div>
@@ -163,22 +163,22 @@ while (true) {
 
               {/* Code Examples */}
               <div className="space-y-16">
-                <h3 className="text-label-large text-accent-black font-medium">Code Examples</h3>
+                <h3 className="text-label-large text-foreground font-medium">Code Examples</h3>
 
                 {/* cURL */}
                 <div>
                   <div className="flex items-center justify-between mb-8">
-                    <label className="text-body-medium text-accent-black">
+                    <label className="text-body-medium text-foreground">
                       cURL
                     </label>
                     <button
                       onClick={() => handleCopy(curlExample, 'curl')}
-                      className="px-12 py-6 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small transition-colors"
+                      className="px-12 py-6 bg-card hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small transition-colors"
                     >
                       {copied === 'curl' ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
-                  <pre className="p-16 bg-background-base border border-border-faint rounded-8 text-body-small text-accent-black font-mono overflow-x-auto">
+                  <pre className="p-16 bg-card rounded-8 text-body-small text-foreground font-mono overflow-x-auto">
 {curlExample}
                   </pre>
                 </div>
@@ -186,41 +186,41 @@ while (true) {
                 {/* JavaScript */}
                 <div>
                   <div className="flex items-center justify-between mb-8">
-                    <label className="text-body-medium text-accent-black">
+                    <label className="text-body-medium text-foreground">
                       JavaScript/TypeScript
                     </label>
                     <button
                       onClick={() => handleCopy(fetchExample, 'fetch')}
-                      className="px-12 py-6 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small transition-colors"
+                      className="px-12 py-6 bg-card hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small transition-colors"
                     >
                       {copied === 'fetch' ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
-                  <pre className="p-16 bg-background-base border border-border-faint rounded-8 text-body-small text-accent-black font-mono overflow-x-auto whitespace-pre-wrap">
+                  <pre className="p-16 bg-card rounded-8 text-body-small text-foreground font-mono overflow-x-auto whitespace-pre-wrap">
 {fetchExample}
                   </pre>
                 </div>
 
                 {/* Streaming Info */}
-                <div className="p-16 bg-background-base rounded-12 border border-border-faint">
+                <div className="p-16 bg-card rounded-12">
                   <div className="flex items-center gap-8 mb-8">
                     <div className="w-6 h-6 bg-heat-100 rounded-full"></div>
-                    <p className="text-label-small text-accent-black font-medium">Streaming Available</p>
+                    <p className="text-label-small text-foreground font-medium">Streaming Available</p>
                   </div>
                   <p className="text-body-small text-black-alpha-48 mb-12">
-                    Use <code className="px-6 py-2 bg-white rounded-4 text-accent-black font-mono text-xs">execute-stream</code> endpoint for real-time updates
+                    Use <code className="px-6 py-2 bg-card dark:bg-zinc-900 rounded-4 text-foreground font-mono text-xs">execute-stream</code> endpoint for real-time updates
                   </p>
                   <div className="space-y-4 text-body-small text-black-alpha-48">
                     <div className="flex items-center gap-8">
-                      <code className="px-6 py-2 bg-white rounded-4 text-accent-black font-mono text-xs">node_started</code>
+                      <code className="px-6 py-2 bg-card dark:bg-zinc-900 rounded-4 text-foreground font-mono text-xs">node_started</code>
                       <span>Node begins</span>
                     </div>
                     <div className="flex items-center gap-8">
-                      <code className="px-6 py-2 bg-white rounded-4 text-accent-black font-mono text-xs">node_completed</code>
+                      <code className="px-6 py-2 bg-card dark:bg-zinc-900 rounded-4 text-foreground font-mono text-xs">node_completed</code>
                       <span>Node finishes</span>
                     </div>
                     <div className="flex items-center gap-8">
-                      <code className="px-6 py-2 bg-white rounded-4 text-accent-black font-mono text-xs">workflow_completed</code>
+                      <code className="px-6 py-2 bg-card dark:bg-zinc-900 rounded-4 text-foreground font-mono text-xs">workflow_completed</code>
                       <span>All done</span>
                     </div>
                   </div>
@@ -229,7 +229,7 @@ while (true) {
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 p-20 bg-accent-white border-t border-border-faint rounded-b-16">
+            <div className="sticky bottom-0 p-20 bg-card border-t border-border-faint rounded-b-16">
               <button
                 onClick={onClose}
                 className="w-full px-20 py-12 bg-heat-100 hover:bg-heat-200 text-white rounded-8 text-body-medium font-medium transition-all active:scale-[0.98]"

@@ -14,7 +14,10 @@ type Props = Parameters<Ticker>[0] & {
 
 export const CELL_SIZE = 80;
 
-export const MAIN_COLOR = 0xe6e6e6;
+// Theme-aware color for decorative elements
+export const MAIN_COLOR = typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
+  ? 0x1a1a1a  // Very dim in dark mode
+  : 0xe6e6e6; // Light in light mode
 
 const animations = [scrape, mapping, search, crawl];
 

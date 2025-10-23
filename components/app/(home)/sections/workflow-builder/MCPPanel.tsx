@@ -79,19 +79,19 @@ export default function MCPPanel({
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 400, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed right-20 top-80 bottom-20 w-[calc(100vw-240px)] max-w-520 bg-accent-white border border-border-faint shadow-lg overflow-y-auto z-50 rounded-16 flex flex-col"
+          className="fixed right-20 top-80 bottom-20 w-[calc(100vw-240px)] max-w-520 bg-card shadow-lg overflow-y-auto z-50 rounded-16 flex flex-col"
         >
           {/* Header */}
           <div className="p-20 border-b border-border-faint">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-xl font-semibold text-accent-black">
+              <h2 className="text-xl font-semibold text-foreground">
                 {mode === 'add-to-agent' ? 'Add MCP to Agent' : 'MCP Node'}
               </h2>
               <button
                 onClick={onClose}
                 className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
               >
-                <svg className="w-16 h-16 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-16 h-16 text-black-alpha-72 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -110,7 +110,7 @@ export default function MCPPanel({
               </label>
 
               {!mcpServers || mcpServers.length === 0 ? (
-                <div className="p-16 bg-background-base rounded-12 border border-border-faint text-center">
+                <div className="p-16 bg-card rounded-12 text-center">
                   <p className="text-body-small text-black-alpha-48 mb-12">
                     No MCP servers available in your registry
                   </p>
@@ -146,7 +146,7 @@ export default function MCPPanel({
                         }
                       }
                     }}
-                    className="w-full px-14 py-10 bg-background-base border border-border-faint rounded-10 text-sm text-accent-black focus:outline-none focus:border-heat-100 transition-colors appearance-none cursor-pointer"
+                    className="w-full px-14 py-10 bg-card dark:bg-[#1c1d24] rounded-10 text-sm text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors appearance-none cursor-pointer"
                   >
                     <option value="">Select an MCP server...</option>
                     {mcpServers.map((server) => {
@@ -162,14 +162,14 @@ export default function MCPPanel({
                   {selectedServer && (
                     <div className="mt-12">
                       {/* Server Info Card */}
-                      <div className="p-16 bg-background-base rounded-12 border border-border-faint">
+                      <div className="p-16 bg-card rounded-12">
                         <div className="flex items-start gap-12">
                           <div className={`text-heat-100`}>
                             {getCategoryIcon(selectedServer.category)}
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-8 mb-4">
-                              <h4 className="text-sm font-medium text-accent-black">
+                              <h4 className="text-sm font-medium text-foreground">
                                 {selectedServer.name}
                               </h4>
                               {selectedServer.name === 'Firecrawl' && selectedServer.isOfficial && (
@@ -228,7 +228,7 @@ export default function MCPPanel({
                                 >
                                   <div className="space-y-6">
                                     {selectedServer.tools.map((tool: string) => (
-                                      <div key={tool} className="p-8 bg-accent-white rounded-6 border border-border-faint">
+                                      <div key={tool} className="p-8 bg-card rounded-6">
                                         <code className="text-xs font-mono text-heat-100">
                                           {tool}
                                         </code>

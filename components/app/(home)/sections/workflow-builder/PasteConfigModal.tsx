@@ -154,13 +154,13 @@ export default function PasteConfigModal({ isOpen, onClose, onSave }: PasteConfi
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-accent-white rounded-16 shadow-2xl max-w-2xl w-full mx-20 flex flex-col"
+        className="bg-card rounded-16 shadow-2xl max-w-2xl w-full mx-20 flex flex-col"
         style={{ maxHeight: '85vh' }}
       >
         {/* Header */}
         <div className="p-20 border-b border-border-faint flex-shrink-0">
           <div className="flex items-center justify-between">
-            <h2 className="text-title-h4 text-accent-black">Paste MCP Configuration</h2>
+            <h2 className="text-title-h4 text-foreground">Paste MCP Configuration</h2>
             <button
               onClick={onClose}
               className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
@@ -219,7 +219,7 @@ export default function PasteConfigModal({ isOpen, onClose, onSave }: PasteConfi
     }
   }
 }`}
-              className="w-full h-[300px] px-14 py-10 bg-background-base border border-border-faint rounded-10 text-sm text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
+              className="w-full h-[300px] px-14 py-10 bg-background-base dark:bg-[#1c1d24] rounded-10 text-sm text-foreground font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
               spellCheck={false}
             />
           </div>
@@ -234,7 +234,7 @@ export default function PasteConfigModal({ isOpen, onClose, onSave }: PasteConfi
             <div className="flex items-start gap-8">
               <AlertCircle className="w-16 h-16 text-heat-100 flex-shrink-0 mt-1" />
               <div>
-                <p className="text-body-small text-accent-black font-medium mb-4">
+                <p className="text-body-small text-foreground font-medium mb-4">
                   Supported Formats
                 </p>
                 <p className="text-body-small text-black-alpha-64 mb-6">
@@ -256,7 +256,7 @@ export default function PasteConfigModal({ isOpen, onClose, onSave }: PasteConfi
         <div className="p-20 border-t border-border-faint flex gap-8 flex-shrink-0">
           <button
             onClick={onClose}
-            className="flex-1 px-20 py-12 bg-black-alpha-4 hover:bg-black-alpha-8 text-accent-black rounded-8 text-body-medium font-medium transition-all"
+            className="flex-1 px-20 py-12 bg-black-alpha-4 hover:bg-black-alpha-8 text-foreground rounded-8 text-body-medium font-medium transition-all"
           >
             Cancel
           </button>

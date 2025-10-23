@@ -89,7 +89,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 400, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-accent-white border border-border-faint shadow-lg overflow-y-auto z-50 rounded-16"
+          className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-card shadow-lg overflow-y-auto z-50 rounded-16"
         >
           {/* Header */}
           <div className="p-20 border-b border-border-faint">
@@ -98,7 +98,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="text-label-large text-accent-black font-medium bg-transparent border-none outline-none focus:outline-none hover:bg-black-alpha-4 px-2 -ml-2 rounded-4 transition-colors"
+                className="text-label-large text-foreground font-medium bg-transparent border-none outline-none focus:outline-none hover:bg-black-alpha-4 px-2 -ml-2 rounded-4 transition-colors"
                 placeholder="Enter node name..."
               />
               <div className="flex items-center gap-8">
@@ -107,7 +107,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                   className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center group"
                   title="Delete node"
                 >
-                  <svg className="w-16 h-16 text-black-alpha-48 group-hover:text-black-alpha-64" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 text-black-alpha-72 group-hover:text-black-alpha-64" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
@@ -115,7 +115,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                   onClick={onClose}
                   className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
                 >
-                  <svg className="w-16 h-16 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 text-black-alpha-72 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -142,7 +142,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search for functions, classes, text..."
-                    className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-heat-100 transition-colors"
+                    className="w-full px-12 py-10 bg-background-base dark:bg-[#1c1d24] rounded-8 text-body-medium text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors"
                   />
                 </div>
 
@@ -155,7 +155,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                     value={filePattern}
                     onChange={(e) => setFilePattern(e.target.value)}
                     placeholder="*.ts,*.tsx,*.js"
-                    className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                    className="w-full px-12 py-10 bg-background-base dark:bg-[#1c1d24] rounded-8 text-body-medium text-foreground dark:text-white font-mono focus:outline-none focus:border-heat-100 transition-colors"
                   />
                   <p className="text-body-small text-black-alpha-48 mt-8">
                     Comma-separated glob patterns
@@ -170,12 +170,12 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                     type="number"
                     value={maxResults}
                     onChange={(e) => setMaxResults(e.target.value)}
-                    className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-heat-100 transition-colors"
+                    className="w-full px-12 py-10 bg-background-base dark:bg-[#1c1d24] rounded-8 text-body-medium text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors"
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <label className="text-label-small text-accent-black">
+                  <label className="text-label-small text-foreground">
                     Include File Content
                   </label>
                   <button
@@ -185,7 +185,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                     }`}
                   >
                     <motion.div
-                      className="w-20 h-20 bg-white rounded-full absolute top-2 shadow-sm"
+                      className="w-20 h-20 bg-white dark:bg-zinc-200 rounded-full absolute top-2 shadow-sm"
                       animate={{ left: includeContent ? '22px' : '2px' }}
                       transition={{ duration: 0.2 }}
                     />
@@ -205,7 +205,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                     type="text"
                     value={nodeData?.name || 'Guardrails'}
                     onChange={(e) => onUpdate(node?.id || '', { name: e.target.value })}
-                    className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-heat-100 transition-colors"
+                    className="w-full px-12 py-10 bg-background-base dark:bg-[#1c1d24] rounded-8 text-body-medium text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors"
                   />
                 </div>
 
@@ -213,11 +213,11 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                   <label className="block text-label-small text-black-alpha-48 mb-8">
                     Input Variable
                   </label>
-                  <div className="flex items-center gap-8 px-12 py-10 bg-background-base border border-border-faint rounded-8">
+                  <div className="flex items-center gap-8 px-12 py-10 bg-background-base dark:bg-[#1c1d24] rounded-8">
                     <svg className="w-16 h-16 text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span className="text-body-small text-accent-black font-mono">{inputAsText}</span>
+                    <span className="text-body-small text-foreground font-mono">{inputAsText}</span>
                     <span className="ml-auto px-8 py-4 bg-heat-4 text-heat-100 rounded-6 text-body-small font-medium">
                       STRING
                     </span>
@@ -230,13 +230,13 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                 {/* Guardrail Toggles */}
                 <div className="space-y-12">
                   {/* PII Detection */}
-                  <div className="p-16 bg-accent-white border border-border-faint rounded-12">
+                  <div className="p-16 bg-card rounded-12">
                     <div className="flex items-center justify-between mb-12">
                       <div className="flex items-center gap-8">
                         <svg className="w-20 h-20 text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
-                        <span className="text-label-medium text-accent-black">PII Detection</span>
+                        <span className="text-label-medium text-foreground">PII Detection</span>
                       </div>
                       <button
                         onClick={() => setPiiEnabled(!piiEnabled)}
@@ -245,7 +245,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                         }`}
                       >
                         <motion.div
-                          className="w-20 h-20 bg-white rounded-full absolute top-2 shadow-sm"
+                          className="w-20 h-20 bg-white dark:bg-zinc-200 rounded-full absolute top-2 shadow-sm"
                           animate={{ left: piiEnabled ? '22px' : '2px' }}
                           transition={{ duration: 0.2, ease: 'easeOut' }}
                         />
@@ -269,7 +269,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <div className="flex-1">
-                          <p className="text-xs text-accent-black font-medium mb-4">What it does:</p>
+                          <p className="text-xs text-foreground font-medium mb-4">What it does:</p>
                           <p className="text-xs text-heat-100 leading-relaxed">
                             Detects sensitive personal data (emails, phone numbers, credit cards, etc.) and blocks requests containing them.
                           </p>
@@ -284,7 +284,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           <p className="text-xs text-heat-100 font-mono mt-2 ml-16">"Hello, how can I help you today?"</p>
                         </div>
                         <div>
-                          <p className="text-xs text-accent-black font-medium flex items-center gap-4">
+                          <p className="text-xs text-foreground font-medium flex items-center gap-4">
                             <span className="w-12 h-12 bg-accent-black rounded-full text-white text-[10px] flex items-center justify-center">✗</span>
                             Fail Example:
                           </p>
@@ -295,13 +295,13 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                   </div>
 
                   {/* Moderation */}
-                  <div className="p-16 bg-accent-white border border-border-faint rounded-12">
+                  <div className="p-16 bg-card rounded-12">
                     <div className="flex items-center justify-between mb-12">
                       <div className="flex items-center gap-8">
                         <svg className="w-20 h-20 text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
-                        <span className="text-label-medium text-accent-black">Content Moderation</span>
+                        <span className="text-label-medium text-foreground">Content Moderation</span>
                       </div>
                       <button
                         onClick={() => setModerationEnabled(!moderationEnabled)}
@@ -310,7 +310,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                         }`}
                       >
                         <motion.div
-                          className="w-20 h-20 bg-white rounded-full absolute top-2 shadow-sm"
+                          className="w-20 h-20 bg-white dark:bg-zinc-200 rounded-full absolute top-2 shadow-sm"
                           animate={{ left: moderationEnabled ? '22px' : '2px' }}
                           transition={{ duration: 0.2, ease: 'easeOut' }}
                         />
@@ -323,7 +323,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <div className="flex-1">
-                          <p className="text-xs text-accent-black font-medium mb-4">What it does:</p>
+                          <p className="text-xs text-foreground font-medium mb-4">What it does:</p>
                           <p className="text-xs text-heat-100 leading-relaxed">
                             Blocks offensive, hateful, violent, or sexually explicit content from being processed.
                           </p>
@@ -338,7 +338,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           <p className="text-xs text-heat-100 font-mono mt-2 ml-16">"This product is excellent quality"</p>
                         </div>
                         <div>
-                          <p className="text-xs text-accent-black font-medium flex items-center gap-4">
+                          <p className="text-xs text-foreground font-medium flex items-center gap-4">
                             <span className="w-12 h-12 bg-accent-black rounded-full text-white text-[10px] flex items-center justify-center">✗</span>
                             Fail Example:
                           </p>
@@ -349,13 +349,13 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                   </div>
 
                   {/* Jailbreak */}
-                  <div className="p-16 bg-accent-white border border-border-faint rounded-12">
+                  <div className="p-16 bg-card rounded-12">
                     <div className="flex items-center justify-between mb-12">
                       <div className="flex items-center gap-8">
                         <svg className="w-20 h-20 text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
-                        <span className="text-label-medium text-accent-black">Jailbreak Detection</span>
+                        <span className="text-label-medium text-foreground">Jailbreak Detection</span>
                       </div>
                       <button
                         onClick={() => setJailbreakEnabled(!jailbreakEnabled)}
@@ -364,7 +364,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                         }`}
                       >
                         <motion.div
-                          className="w-20 h-20 bg-white rounded-full absolute top-2 shadow-sm"
+                          className="w-20 h-20 bg-white dark:bg-zinc-200 rounded-full absolute top-2 shadow-sm"
                           animate={{ left: jailbreakEnabled ? '22px' : '2px' }}
                           transition={{ duration: 0.2, ease: 'easeOut' }}
                         />
@@ -377,7 +377,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <div className="flex-1">
-                          <p className="text-xs text-accent-black font-medium mb-4">What it does:</p>
+                          <p className="text-xs text-foreground font-medium mb-4">What it does:</p>
                           <p className="text-xs text-heat-100 leading-relaxed">
                             Detects attempts to bypass AI safety measures or trick the model into ignoring its instructions.
                           </p>
@@ -392,7 +392,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           <p className="text-xs text-heat-100 font-mono mt-2 ml-16">"Please help me write a professional email"</p>
                         </div>
                         <div>
-                          <p className="text-xs text-accent-black font-medium flex items-center gap-4">
+                          <p className="text-xs text-foreground font-medium flex items-center gap-4">
                             <span className="w-12 h-12 bg-accent-black rounded-full text-white text-[10px] flex items-center justify-center">✗</span>
                             Fail Example:
                           </p>
@@ -403,13 +403,13 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                   </div>
 
                   {/* Hallucination */}
-                  <div className="p-16 bg-accent-white border border-border-faint rounded-12">
+                  <div className="p-16 bg-card rounded-12">
                     <div className="flex items-center justify-between mb-12">
                       <div className="flex items-center gap-8">
                         <svg className="w-20 h-20 text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                         </svg>
-                        <span className="text-label-medium text-accent-black">Hallucination Detection</span>
+                        <span className="text-label-medium text-foreground">Hallucination Detection</span>
                       </div>
                       <button
                         onClick={() => setHallucinationEnabled(!hallucinationEnabled)}
@@ -418,7 +418,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                         }`}
                       >
                         <motion.div
-                          className="w-20 h-20 bg-white rounded-full absolute top-2 shadow-sm"
+                          className="w-20 h-20 bg-white dark:bg-zinc-200 rounded-full absolute top-2 shadow-sm"
                           animate={{ left: hallucinationEnabled ? '22px' : '2px' }}
                           transition={{ duration: 0.2, ease: 'easeOut' }}
                         />
@@ -431,7 +431,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <div className="flex-1">
-                          <p className="text-xs text-accent-black font-medium mb-4">What it does:</p>
+                          <p className="text-xs text-foreground font-medium mb-4">What it does:</p>
                           <p className="text-xs text-heat-100 leading-relaxed">
                             Checks if the AI output contains factual claims that can't be verified or seem made up.
                           </p>
@@ -446,7 +446,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           <p className="text-xs text-heat-100 font-mono mt-2 ml-16">"The sky appears blue due to Rayleigh scattering"</p>
                         </div>
                         <div>
-                          <p className="text-xs text-accent-black font-medium flex items-center gap-4">
+                          <p className="text-xs text-foreground font-medium flex items-center gap-4">
                             <span className="w-12 h-12 bg-accent-black rounded-full text-white text-[10px] flex items-center justify-center">✗</span>
                             Fail Example:
                           </p>
@@ -466,7 +466,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                       <select
                         value={guardrailModel}
                         onChange={(e) => setGuardrailModel(e.target.value)}
-                        className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-heat-100 transition-colors cursor-pointer"
+                        className="w-full px-12 py-10 bg-background-base dark:bg-[#1c1d24] rounded-8 text-body-medium text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors cursor-pointer"
                       >
                         <optgroup label="OpenAI (Recommended)">
                           <option value="openai/gpt-5-mini">GPT-5 Mini (Fast & Cheap)</option>
@@ -494,7 +494,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                       <select
                         value={actionOnViolation}
                         onChange={(e) => setActionOnViolation(e.target.value)}
-                        className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-heat-100 transition-colors cursor-pointer"
+                        className="w-full px-12 py-10 bg-background-base dark:bg-[#1c1d24] rounded-8 text-body-medium text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors cursor-pointer"
                       >
                         <option value="block">🛑 Block - Stop workflow execution</option>
                         <option value="warn">⚠️ Warn - Continue with warning</option>
@@ -515,7 +515,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                         onChange={(e) => setCustomRules(e.target.value)}
                         placeholder="Block messages containing: refund&#10;Block messages about: billing&#10;Require approval for: account changes"
                         rows={4}
-                        className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black placeholder-black-alpha-32 focus:outline-none focus:border-heat-100 transition-colors resize-y font-mono"
+                        className="w-full px-12 py-10 bg-background-base dark:bg-[#1c1d24] rounded-8 text-body-medium text-foreground dark:text-white placeholder-black-alpha-32 focus:outline-none focus:border-heat-100 transition-colors resize-y font-mono"
                       />
                       <p className="text-body-small text-black-alpha-48 mt-8">
                         One rule per line. LLM will check content against these rules.
@@ -544,17 +544,17 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-accent-white rounded-16 shadow-2xl w-[600px] max-h-[80vh] overflow-hidden flex flex-col"
+            className="bg-card dark:bg-[#1c1d24] rounded-16 shadow-2xl w-[600px] max-h-[80vh] overflow-hidden flex flex-col border border-border-faint"
           >
             {/* Header */}
-            <div className="p-20 border-b border-border-faint bg-background-base">
+            <div className="p-20 border-b border-border-faint bg-background-base dark:bg-[#1c1d24]">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-10">
                   <svg className="w-24 h-24 text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                   <div>
-                    <h3 className="text-label-large text-accent-black">
+                    <h3 className="text-label-large text-foreground">
                       PII Detection Configuration
                     </h3>
                     <p className="text-body-small text-black-alpha-48 mt-2">
@@ -566,7 +566,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                   onClick={() => setShowPIIModal(false)}
                   className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
                 >
-                  <svg className="w-16 h-16 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 text-black-alpha-72 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -584,7 +584,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                 </button>
                 <button
                   onClick={() => setPiiEntities([])}
-                  className="text-body-small text-black-alpha-48 hover:text-accent-black transition-colors"
+                  className="text-body-small text-black-alpha-48 hover:text-foreground transition-colors"
                 >
                   Clear all
                 </button>
@@ -592,10 +592,10 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
 
               <div className="space-y-16">
                 <div>
-                  <h4 className="text-label-small text-accent-black mb-10">Common Types</h4>
+                  <h4 className="text-label-small text-foreground mb-10">Common Types</h4>
                   <div className="grid grid-cols-2 gap-8">
                     {allPIIEntities.slice(0, 8).map((entity) => (
-                      <label key={entity.id} className="flex items-center gap-8 p-10 hover:bg-background-base rounded-8 cursor-pointer transition-colors">
+                      <label key={entity.id} className="flex items-center gap-8 p-10 hover:bg-background-base dark:hover:bg-[#2a2b32] rounded-8 cursor-pointer transition-colors">
                         <input
                           type="checkbox"
                           checked={piiEntities.includes(entity.id)}
@@ -608,17 +608,17 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           }}
                           className="w-16 h-16 rounded-4 border border-border-faint text-heat-100 focus:ring-heat-100"
                         />
-                        <span className="text-body-small text-accent-black">{entity.label}</span>
+                        <span className="text-body-small text-foreground">{entity.label}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="text-label-small text-accent-black mb-10">US-Specific Types</h4>
+                  <h4 className="text-label-small text-foreground mb-10">US-Specific Types</h4>
                   <div className="grid grid-cols-2 gap-8">
                     {allPIIEntities.slice(8).map((entity) => (
-                      <label key={entity.id} className="flex items-center gap-8 p-10 hover:bg-background-base rounded-8 cursor-pointer transition-colors">
+                      <label key={entity.id} className="flex items-center gap-8 p-10 hover:bg-background-base dark:hover:bg-[#2a2b32] rounded-8 cursor-pointer transition-colors">
                         <input
                           type="checkbox"
                           checked={piiEntities.includes(entity.id)}
@@ -631,7 +631,7 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           }}
                           className="w-16 h-16 rounded-4 border border-border-faint text-heat-100 focus:ring-heat-100"
                         />
-                        <span className="text-body-small text-accent-black">{entity.label}</span>
+                        <span className="text-body-small text-foreground">{entity.label}</span>
                       </label>
                     ))}
                   </div>
@@ -640,14 +640,14 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
             </div>
 
             {/* Footer */}
-            <div className="p-20 border-t border-border-faint bg-background-base flex justify-between items-center">
+            <div className="p-20 border-t border-border-faint bg-background-base dark:bg-[#1c1d24] flex justify-between items-center">
               <div className="text-body-small text-black-alpha-48">
                 {piiEntities.length} of {allPIIEntities.length} types selected
               </div>
               <div className="flex gap-8">
                 <button
                   onClick={() => setShowPIIModal(false)}
-                  className="px-16 py-8 text-body-small text-accent-black hover:bg-black-alpha-4 rounded-8 transition-colors"
+                  className="px-16 py-8 text-body-small text-foreground hover:bg-black-alpha-4 rounded-8 transition-colors"
                 >
                   Cancel
                 </button>

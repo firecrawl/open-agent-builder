@@ -7,6 +7,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
+
+
 // Import shared components
 import Button from "@/components/shared/button/Button";
 import { Connector } from "@/components/shared/layout/curvy-rect";
@@ -29,6 +31,7 @@ import WorkflowBuilder from "@/components/app/(home)/sections/workflow-builder/W
 // Import header components
 import HeaderBrandKit from "@/components/shared/header/BrandKit/BrandKit";
 import HeaderWrapper from "@/components/shared/header/Wrapper/Wrapper";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import HeaderDropdownWrapper from "@/components/shared/header/Dropdown/Wrapper/Wrapper";
 import GithubIcon from "@/components/shared/header/Github/_svg/GithubIcon";
 import ButtonUI from "@/components/ui/shadcn/button";
@@ -98,15 +101,15 @@ function StyleGuidePageContent() {
           />
         </SignedIn>
       ) : (
-      <div className="min-h-screen bg-background-base">
+      <div className="min-h-screen bg-background">
         {/* Header/Navigation Section */}
         <HeaderDropdownWrapper />
         
-        <div className="sticky top-0 left-0 w-full z-[101] bg-background-base header">
-          <div className="absolute top-0 cmw-container border-x border-border-faint h-full pointer-events-none" />
-          
-          <div className="h-1 bg-border-faint w-full left-0 -bottom-1 absolute" />
-          
+        <div className="sticky top-0 left-0 w-full z-[101] bg-background header">
+          <div className="absolute top-0 cmw-container border-x border-gray-200 dark:border-[#2a2a2a] h-full pointer-events-none" />
+
+          <div className="h-1 bg-gray-200 dark:bg-[#2a2a2a] w-full left-0 -bottom-1 absolute" />
+
           <div className="cmw-container absolute h-full pointer-events-none top-0">
             <Connector className="absolute -left-[10.5px] -bottom-11" />
             <Connector className="absolute -right-[10.5px] -bottom-11" />
@@ -150,6 +153,9 @@ function StyleGuidePageContent() {
                     afterSignOutUrl="/"
                   />
                 </SignedIn>
+
+                {/* Theme Toggle */}
+                <ThemeToggle size="xl" />
               </div>
             </div>
           </HeaderWrapper>
@@ -189,7 +195,7 @@ function StyleGuidePageContent() {
                   </p>
                 </motion.div>
               ) : (
-                <SignedIn>
+                  <SignedIn>
                   <motion.div
                     key="step2"
                     initial={{ opacity: 0 }}
@@ -214,8 +220,8 @@ function StyleGuidePageContent() {
                       }}
                     />
                   </motion.div>
-                </SignedIn>
-              )}
+                  </SignedIn>
+                )}
             </AnimatePresence>
           </div>
           

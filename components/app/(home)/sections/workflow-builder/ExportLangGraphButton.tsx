@@ -38,7 +38,7 @@ export function ExportLangGraphButton({ workflowId, workflowName }: ExportLangGr
   return (
     <button
       onClick={handleExport}
-      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-md transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-heat-100 focus:ring-offset-2 focus:ring-offset-background"
     >
       <Download className="w-4 h-4" />
       Export as LangGraph
