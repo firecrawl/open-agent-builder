@@ -59,7 +59,7 @@ export default function NodeArgumentsPanel({ nodeId, currentArgs, onUpdate }: No
         </h3>
         <button
           onClick={() => setShowAddArg(true)}
-          className="px-10 py-6 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small text-accent-black transition-colors flex items-center gap-6"
+          className="px-10 py-6 bg-card hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small text-foreground transition-colors flex items-center gap-6"
         >
           <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -69,7 +69,7 @@ export default function NodeArgumentsPanel({ nodeId, currentArgs, onUpdate }: No
       </div>
 
       {arguments_.length === 0 ? (
-        <div className="p-16 bg-background-base rounded-8 border border-border-faint text-center">
+        <div className="p-16 bg-card rounded-8 text-center">
           <p className="text-body-small text-black-alpha-48">
             No arguments defined. Click "Add Argument" to get started.
           </p>
@@ -81,7 +81,7 @@ export default function NodeArgumentsPanel({ nodeId, currentArgs, onUpdate }: No
               key={index}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-12 bg-background-base rounded-8 border border-border-faint"
+              className="p-12 bg-card rounded-8"
             >
               <div className="flex items-start gap-8 mb-12">
                 <div className="flex-1 grid grid-cols-2 gap-8">
@@ -91,14 +91,14 @@ export default function NodeArgumentsPanel({ nodeId, currentArgs, onUpdate }: No
                     value={arg.name}
                     onChange={(e) => updateArgument(index, { name: e.target.value })}
                     placeholder="argumentName"
-                    className="px-10 py-6 bg-white border border-border-faint rounded-6 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                    className="px-10 py-6 bg-card rounded-6 text-body-small text-foreground font-mono focus:outline-none focus:border-heat-100 transition-colors"
                   />
 
                   {/* Argument Type */}
                   <select
                     value={arg.type}
                     onChange={(e) => updateArgument(index, { type: e.target.value as any })}
-                    className="px-10 py-6 bg-white border border-border-faint rounded-6 text-body-small text-accent-black focus:outline-none focus:border-heat-100 transition-colors"
+                    className="px-10 py-6 bg-card rounded-6 text-body-small text-foreground focus:outline-none focus:border-heat-100 transition-colors"
                   >
                     <option value="string">String</option>
                     <option value="number">Number</option>
@@ -113,7 +113,7 @@ export default function NodeArgumentsPanel({ nodeId, currentArgs, onUpdate }: No
                   onClick={() => removeArgument(index)}
                   className="w-24 h-24 rounded-4 hover:bg-black-alpha-4 transition-colors flex items-center justify-center group"
                 >
-                  <svg className="w-12 h-12 text-black-alpha-48 group-hover:text-accent-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-12 h-12 text-black-alpha-72 group-hover:text-foreground dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -129,7 +129,7 @@ export default function NodeArgumentsPanel({ nodeId, currentArgs, onUpdate }: No
                   value={arg.reference || ''}
                   onChange={(e) => updateArgument(index, { reference: e.target.value })}
                   placeholder="state.variables.node_1.price or 'default value'"
-                  className="w-full px-10 py-6 bg-white border border-border-faint rounded-6 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                  className="w-full px-10 py-6 bg-card rounded-6 text-body-small text-foreground font-mono focus:outline-none focus:border-heat-100 transition-colors"
                 />
                 <p className="text-body-small text-black-alpha-32">
                   Reference previous node output or set a default value
@@ -146,7 +146,7 @@ export default function NodeArgumentsPanel({ nodeId, currentArgs, onUpdate }: No
                   }`}
                 >
                   <motion.div
-                    className="w-16 h-16 bg-white rounded-full absolute top-2 shadow-sm"
+                    className="w-16 h-16 bg-white dark:bg-zinc-200 rounded-full absolute top-2 shadow-sm"
                     animate={{ left: arg.required ? '18px' : '2px' }}
                     transition={{ duration: 0.2 }}
                   />
@@ -163,7 +163,7 @@ export default function NodeArgumentsPanel({ nodeId, currentArgs, onUpdate }: No
           animate={{ opacity: 1, scale: 1 }}
           className="p-12 bg-heat-4 rounded-8 border border-heat-100"
         >
-          <p className="text-body-small text-accent-black mb-12">
+          <p className="text-body-small text-foreground mb-12">
             Add a new argument to define what this node receives
           </p>
           <button
@@ -177,10 +177,10 @@ export default function NodeArgumentsPanel({ nodeId, currentArgs, onUpdate }: No
 
       {/* Quick Reference Guide */}
       <details className="group">
-        <summary className="cursor-pointer list-none p-12 bg-heat-4 rounded-8 border border-heat-100 text-body-small text-accent-black hover:bg-heat-8 transition-colors">
+        <summary className="cursor-pointer list-none p-12 bg-heat-4 rounded-8 border border-heat-100 text-body-small text-foreground hover:bg-heat-8 transition-colors">
           📖 Variable Reference Guide
         </summary>
-        <div className="mt-8 p-12 bg-heat-4 rounded-8 border border-heat-100 space-y-6 text-body-small text-accent-black font-mono">
+        <div className="mt-8 p-12 bg-heat-4 rounded-8 border border-heat-100 space-y-6 text-body-small text-foreground font-mono">
           <div>
             <strong>Workflow Input:</strong>
             <code className="block mt-4 text-heat-100">state.variables.input</code>

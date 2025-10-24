@@ -55,15 +55,15 @@ export default function WorkflowNameEditor({ workflow, onUpdate, renameTrigger =
             onBlur={handleSave}
             onKeyDown={handleKeyDown}
             autoFocus
-            className="px-16 py-8 bg-accent-white border border-heat-100 rounded-8 text-body-medium text-accent-black focus:outline-none shadow-lg min-w-200"
+            className="px-16 py-8 bg-card border border-heat-100 rounded-8 text-body-medium text-foreground focus:outline-none shadow-lg min-w-200"
           />
         ) : (
           <button
             onClick={() => setIsEditing(true)}
-            className="px-16 py-8 bg-accent-white hover:bg-accent-white border border-border-faint hover:border-heat-100 rounded-8 text-body-medium text-accent-black transition-colors flex items-center gap-8"
+            className="px-16 py-8 bg-card hover:bg-muted border border-border hover:border-heat-100 rounded-8 text-body-medium text-foreground transition-colors flex items-center gap-8"
           >
             <span>{name}</span>
-            <svg className="w-14 h-14 text-black-alpha-48 group-hover:text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-14 h-14 text-muted-foreground group-hover:text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
           </button>

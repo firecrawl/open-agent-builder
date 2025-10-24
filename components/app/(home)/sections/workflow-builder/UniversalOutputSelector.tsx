@@ -76,10 +76,10 @@ export default function UniversalOutputSelector({
             className={`w-full p-12 rounded-8 border transition-all text-left ${
               outputAs === 'full'
                 ? 'border-heat-100 bg-heat-4'
-                : 'border-border-faint bg-background-base hover:border-border-light'
+                : 'border-border-faint bg-card hover:border-border-light'
             }`}
           >
-            <p className="text-body-small text-accent-black font-medium mb-4">Full Output</p>
+            <p className="text-body-small text-foreground font-medium mb-4">Full Output</p>
             <p className="text-body-small text-black-alpha-48">
               <code className="font-mono text-xs">state.variables.{nodeId}</code> returns entire result
             </p>
@@ -91,10 +91,10 @@ export default function UniversalOutputSelector({
             className={`w-full p-12 rounded-8 border transition-all text-left ${
               outputAs === 'field'
                 ? 'border-heat-100 bg-heat-4'
-                : 'border-border-faint bg-background-base hover:border-border-light'
+                : 'border-border-faint bg-card hover:border-border-light'
             }`}
           >
-            <p className="text-body-small text-accent-black font-medium mb-4">Extract Field</p>
+            <p className="text-body-small text-foreground font-medium mb-4">Extract Field</p>
             <p className="text-body-small text-black-alpha-48">
               Extract a specific field from the output
             </p>
@@ -108,7 +108,7 @@ export default function UniversalOutputSelector({
               <select
                 value={fieldName}
                 onChange={(e) => setFieldName(e.target.value)}
-                className="w-full px-10 py-6 bg-white border border-border-faint rounded-6 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors mb-8"
+                className="w-full px-10 py-6 bg-card rounded-6 text-body-small text-foreground font-mono focus:outline-none focus:border-heat-100 transition-colors mb-8"
               >
                 {defaultFields.map(field => (
                   <option key={field} value={field}>{field}</option>
@@ -125,7 +125,7 @@ export default function UniversalOutputSelector({
                     setFieldName(e.target.value);
                   }}
                   placeholder="data.items[0].title"
-                  className="w-full px-10 py-6 bg-white border border-border-faint rounded-6 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                  className="w-full px-10 py-6 bg-card rounded-6 text-body-small text-foreground font-mono focus:outline-none focus:border-heat-100 transition-colors"
                 />
               )}
 
@@ -141,10 +141,10 @@ export default function UniversalOutputSelector({
             className={`w-full p-12 rounded-8 border transition-all text-left ${
               outputAs === 'custom'
                 ? 'border-heat-100 bg-heat-4'
-                : 'border-border-faint bg-background-base hover:border-border-light'
+                : 'border-border-faint bg-card hover:border-border-light'
             }`}
           >
-            <p className="text-body-small text-accent-black font-medium mb-4">Custom Path</p>
+            <p className="text-body-small text-foreground font-medium mb-4">Custom Path</p>
             <p className="text-body-small text-black-alpha-48">
               Use dot notation to extract nested data
             </p>
@@ -157,7 +157,7 @@ export default function UniversalOutputSelector({
                 value={customPath}
                 onChange={(e) => setCustomPath(e.target.value)}
                 placeholder="result.data.items[0].title"
-                className="w-full px-10 py-6 bg-white border border-border-faint rounded-6 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                className="w-full px-10 py-6 bg-card rounded-6 text-body-small text-foreground font-mono focus:outline-none focus:border-heat-100 transition-colors"
               />
               <p className="text-body-small text-black-alpha-48 mt-8">
                 Supports dot notation and array indexing

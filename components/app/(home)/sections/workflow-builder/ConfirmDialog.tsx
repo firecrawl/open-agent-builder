@@ -67,7 +67,7 @@ export default function ConfirmDialog({
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-accent-white rounded-16 shadow-2xl max-w-400 w-full"
+            className="bg-card rounded-16 shadow-2xl max-w-400 w-full"
           >
             {/* Content */}
             <div className="p-24">
@@ -83,14 +83,14 @@ export default function ConfirmDialog({
                 </svg>
               </div>
 
-              <h2 className="text-title-h5 text-accent-black mb-8">{title}</h2>
+              <h2 className="text-title-h5 text-foreground mb-8">{title}</h2>
               <p className="text-body-small text-black-alpha-48 mb-24">{description}</p>
 
               {/* Actions */}
               <div className="flex gap-12">
                 <button
                   onClick={onCancel}
-                  className="flex-1 px-16 py-10 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-8 text-body-medium text-accent-black transition-colors"
+                  className="flex-1 px-16 py-10 bg-background-base dark:bg-[#1c1d24] hover:bg-black-alpha-4 border border-border-faint rounded-8 text-body-medium text-foreground transition-colors"
                 >
                   {cancelText}
                 </button>

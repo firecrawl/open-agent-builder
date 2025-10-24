@@ -76,7 +76,7 @@ return result;`,
           <select
             value={stateValue}
             onChange={(e) => setStateValue(e.target.value)}
-            className="w-full px-12 py-8 bg-accent-white border border-border-faint rounded-8 text-sm text-accent-black focus:outline-none focus:border-heat-100 transition-colors"
+            className="w-full px-12 py-8 bg-card dark:bg-[#1c1d24]  rounded-8 text-sm text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors"
           >
             <option value="true">true</option>
             <option value="false">false</option>
@@ -89,7 +89,7 @@ return result;`,
             value={stateValue}
             onChange={(e) => setStateValue(e.target.value)}
             placeholder="42 or {{lastOutput.count}}"
-            className="w-full px-12 py-8 bg-accent-white border border-border-faint rounded-8 text-sm text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+            className="w-full px-12 py-8 bg-card dark:bg-[#1c1d24]  rounded-8 text-sm text-foreground dark:text-white font-mono focus:outline-none focus:border-heat-100 transition-colors"
           />
         );
       case "json":
@@ -99,7 +99,7 @@ return result;`,
             onChange={(e) => setStateValue(e.target.value)}
             rows={4}
             placeholder='{"key": "value"} or {{lastOutput}}'
-            className="w-full px-12 py-8 bg-accent-white border border-border-faint rounded-8 text-sm text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
+            className="w-full px-12 py-8 bg-card dark:bg-[#1c1d24]  rounded-8 text-sm text-foreground dark:text-white font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
           />
         );
       case "expression":
@@ -109,7 +109,7 @@ return result;`,
             onChange={(e) => setStateValue(e.target.value)}
             rows={3}
             placeholder="input.price * 1.1"
-            className="w-full px-12 py-8 bg-accent-white border border-border-faint rounded-8 text-sm text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
+            className="w-full px-12 py-8 bg-card dark:bg-[#1c1d24]  rounded-8 text-sm text-foreground dark:text-white font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
           />
         );
       default:
@@ -119,7 +119,7 @@ return result;`,
             value={stateValue}
             onChange={(e) => setStateValue(e.target.value)}
             placeholder="Hello {{input.name}}"
-            className="w-full px-12 py-8 bg-accent-white border border-border-faint rounded-8 text-sm text-accent-black focus:outline-none focus:border-heat-100 transition-colors"
+            className="w-full px-12 py-8 bg-card dark:bg-[#1c1d24]  rounded-8 text-sm text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors"
           />
         );
     }
@@ -133,22 +133,22 @@ return result;`,
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 400, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-accent-white border border-border-faint shadow-lg overflow-y-auto z-50 rounded-16"
+          className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-card border border-gray-200 dark:border-gray-900 text-foreground shadow-lg overflow-y-auto z-50 rounded-16"
         >
           {/* Header */}
-          <div className="p-20 border-b border-border-faint">
+          <div className="p-20 border-b border-gray-200 dark:border-gray-900">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-label-large text-accent-black font-medium">
+              <h2 className="text-label-large text-foreground font-medium">
                 {nodeData?.nodeName || "Data"}
               </h2>
               <div className="flex items-center gap-8">
                 <button
                   onClick={() => onDelete(node?.id || "")}
-                  className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center group"
+                  className="w-32 h-32 rounded-6 hover:bg-muted transition-colors flex items-center justify-center group"
                   title="Delete node"
                 >
                   <svg
-                    className="w-16 h-16 text-black-alpha-48 group-hover:text-black-alpha-64"
+                    className="w-16 h-16 text-muted-foreground group-hover:text-foreground"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -163,10 +163,10 @@ return result;`,
                 </button>
                 <button
                   onClick={onClose}
-                  className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
+                  className="w-32 h-32 rounded-6 hover:bg-muted transition-colors flex items-center justify-center"
                 >
                   <svg
-                    className="w-16 h-16 text-black-alpha-48"
+                    className="w-16 h-16 text-muted-foreground dark:text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -181,7 +181,7 @@ return result;`,
                 </button>
               </div>
             </div>
-            <p className="text-body-small text-black-alpha-48">
+            <p className="text-body-small text-muted-foreground dark:text-gray-400">
               {nodeType.includes("transform")
                 ? "Transform data using JavaScript"
                 : nodeType.includes("state")
@@ -196,17 +196,17 @@ return result;`,
             {nodeType.includes("transform") && (
               <>
                 <div>
-                  <h3 className="text-sm font-medium text-accent-black mb-12">
+                  <h3 className="text-sm font-medium text-foreground mb-12">
                     Transform Code (TypeScript)
                   </h3>
-                  <p className="text-sm text-black-alpha-48 mb-16">
+                  <p className="text-sm text-muted-foreground dark:text-gray-400 mb-16">
                     Write TypeScript code to transform data. Runs securely in E2B sandbox.
                   </p>
 
                   {/* Code Editor */}
                   <div className="mb-16">
                     <div className="flex items-center justify-between mb-8">
-                      <label className="block text-sm text-accent-black">
+                      <label className="block text-sm text-foreground">
                         TypeScript Code
                       </label>
                       <VariableReferencePicker
@@ -221,16 +221,16 @@ return result;`,
                       value={transformScript}
                       onChange={(e) => setTransformScript(e.target.value)}
                       rows={20}
-                      className="w-full px-12 py-10 bg-[#1e1e1e] text-[#d4d4d4] border border-border-faint rounded-8 text-sm font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
+                      className="w-full px-12 py-10 bg-[#1e1e1e] dark:bg-[#0d0d0d] text-[#d4d4d4] dark:text-white  rounded-8 text-sm font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
                       placeholder="// Transform the input data using TypeScript"
                       spellCheck={false}
                     />
-                    <div className="mt-8 text-xs text-black-alpha-48 space-y-4">
+                    <div className="mt-8 text-xs text-muted-foreground dark:text-gray-400 space-y-4">
                       <p>Available variables:</p>
                       <ul className="list-disc list-inside space-y-2 ml-8">
-                        <li><code className="px-4 py-1 bg-background-base rounded text-heat-100 font-mono">input</code> - Current input data</li>
-                        <li><code className="px-4 py-1 bg-background-base rounded text-heat-100 font-mono">lastOutput</code> - Output from previous node</li>
-                        <li><code className="px-4 py-1 bg-background-base rounded text-heat-100 font-mono">state</code> - Workflow state with variables</li>
+                        <li><code className="px-4 py-1 bg-background-base dark:bg-[#1c1d24] rounded text-heat-100 font-mono">input</code> - Current input data</li>
+                        <li><code className="px-4 py-1 bg-background-base dark:bg-[#1c1d24] rounded text-heat-100 font-mono">lastOutput</code> - Output from previous node</li>
+                        <li><code className="px-4 py-1 bg-background-base dark:bg-[#1c1d24] rounded text-heat-100 font-mono">state</code> - Workflow state with variables</li>
                       </ul>
                       <p className="mt-8">Your function should return an object with the transformed data.</p>
                     </div>
@@ -243,20 +243,20 @@ return result;`,
             {nodeType.includes("state") && !nodeType.includes("transform") && (
               <>
                 <div>
-                  <h3 className="text-sm font-medium text-accent-black mb-12">
+                  <h3 className="text-sm font-medium text-foreground mb-12">
                     Set global variables
                   </h3>
-                  <p className="text-sm text-black-alpha-48 mb-16">
+                  <p className="text-sm text-muted-foreground dark:text-gray-400 mb-16">
                     Assign values to workflow's state variables
                   </p>
 
                   {/* State Assignments */}
                   <div className="space-y-12">
-                    <div className="p-12 bg-background-base rounded-10 border border-border-faint">
+                    <div className="p-12 bg-background-base dark:bg-[#1c1d24] rounded-10 border border-border-faint dark:border-gray-800">
                       <div className="space-y-12">
                         {/* Variable Name */}
                         <div>
-                          <label className="block text-sm text-accent-black mb-6">
+                          <label className="block text-sm text-foreground mb-6">
                             Variable Name
                           </label>
                           <input
@@ -264,22 +264,22 @@ return result;`,
                             value={stateKey}
                             onChange={(e) => setStateKey(e.target.value)}
                             placeholder="myVariable"
-                            className="w-full px-12 py-8 bg-accent-white border border-border-faint rounded-8 text-sm text-accent-black font-mono focus:outline-none focus:border-heat-100"
+                            className="w-full px-12 py-8 bg-card dark:bg-[#1c1d24]  rounded-8 text-sm text-foreground dark:text-white font-mono focus:outline-none focus:border-heat-100"
                           />
-                          <p className="text-xs text-black-alpha-48 mt-4">
-                            Access later with <code className="px-4 py-1 bg-background-base rounded text-heat-100 font-mono text-xs">{`{{state.${stateKey}}}`}</code>
+                          <p className="text-xs text-muted-foreground dark:text-gray-400 mt-4">
+                            Access later with <code className="px-4 py-1 bg-background-base dark:bg-[#0d0d0d] rounded text-heat-100 font-mono text-xs">{`{{state.${stateKey}}}`}</code>
                           </p>
                         </div>
 
                         {/* Value Type */}
                         <div>
-                          <label className="block text-sm text-accent-black mb-6">
+                          <label className="block text-sm text-foreground mb-6">
                             Value Type
                           </label>
                           <select
                             value={valueType}
                             onChange={(e) => setValueType(e.target.value as any)}
-                            className="w-full px-12 py-8 bg-accent-white border border-border-faint rounded-8 text-sm text-accent-black focus:outline-none focus:border-heat-100 transition-colors appearance-none cursor-pointer"
+                            className="w-full px-12 py-8 bg-card dark:bg-[#1c1d24] rounded-8 text-sm text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors appearance-none cursor-pointer"
                           >
                             <option value="string">String</option>
                             <option value="number">Number</option>
@@ -292,7 +292,7 @@ return result;`,
                         {/* Value Input */}
                         <div>
                           <div className="flex items-center justify-between mb-6">
-                            <label className="block text-sm text-accent-black">
+                            <label className="block text-sm text-foreground">
                               Value
                             </label>
                             <VariableReferencePicker
@@ -302,7 +302,7 @@ return result;`,
                             />
                           </div>
                           {renderValueInput()}
-                          <p className="text-xs text-black-alpha-48 mt-4">
+                          <p className="text-xs text-muted-foreground dark:text-gray-400 mt-4">
                             {valueType === 'string' && 'Use {{variables}} to reference other data'}
                             {valueType === 'number' && 'Can use {{lastOutput.price}} to reference numbers'}
                             {valueType === 'boolean' && 'true or false'}
@@ -320,7 +320,7 @@ return result;`,
                           description: 'Currently you can set one variable per node. Add another Set State node for more variables.'
                         });
                       }}
-                      className="px-12 py-8 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-8 text-sm text-accent-black transition-colors flex items-center gap-6"
+                      className="px-12 py-8 bg-background-base dark:bg-[#1c1d24] hover:bg-black-alpha-4 border border-border-faint dark:border-gray-800 rounded-8 text-sm text-foreground transition-colors flex items-center gap-6"
                     >
                       <svg
                         className="w-14 h-14"

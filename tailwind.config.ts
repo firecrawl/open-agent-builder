@@ -7,11 +7,33 @@ import colorsJson from "./colors.json";
 const colors = Object.keys(colorsJson).reduce(
   (acc, key) => {
     acc[key] = `var(--${key})`;
-
     return acc;
   },
   {} as Record<string, string>
 );
+
+// Override specific colors for light/dark mode
+const themeColors = {
+  background: 'hsl(var(--background))',
+  foreground: 'hsl(var(--foreground))',
+  card: 'hsl(var(--card))',
+  'card-foreground': 'hsl(var(--card-foreground))',
+  popover: 'hsl(var(--popover))',
+  'popover-foreground': 'hsl(var(--popover-foreground))',
+  primary: 'hsl(var(--primary))',
+  'primary-foreground': 'hsl(var(--primary-foreground))',
+  secondary: 'hsl(var(--secondary))',
+  'secondary-foreground': 'hsl(var(--secondary-foreground))',
+  muted: 'hsl(var(--muted))',
+  'muted-foreground': 'hsl(var(--muted-foreground))',
+  accent: 'hsl(var(--accent))',
+  'accent-foreground': 'hsl(var(--accent-foreground))',
+  destructive: 'hsl(var(--destructive))',
+  'destructive-foreground': 'hsl(var(--destructive-foreground))',
+  border: 'hsl(var(--border))',
+  input: 'hsl(var(--input))',
+  ring: 'hsl(var(--ring))',
+};
 
 const sizes = Array.from({ length: 1000 }, (_, i) => i).reduce(
   (acc, curr) => {
@@ -55,6 +77,7 @@ const transitionDurations = Array.from({ length: 60 }, (_, i) => i).reduce(
 );
 
 const themeConfig: Config = {
+  darkMode: 'class',
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -223,9 +246,14 @@ const themeConfig: Config = {
         ]
       },
       colors: {
-        transparent: "transparent",
-        current: "currentColor",
-        ...colors
+      transparent: "transparent",
+      current: "currentColor",
+      ...colors,
+        ...themeColors,
+        // Override heat colors with CSS variables for dynamic theming
+        'heat-100': 'var(--accent-color, #FA5D19)',
+        'heat-200': 'var(--accent-color-hover, #eb5617)',
+        'heat-4': 'color-mix(in srgb, var(--accent-color, #FA5D19) 10%, transparent)',
       },
       screens: {
         xs: { min: "390px" },

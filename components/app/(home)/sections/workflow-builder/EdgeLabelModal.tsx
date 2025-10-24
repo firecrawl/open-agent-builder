@@ -49,11 +49,11 @@ export default function EdgeLabelModal({ edge, isOpen, onClose, onSave }: EdgeLa
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-accent-white rounded-16 shadow-2xl max-w-400 w-full"
+            className="bg-card rounded-16 shadow-2xl max-w-400 w-full"
           >
             {/* Header */}
             <div className="p-20 border-b border-border-faint">
-              <h2 className="text-title-h4 text-accent-black">Edit Connection</h2>
+              <h2 className="text-title-h4 text-foreground">Edit Connection</h2>
               <p className="text-body-small text-black-alpha-48 mt-4">
                 Add a label to this connection
               </p>
@@ -69,49 +69,49 @@ export default function EdgeLabelModal({ edge, isOpen, onClose, onSave }: EdgeLa
                 <div className="space-y-8">
                   <button
                     onClick={() => setLabelType('none')}
-                    className={`w-full p-12 rounded-8 border-2 transition-all text-left ${
+                    className={`w-full p-12 rounded-8 border transition-all text-left ${
                       labelType === 'none'
                         ? 'border-heat-100 bg-heat-4'
-                        : 'border-border-faint bg-background-base hover:border-border-light'
+                        : 'border-border-faint dark:border-black-alpha-12 bg-card hover:border-border-light dark:hover:border-black-alpha-24'
                     }`}
                   >
-                    <p className="text-body-small text-accent-black font-medium">No Label</p>
+                    <p className="text-body-small text-foreground font-medium">No Label</p>
                     <p className="text-body-small text-black-alpha-48 mt-4">Standard connection</p>
                   </button>
 
                   <button
                     onClick={() => setLabelType('true')}
-                    className={`w-full p-12 rounded-8 border-2 transition-all text-left ${
+                    className={`w-full p-12 rounded-8 border transition-all text-left ${
                       labelType === 'true'
                         ? 'border-heat-100 bg-heat-4'
-                        : 'border-border-faint bg-background-base hover:border-border-light'
+                        : 'border-border-faint dark:border-black-alpha-12 bg-card hover:border-border-light dark:hover:border-black-alpha-24'
                     }`}
                   >
-                    <p className="text-body-small text-accent-black font-medium">True Branch</p>
+                    <p className="text-body-small text-foreground font-medium">True Branch</p>
                     <p className="text-body-small text-black-alpha-48 mt-4">For If/Else true condition</p>
                   </button>
 
                   <button
                     onClick={() => setLabelType('false')}
-                    className={`w-full p-12 rounded-8 border-2 transition-all text-left ${
+                    className={`w-full p-12 rounded-8 border transition-all text-left ${
                       labelType === 'false'
                         ? 'border-heat-100 bg-heat-4'
-                        : 'border-border-faint bg-background-base hover:border-border-light'
+                        : 'border-border-faint dark:border-black-alpha-12 bg-card hover:border-border-light dark:hover:border-black-alpha-24'
                     }`}
                   >
-                    <p className="text-body-small text-accent-black font-medium">False Branch</p>
+                    <p className="text-body-small text-foreground font-medium">False Branch</p>
                     <p className="text-body-small text-black-alpha-48 mt-4">For If/Else false condition</p>
                   </button>
 
                   <button
                     onClick={() => setLabelType('custom')}
-                    className={`w-full p-12 rounded-8 border-2 transition-all text-left ${
+                    className={`w-full p-12 rounded-8 border transition-all text-left ${
                       labelType === 'custom'
                         ? 'border-heat-100 bg-heat-4'
-                        : 'border-border-faint bg-background-base hover:border-border-light'
+                        : 'border-border-faint dark:border-black-alpha-12 bg-card hover:border-border-light dark:hover:border-black-alpha-24'
                     }`}
                   >
-                    <p className="text-body-small text-accent-black font-medium">Custom Label</p>
+                    <p className="text-body-small text-foreground font-medium">Custom Label</p>
                     <p className="text-body-small text-black-alpha-48 mt-4">Your own text</p>
                   </button>
                 </div>
@@ -128,7 +128,7 @@ export default function EdgeLabelModal({ edge, isOpen, onClose, onSave }: EdgeLa
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
                     placeholder="Enter label text"
-                    className="w-full px-12 py-8 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-heat-100 transition-colors"
+                    className="w-full px-12 py-8 bg-card rounded-8 text-body-medium text-foreground focus:outline-none focus:border-heat-100 transition-colors"
                   />
                 </div>
               )}
@@ -138,7 +138,7 @@ export default function EdgeLabelModal({ edge, isOpen, onClose, onSave }: EdgeLa
             <div className="p-20 border-t border-border-faint flex items-center justify-end gap-12">
               <button
                 onClick={onClose}
-                className="px-20 py-10 text-body-medium text-black-alpha-48 hover:text-accent-black transition-colors"
+                className="px-20 py-10 text-body-medium text-black-alpha-48 hover:text-foreground transition-colors"
               >
                 Cancel
               </button>

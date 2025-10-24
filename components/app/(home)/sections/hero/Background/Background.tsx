@@ -9,10 +9,10 @@ import CenterStar from "./_svg/CenterStar";
 export default function HomeHeroBackground() {
   return (
     <div className="overlay contain-layout pointer-events-none lg-max:hidden">
-      <div className="top-100 h-[calc(100%-99px)] border-border-faint border-y w-full left-0 absolute" />
+      <div className="top-100 h-[calc(100%-99px)] border-gray-200 dark:border-[#2a2a2a] border-y w-full left-0 absolute" />
 
-      <div className="cw-[1314px] z-[105] absolute top-0 border-x border-border-faint h-full">
-        <div className="text-mono-x-small font-mono text-black-alpha-12 select-none">
+      <div className="cw-[1314px] z-[105] absolute top-0 border-x border-gray-200 dark:border-[#2a2a2a] h-full">
+        <div className="text-mono-x-small font-mono text-black-alpha-12 dark:text-gray-800 select-none">
           <div className="absolute top-111 -left-1 w-102 text-center">
             {" "}
             [ 200 OK ]{" "}
@@ -32,13 +32,13 @@ export default function HomeHeroBackground() {
           </div>
         </div>
 
-        <div className="top-302 h-1 left-0 bg-border-faint w-303 absolute" />
-        <div className="top-403 h-1 left-0 bg-border-faint w-303 absolute" />
-        <div className="top-504 h-1 left-100 bg-border-faint w-203 absolute" />
+        <div className="top-302 h-1 left-0 bg-gray-200 dark:bg-[#2a2a2a] w-303 absolute" />
+        <div className="top-403 h-1 left-0 bg-gray-200 dark:bg-[#2a2a2a] w-303 absolute" />
+        <div className="top-504 h-1 left-100 bg-gray-200 dark:bg-[#2a2a2a] w-203 absolute" />
 
-        <div className="top-302 h-1 right-0 bg-border-faint w-303 absolute" />
-        <div className="top-403 h-1 right-0 bg-border-faint w-303 absolute" />
-        <div className="top-504 h-1 right-100 bg-border-faint w-203 absolute" />
+        <div className="top-302 h-1 right-0 bg-gray-200 dark:bg-[#2a2a2a] w-303 absolute" />
+        <div className="top-403 h-1 right-0 bg-gray-200 dark:bg-[#2a2a2a] w-303 absolute" />
+        <div className="top-504 h-1 right-100 bg-gray-200 dark:bg-[#2a2a2a] w-203 absolute" />
 
         {Array.from({ length: 2 }, (_, i) => (
           <Fragment key={i}>
@@ -68,10 +68,10 @@ export default function HomeHeroBackground() {
         ))}
       </div>
 
-      <div className="cw-[910px] absolute top-100 border-x border-border-faint h-[calc(100%-99px)]" />
-      <div className="cw-[708px] absolute top-100 border-x border-border-faint h-[calc(100%-99px)]">
-        <CenterStar className="absolute top-77 -right-24 z-[1]" />
-        <CenterStar className="absolute top-77 -left-24 z-[1]" />
+      <div className="cw-[910px] absolute top-100 border-x border-gray-200 dark:border-[#2a2a2a] h-[calc(100%-99px)]" />
+      <div className="cw-[708px] absolute top-100 border-x border-gray-200 dark:border-[#2a2a2a] h-[calc(100%-99px)]">
+        <CenterStar className="absolute top-77 -right-24 z-[1] dark:opacity-10" />
+        <CenterStar className="absolute top-77 -left-24 z-[1] dark:opacity-10" />
       </div>
 
       <CurvyRect
@@ -79,11 +79,11 @@ export default function HomeHeroBackground() {
         bottom
       />
 
-      <div className="cw-[506px] absolute top-100 border-x border-border-faint h-102" />
-      <div className="cw-[304px] absolute top-100 border-x border-border-faint h-102" />
-      <div className="cw-[102px] absolute top-100 border-x border-border-faint h-102" />
+      <div className="cw-[506px] absolute top-100 border-x border-gray-200 dark:border-[#2a2a2a] h-102" />
+      <div className="cw-[304px] absolute top-100 border-x border-gray-200 dark:border-[#2a2a2a] h-102" />
+      <div className="cw-[102px] absolute top-100 border-x border-gray-200 dark:border-[#2a2a2a] h-102" />
 
-      <div className="top-201 h-1 bg-border-faint cw-[1112px] absolute" />
+      <div className="top-201 h-1 bg-gray-200 dark:bg-[#2a2a2a] cw-[1112px] absolute" />
 
       <div className="cw-[1112px] absolute top-0 h-full">
         <CurvyRect className="w-full absolute top-full h-100 left-0" top />

@@ -133,3 +133,16 @@
   }
 }
 
+/* Dark Mode Overrides */
+.dark {
+  /* Border colors - visible but subtle for dark mode */
+  --border-faint: #2a2a2a;
+  --border-muted: #333333;
+  --border-loud: #3a3a3a;
+
+  /* Illustration colors */
+  --illustrations-faint: #2a2a2a;
+  --illustrations-muted: #333333;
+  --illustrations-default: #3a3a3a;
+}
+

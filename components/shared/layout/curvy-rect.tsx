@@ -78,7 +78,7 @@ export const Connector = ({
     >
       <path
         d="M10.5 4C10.5 7.31371 7.81371 10 4.5 10H0.5V11H4.5C7.81371 11 10.5 13.6863 10.5 17V21H11.5V17C11.5 13.6863 14.1863 11 17.5 11H21.5V10H17.5C14.1863 10 11.5 7.31371 11.5 4V0H10.5V4Z"
-        fill="#EDEDED"
+        fill="var(--border-faint)"
       />
     </svg>
   );
@@ -103,7 +103,7 @@ export const ConnectorToRight = ({
     >
       <path
         d="M1 4C1 7.31371 3.68629 10 7 10H11V11H7C3.68629 11 1 13.6863 1 17V21H0V0H1V4Z"
-        fill="#EDEDED"
+        fill="var(--border-faint)"
       />
     </svg>
   );
@@ -128,7 +128,7 @@ export const ConnectorToLeft = ({
     >
       <path
         d="M11 21H10V17C10 13.6863 7.31371 11 4 11H0V10H4C7.31371 10 10 7.31371 10 4V0H11V21Z"
-        fill="#EDEDED"
+        fill="var(--border-faint)"
       />
     </svg>
   );
@@ -153,7 +153,7 @@ export const ConnectorToTop = ({
     >
       <path
         d="M11 4C11 7.31371 13.6863 10 17 10H21V11H0V10H4C7.31371 10 10 7.31371 10 4V0H11V4Z"
-        fill="#EDEDED"
+        fill="var(--border-faint)"
       />
     </svg>
   );
@@ -178,7 +178,7 @@ export const ConnectorToBottom = ({
     >
       <path
         d="M11 7C11 3.68629 13.6863 1 17 1H21V0H0V1H4C7.31371 1 10 3.68629 10 7V11H11V7Z"
-        fill="#EDEDED"
+        fill="var(--border-faint)"
       />
     </svg>
   );

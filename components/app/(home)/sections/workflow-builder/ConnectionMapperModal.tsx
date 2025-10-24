@@ -129,14 +129,14 @@ export default function ConnectionMapperModal({
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-accent-white rounded-16 shadow-2xl max-w-600 w-full max-h-[80vh] overflow-y-auto"
+            className="bg-card rounded-16 shadow-2xl max-w-600 w-full max-h-[80vh] overflow-y-auto"
           >
             {/* Header */}
             <div className="p-24 border-b border-border-faint">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-title-h3 text-accent-black">Map Connection</h2>
-                  <p className="text-body-small text-black-alpha-48 mt-4">
+                  <h2 className="text-title-h3 text-foreground">Map Connection</h2>
+                  <p className="text-body-small text-black-alpha-48 dark:text-gray-300 mt-4">
                     {sourceData.nodeName} → {targetData.nodeName}
                   </p>
                 </div>
@@ -144,7 +144,7 @@ export default function ConnectionMapperModal({
                   onClick={onClose}
                   className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
                 >
-                  <svg className="w-16 h-16 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 text-black-alpha-48 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -167,8 +167,8 @@ export default function ConnectionMapperModal({
               {/* Mapping Grid */}
               <div className="space-y-12">
                 <div className="grid grid-cols-2 gap-12 pb-12 border-b border-border-faint">
-                  <p className="text-label-small text-black-alpha-48">From ({sourceData.nodeName})</p>
-                  <p className="text-label-small text-black-alpha-48">To ({targetData.nodeName})</p>
+                  <p className="text-label-small text-black-alpha-48 dark:text-gray-300">From ({sourceData.nodeName})</p>
+                  <p className="text-label-small text-black-alpha-48 dark:text-gray-300">To ({targetData.nodeName})</p>
                 </div>
 
                 {targetKeys.map((targetKey) => (
@@ -176,7 +176,7 @@ export default function ConnectionMapperModal({
                     <select
                       value={mapping[targetKey] || ''}
                       onChange={(e) => setMapping({ ...mapping, [targetKey]: e.target.value })}
-                      className="px-12 py-8 bg-background-base border border-border-faint rounded-6 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                      className="px-12 py-8 bg-background-base dark:bg-[#1c1d24] rounded-6 text-body-small text-foreground font-mono focus:outline-none focus:border-heat-100 transition-colors"
                     >
                       <option value="">-- Select source --</option>
                       <option value="__full__">Full Output</option>
@@ -191,7 +191,7 @@ export default function ConnectionMapperModal({
                       <svg className="w-12 h-12 text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
-                      <code className="text-body-small text-accent-black font-mono">{targetKey}</code>
+                      <code className="text-body-small text-foreground font-mono">{targetKey}</code>
                     </div>
                   </div>
                 ))}
@@ -219,7 +219,7 @@ export default function ConnectionMapperModal({
                   setMapping({});
                   onConnect({});
                 }}
-                className="px-20 py-10 text-body-medium text-black-alpha-48 hover:text-accent-black transition-colors"
+                className="px-20 py-10 text-body-medium text-black-alpha-48 dark:text-gray-300 hover:text-foreground dark:hover:text-white transition-colors"
               >
                 Skip Mapping
               </button>

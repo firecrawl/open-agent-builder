@@ -46,4 +46,8 @@ certificates
 post_migrator.py
 
 # Server
+server/node_modules
 firecrawl-responses-api/.env
+
+# clerk configuration (can include secrets)
+/.clerk/

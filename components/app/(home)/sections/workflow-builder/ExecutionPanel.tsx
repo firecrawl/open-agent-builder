@@ -325,13 +325,13 @@ export default function ExecutionPanel({
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 400, opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-accent-white border border-border-faint shadow-lg overflow-hidden z-50 rounded-16 flex flex-col"
+        className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-card shadow-lg overflow-hidden z-50 rounded-16 flex flex-col"
       >
         {/* Header */}
         <div className="p-20 border-b border-border-faint flex-shrink-0">
           <div className="flex items-center justify-between mb-8">
             <div className="flex flex-col gap-4">
-              <h2 className="text-label-large text-accent-black">Preview Workflow</h2>
+              <h2 className="text-label-large text-foreground">Preview Workflow</h2>
               <span className="text-body-small text-black-alpha-48">
                 Environment: {environment === 'production' ? 'Production' : 'Draft'}
               </span>
@@ -430,14 +430,14 @@ export default function ExecutionPanel({
                 onClick={onClose}
                 className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
               >
-                <svg className="w-16 h-16 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-16 h-16 text-black-alpha-72 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
           </div>
         {execution?.status === 'waiting-auth' && pendingAuth && pendingAuth.toolName === 'user-approval' && (
-          <div className="mb-16 p-16 bg-accent-white border border-border-faint rounded-8">
+          <div className="mb-16 p-16 bg-card rounded-8">
             <div className="flex items-start gap-12 mb-12">
               <div className="w-32 h-32 rounded-full bg-heat-100 flex items-center justify-center flex-shrink-0">
                 <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -445,14 +445,14 @@ export default function ExecutionPanel({
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-label-medium font-medium text-accent-black mb-4">
+                <p className="text-label-medium font-medium text-foreground mb-4">
                   Workflow Paused
                 </p>
                 <p className="text-body-small text-black-alpha-48 mb-8">
                   Approval Required
                 </p>
-                <div className="p-12 bg-background-base border border-border-faint rounded-6">
-                  <p className="text-body-small text-accent-black whitespace-pre-wrap">
+                <div className="p-12 bg-card rounded-6">
+                  <p className="text-body-small text-foreground whitespace-pre-wrap">
                     {pendingAuth.message || 'This workflow requires your approval to continue.'}
                   </p>
                 </div>
@@ -483,7 +483,7 @@ export default function ExecutionPanel({
                   toast.error('Rejected');
                   onClose();
                 }}
-                className="flex-1 px-14 py-8 bg-background-base hover:bg-black-alpha-4 text-accent-black border border-border-faint rounded-6 text-body-small font-medium transition-all active:scale-[0.98]"
+                className="flex-1 px-14 py-8 bg-card hover:bg-black-alpha-4 text-foreground border border-border-faint rounded-6 text-body-small font-medium transition-all active:scale-[0.98]"
               >
                 Reject
               </button>
@@ -495,7 +495,7 @@ export default function ExecutionPanel({
           <div className="m-20 mt-0 mb-16 p-16 bg-heat-4 border border-heat-100 rounded-12">
             <div className="flex flex-col gap-12">
               <div>
-                <p className="text-label-medium font-medium text-accent-black">
+                <p className="text-label-medium font-medium text-foreground">
                   Authorization required for {pendingAuth.toolName}
                 </p>
                 <p className="text-body-small text-black-alpha-64 mt-4">
@@ -516,7 +516,7 @@ export default function ExecutionPanel({
                     Open authorization
                   </a>
                 ) : (
-                  <span className="px-14 py-8 bg-accent-white border border-border-faint rounded-8 text-body-small text-black-alpha-64">
+                  <span className="px-14 py-8 bg-card rounded-8 text-body-small text-black-alpha-64">
                     Waiting for authorization link...
                   </span>
                 )}
@@ -524,7 +524,7 @@ export default function ExecutionPanel({
                   type="button"
                   onClick={handleCopyAuthLink}
                   disabled={!pendingAuth.authUrl}
-                  className="inline-flex items-center gap-6 px-14 py-8 bg-accent-white border border-border-faint rounded-8 text-body-small text-accent-black hover:bg-black-alpha-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center gap-6 px-14 py-8 bg-card rounded-8 text-body-small text-foreground hover:bg-black-alpha-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg className="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -570,7 +570,7 @@ export default function ExecutionPanel({
                 </svg>
                 <div className="flex items-center gap-6">
                   <NodeIcon className="w-12 h-12 text-black-alpha-64" strokeWidth={2.5} />
-                  <span className="text-accent-black font-medium">{typeof nodeName === 'string' ? nodeName : 'Running...'}</span>
+                  <span className="text-foreground font-medium">{typeof nodeName === 'string' ? nodeName : 'Running...'}</span>
                 </div>
               </div>
             );
@@ -584,7 +584,7 @@ export default function ExecutionPanel({
               {/* Input Variables */}
               {inputVariables.length > 0 ? (
                 <div className="mb-24 space-y-16">
-                  <h3 className="text-label-medium text-accent-black">Workflow Inputs</h3>
+                  <h3 className="text-label-medium text-foreground">Workflow Inputs</h3>
                   {inputVariables.map((variable: any, index: number) => (
                     <div key={index}>
                       <label className="block text-label-small text-black-alpha-48 mb-8">
@@ -601,7 +601,7 @@ export default function ExecutionPanel({
                         <select
                           value={inputValues[variable.name] || 'false'}
                           onChange={(e) => setInputValues({ ...inputValues, [variable.name]: e.target.value === 'true' })}
-                          className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-accent-black transition-colors"
+                          className="w-full px-12 py-10 bg-card rounded-8 text-body-medium text-foreground focus:outline-none focus:border-accent-black transition-colors"
                         >
                           <option value="true">True</option>
                           <option value="false">False</option>
@@ -612,7 +612,7 @@ export default function ExecutionPanel({
                           value={inputValues[variable.name] || ''}
                           onChange={(e) => setInputValues({ ...inputValues, [variable.name]: parseFloat(e.target.value) })}
                           placeholder={variable.defaultValue || '0'}
-                          className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-accent-black transition-colors"
+                          className="w-full px-12 py-10 bg-card rounded-8 text-body-medium text-foreground focus:outline-none focus:border-accent-black transition-colors"
                         />
                       ) : (
                         <input
@@ -620,7 +620,7 @@ export default function ExecutionPanel({
                           value={inputValues[variable.name] || ''}
                           onChange={(e) => setInputValues({ ...inputValues, [variable.name]: e.target.value })}
                           placeholder={variable.defaultValue || `Enter ${variable.name}...`}
-                          className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-accent-black transition-colors"
+                          className="w-full px-12 py-10 bg-card rounded-8 text-body-medium text-foreground focus:outline-none focus:border-accent-black transition-colors"
                         />
                       )}
                     </div>
@@ -636,7 +636,7 @@ export default function ExecutionPanel({
                     onChange={(e) => setInputValues({ input: e.target.value })}
                     placeholder="Enter your message or prompt..."
                     rows={6}
-                    className="w-full px-12 py-10 bg-background-base border border-border-faint rounded-8 text-body-medium text-accent-black focus:outline-none focus:border-accent-black transition-colors resize-none"
+                    className="w-full px-12 py-10 bg-card rounded-8 text-body-medium text-foreground focus:outline-none focus:border-accent-black transition-colors resize-none"
                   />
                 </div>
               )}
@@ -655,16 +655,16 @@ export default function ExecutionPanel({
 
               {/* Workflow Info */}
               {workflow && (
-                <div className="mt-24 p-16 bg-accent-white rounded-12 border border-border-faint">
-                  <h3 className="text-label-medium text-accent-black mb-12">Workflow Summary</h3>
+                <div className="mt-24 p-16 bg-card rounded-12">
+                  <h3 className="text-label-medium text-foreground mb-12">Workflow Summary</h3>
                   <div className="space-y-8 text-body-small text-black-alpha-48">
                     <div className="flex justify-between">
                       <span>Nodes:</span>
-                      <span className="text-accent-black font-medium">{workflow.nodes.length}</span>
+                      <span className="text-foreground font-medium">{workflow.nodes.length}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Connections:</span>
-                      <span className="text-accent-black font-medium">{workflow.edges.length}</span>
+                      <span className="text-foreground font-medium">{workflow.edges.length}</span>
                     </div>
                   </div>
                 </div>
@@ -673,19 +673,19 @@ export default function ExecutionPanel({
           ) : (
             <div className="p-20">
               {/* Input Echo */}
-              <div className="mb-24 p-16 bg-accent-white rounded-12 border border-border-faint">
-                <p className="text-body-small text-accent-black mb-4 font-medium">Inputs:</p>
+              <div className="mb-24 p-16 bg-card rounded-12">
+                <p className="text-body-small text-foreground mb-4 font-medium">Inputs:</p>
                 {inputVariables.length > 0 ? (
                   <div className="space-y-6 text-body-small">
                     {Object.entries(inputValues).map(([key, value]) => (
                       <div key={key} className="font-mono">
                         <span className="text-black-alpha-48">{key}:</span>{' '}
-                        <span className="text-accent-black">{JSON.stringify(value)}</span>
+                        <span className="text-foreground">{JSON.stringify(value)}</span>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-body-medium text-accent-black">{inputValues.input}</p>
+                  <p className="text-body-medium text-foreground">{inputValues.input}</p>
                 )}
               </div>
 
@@ -718,12 +718,12 @@ export default function ExecutionPanel({
                         animate={{ opacity: 1, y: 0 }}
                         className={`rounded-12 p-16 border transition-all ${
                           isActive
-                            ? 'border-border-faint bg-accent-white shadow-sm'
+                            ? 'border-border-faint bg-card shadow-sm'
                             : result.status === 'completed'
-                            ? 'border-heat-100 bg-accent-white'
+                            ? 'border-heat-100 bg-card'
                             : result.status === 'failed'
-                            ? 'border-border-faint bg-accent-white'
-                            : 'border-border-faint bg-accent-white'
+                            ? 'border-border-faint bg-card'
+                            : 'border-border-faint bg-card'
                         }`}
                       >
                         {/* Node Header */}
@@ -756,7 +756,7 @@ export default function ExecutionPanel({
                                 </svg>
                               </div>
                             )}
-                            <h3 className="text-label-medium font-medium text-accent-black">
+                            <h3 className="text-label-medium font-medium text-foreground">
                               {typeof nodeName === 'string' ? nodeName : 'Node'}
                             </h3>
                           </div>
@@ -772,7 +772,7 @@ export default function ExecutionPanel({
                                 }
                                 setExpandedSchemas(newExpanded);
                               }}
-                              className="px-8 py-4 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small text-accent-black transition-colors flex items-center gap-4"
+                              className="px-8 py-4 bg-card hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small text-foreground transition-colors flex items-center gap-4"
                               title="View data flow schema"
                             >
                               <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -782,9 +782,9 @@ export default function ExecutionPanel({
                             </button>
                             {result.status !== 'completed' && (
                               <span className={`text-body-small px-8 py-4 rounded-6 border ${
-                                result.status === 'running' ? 'bg-accent-white text-black-alpha-64 border-border-faint' :
-                                result.status === 'failed' ? 'bg-accent-white text-accent-black border-border-faint' :
-                                'bg-accent-white text-gray-600 border-gray-200'
+                                result.status === 'running' ? 'bg-card text-black-alpha-64 border-border-faint' :
+                                result.status === 'failed' ? 'bg-card text-foreground border-border-faint' :
+                                'bg-card text-gray-600 dark:text-gray-400 border-border-faint dark:border-black-alpha-12'
                               }`}>
                                 {statusLabel}
                               </span>
@@ -798,10 +798,10 @@ export default function ExecutionPanel({
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mt-12 p-12 bg-accent-white rounded-8 border border-border-faint"
+                            className="mt-12 p-12 bg-card rounded-8"
                           >
                             <div className="flex items-center justify-between mb-8">
-                              <h4 className="text-label-small text-accent-black font-medium">Data Flow Schema</h4>
+                              <h4 className="text-label-small text-foreground font-medium">Data Flow Schema</h4>
                               <button
                                 onClick={() => {
                                   const schema = {
@@ -829,7 +829,7 @@ export default function ExecutionPanel({
                                   };
                                   navigator.clipboard.writeText(JSON.stringify(schema, null, 2));
                                 }}
-                                className="text-body-small text-black-alpha-64 hover:text-accent-black transition-colors flex items-center gap-4"
+                                className="text-body-small text-black-alpha-64 hover:text-foreground transition-colors flex items-center gap-4"
                               >
                                 <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -854,14 +854,14 @@ export default function ExecutionPanel({
                                             <div className="flex items-center gap-4 mb-4">
                                               <span className="text-body-small text-black-alpha-64">← {sourceName}</span>
                                               {edge.label && (
-                                                <span className="text-body-small text-black-alpha-48 bg-background-base px-6 py-2 rounded-4">
+                                                <span className="text-body-small text-black-alpha-48 bg-card px-6 py-2 rounded-4">
                                                   {edge.label}
                                                 </span>
                                               )}
                                             </div>
                                             {sourceOutput && (
-                                              <div className="bg-background-base rounded-6 p-8 border border-border-faint ml-16">
-                                                <pre className="text-[10px] text-accent-black font-mono whitespace-pre-wrap overflow-auto max-h-100">
+                                              <div className="bg-card rounded-6 p-8 border border-border-faint ml-16">
+                                                <pre className="text-[10px] text-foreground font-mono whitespace-pre-wrap overflow-auto max-h-100">
                                                   {typeof sourceOutput === 'string' ? sourceOutput : JSON.stringify(sourceOutput, null, 2)}
                                                 </pre>
                                               </div>
@@ -878,8 +878,8 @@ export default function ExecutionPanel({
                               {(node?.data as any)?.arguments && (
                                 <div>
                                   <p className="text-body-small text-black-alpha-48 mb-6 font-medium">Node Arguments:</p>
-                                  <div className="bg-background-base rounded-6 p-8 border border-border-faint">
-                                    <pre className="text-[10px] text-accent-black font-mono whitespace-pre-wrap">
+                                  <div className="bg-card rounded-6 p-8 border border-border-faint">
+                                    <pre className="text-[10px] text-foreground font-mono whitespace-pre-wrap">
                                       {JSON.stringify((node?.data as any)?.arguments, null, 2)}
                                     </pre>
                                   </div>
@@ -890,8 +890,8 @@ export default function ExecutionPanel({
                               {result.output && (
                                 <div>
                                   <p className="text-body-small text-black-alpha-48 mb-6 font-medium">Output Data:</p>
-                                  <div className="bg-background-base rounded-6 p-8 border border-border-faint">
-                                    <pre className="text-[10px] text-accent-black font-mono whitespace-pre-wrap overflow-auto max-h-150">
+                                  <div className="bg-card rounded-6 p-8 border border-border-faint">
+                                    <pre className="text-[10px] text-foreground font-mono whitespace-pre-wrap overflow-auto max-h-150">
                                       {typeof result.output === 'string' ? result.output : JSON.stringify(result.output, null, 2)}
                                     </pre>
                                   </div>
@@ -905,13 +905,13 @@ export default function ExecutionPanel({
                                     <div className="w-20 h-20 rounded-4 bg-[#FFEFA4] dark:bg-[#FFDD40] flex items-center justify-center flex-shrink-0">
                                       <Plug className="w-12 h-12 text-white" strokeWidth={2.5} />
                                     </div>
-                                    <p className="text-label-medium font-medium text-accent-black">MCP Tool Calls:</p>
+                                    <p className="text-label-medium font-medium text-foreground">MCP Tool Calls:</p>
                                   </div>
                                   <div className="space-y-8">
                                     {result.toolCalls.map((call, index) => (
-                                      <div key={index} className="bg-background-base rounded-6 p-8 border border-border-faint">
+                                      <div key={index} className="bg-card rounded-6 p-8 border border-border-faint">
                                         <div className="flex items-center justify-between mb-6">
-                                          <span className="text-body-small font-medium text-accent-black">
+                                          <span className="text-body-small font-medium text-foreground">
                                             {call.name || `Tool ${index + 1}`}
                                           </span>
                                           <span className="text-xs text-black-alpha-32">#{index + 1}</span>
@@ -919,7 +919,7 @@ export default function ExecutionPanel({
                                         {call.arguments && (
                                           <div className="mb-6">
                                             <p className="text-[10px] text-black-alpha-48 mb-2 uppercase tracking-wide">Arguments</p>
-                                            <pre className="text-[10px] text-accent-black font-mono whitespace-pre-wrap bg-accent-white border border-border-faint rounded-4 p-6 overflow-auto max-h-120">
+                                            <pre className="text-[10px] text-foreground font-mono whitespace-pre-wrap bg-card rounded-4 p-6 overflow-auto max-h-120">
                                               {typeof call.arguments === 'string'
                                                 ? call.arguments
                                                 : JSON.stringify(call.arguments, null, 2)}
@@ -929,7 +929,7 @@ export default function ExecutionPanel({
                                         {call.output && (
                                           <div>
                                             <p className="text-[10px] text-black-alpha-48 mb-2 uppercase tracking-wide">Output</p>
-                                            <pre className="text-[10px] text-accent-black font-mono whitespace-pre-wrap bg-accent-white border border-border-faint rounded-4 p-6 overflow-auto max-h-150">
+                                            <pre className="text-[10px] text-foreground font-mono whitespace-pre-wrap bg-card rounded-4 p-6 overflow-auto max-h-150">
                                               {typeof call.output === 'string'
                                                 ? call.output
                                                 : JSON.stringify(call.output, null, 2)}
@@ -957,7 +957,7 @@ export default function ExecutionPanel({
                                             <div key={edge.id} className="flex items-center gap-4">
                                               <span className="text-body-small text-black-alpha-64">→ {targetName}</span>
                                               {edge.label && (
-                                                <span className="text-body-small text-black-alpha-48 bg-background-base px-6 py-2 rounded-4">
+                                                <span className="text-body-small text-black-alpha-48 bg-card px-6 py-2 rounded-4">
                                                   {edge.label}
                                                 </span>
                                               )}
@@ -977,10 +977,10 @@ export default function ExecutionPanel({
                         {result.error && (
                           <div className="mt-12">
                             <div className="flex items-center justify-between mb-6">
-                              <p className="text-body-small text-accent-black font-medium">Error:</p>
+                              <p className="text-body-small text-foreground font-medium">Error:</p>
                               <button
                                 onClick={() => handleCopyError(result.error!, nodeId)}
-                                className="text-body-small text-accent-black hover:text-accent-black transition-colors flex items-center gap-4 px-8 py-4 rounded-6 hover:bg-black-alpha-4"
+                                className="text-body-small text-foreground hover:text-foreground transition-colors flex items-center gap-4 px-8 py-4 rounded-6 hover:bg-black-alpha-4"
                               >
                                 {copiedError === nodeId ? (
                                   <>
@@ -1000,7 +1000,7 @@ export default function ExecutionPanel({
                               </button>
                             </div>
                             <div className="bg-black-alpha-4 rounded-8 p-12 border border-border-faint">
-                              <pre className="text-body-small text-accent-black whitespace-pre-wrap overflow-auto max-h-200 font-mono">
+                              <pre className="text-body-small text-foreground whitespace-pre-wrap overflow-auto max-h-200 font-mono">
                                 {result.error}
                               </pre>
                             </div>
@@ -1010,7 +1010,7 @@ export default function ExecutionPanel({
 
                         {result.pendingAuth && (
                           <div className="mt-12 p-12 bg-heat-4 border border-heat-100 rounded-8">
-                            <p className="text-body-small font-medium text-accent-black">
+                            <p className="text-body-small font-medium text-foreground">
                               Authorization required for {result.pendingAuth.toolName}
                             </p>
                             <p className="text-body-small text-black-alpha-64 mt-4">
@@ -1075,14 +1075,14 @@ export default function ExecutionPanel({
                                   return (
                                     <div className="space-y-12">
                                       {/* Success notification */}
-                                      <div className="bg-background-base border border-border-faint rounded-8 p-12">
+                                      <div className="bg-card rounded-8 p-12">
                                         <div className="flex items-center gap-8 mb-8">
                                           <div className="w-16 h-16 bg-accent-black rounded-full flex items-center justify-center">
                                             <svg className="w-10 h-10 text-accent-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                             </svg>
                                           </div>
-                                          <span className="text-body-small font-medium text-accent-black">
+                                          <span className="text-body-small font-medium text-foreground">
                                             Document Updated
                                           </span>
                                         </div>
@@ -1106,14 +1106,14 @@ export default function ExecutionPanel({
                                       
                                       {/* Raw output for debugging */}
                                       <details className="group">
-                                        <summary className="cursor-pointer text-body-small text-black-alpha-48 hover:text-accent-black transition-colors flex items-center gap-4">
+                                        <summary className="cursor-pointer text-body-small text-black-alpha-48 hover:text-foreground transition-colors flex items-center gap-4">
                                           <span>View Raw Output</span>
                                           <svg className="w-12 h-12 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                           </svg>
                                         </summary>
-                                        <div className="mt-8 bg-background-base rounded-8 p-12 border border-border-faint">
-                                          <pre className="text-[11px] leading-relaxed text-accent-black whitespace-pre-wrap overflow-auto max-h-200 font-mono">
+                                        <div className="mt-8 bg-card rounded-8 p-12 border border-border-faint">
+                                          <pre className="text-[11px] leading-relaxed text-foreground whitespace-pre-wrap overflow-auto max-h-200 font-mono">
                                             {outputStr}
                                           </pre>
                                         </div>
@@ -1125,8 +1125,8 @@ export default function ExecutionPanel({
                               
                               // Default output display
                               return (
-                                <div className="bg-background-base rounded-8 p-12 border border-border-faint">
-                                  <pre className="text-[11px] leading-relaxed text-accent-black whitespace-pre-wrap overflow-auto max-h-200 font-mono">
+                                <div className="bg-card rounded-8 p-12 border border-border-faint">
+                                  <pre className="text-[11px] leading-relaxed text-foreground whitespace-pre-wrap overflow-auto max-h-200 font-mono">
                                     {outputStr}
                                   </pre>
                                 </div>
@@ -1141,13 +1141,13 @@ export default function ExecutionPanel({
                               <div className="w-20 h-20 rounded-4 bg-[#FFEFA4] dark:bg-[#FFDD40] flex items-center justify-center flex-shrink-0">
                                 <Plug className="w-12 h-12 text-white" strokeWidth={2.5} />
                               </div>
-                              <p className="text-label-medium font-medium text-accent-black">MCP Tool Calls:</p>
+                              <p className="text-label-medium font-medium text-foreground">MCP Tool Calls:</p>
                             </div>
                             <div className="space-y-8">
                               {result.toolCalls.map((call, index) => (
-                                <div key={index} className="bg-background-base rounded-8 p-12 border border-border-faint">
+                                <div key={index} className="bg-card rounded-8 p-12 border border-border-faint">
                                   <div className="flex items-center justify-between mb-8">
-                                    <span className="text-body-small font-medium text-accent-black">
+                                    <span className="text-body-small font-medium text-foreground">
                                       {call.name || `Tool ${index + 1}`}
                                     </span>
                                     <span className="text-body-small text-black-alpha-32">#{index + 1}</span>
@@ -1155,7 +1155,7 @@ export default function ExecutionPanel({
                                   {call.arguments && (
                                     <div className="mb-8">
                                       <p className="text-[11px] text-black-alpha-48 mb-2 uppercase tracking-wide">Arguments</p>
-                                      <pre className="text-[10px] text-accent-black font-mono whitespace-pre-wrap bg-accent-white border border-border-faint rounded-6 p-8 overflow-auto max-h-120">
+                                      <pre className="text-[10px] text-foreground font-mono whitespace-pre-wrap bg-card rounded-6 p-8 overflow-auto max-h-120">
                                         {typeof call.arguments === 'string'
                                           ? call.arguments
                                           : JSON.stringify(call.arguments, null, 2)}
@@ -1165,7 +1165,7 @@ export default function ExecutionPanel({
                                   {call.output && (
                                     <div>
                                       <p className="text-[11px] text-black-alpha-48 mb-2 uppercase tracking-wide">Output</p>
-                                      <pre className="text-[10px] text-accent-black font-mono whitespace-pre-wrap bg-accent-white border border-border-faint rounded-6 p-8 overflow-auto max-h-150">
+                                      <pre className="text-[10px] text-foreground font-mono whitespace-pre-wrap bg-card rounded-6 p-8 overflow-auto max-h-150">
                                         {typeof call.output === 'string'
                                           ? call.output
                                           : JSON.stringify(call.output, null, 2)}
@@ -1211,14 +1211,14 @@ export default function ExecutionPanel({
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </div>
-                        <h3 className="text-label-large text-accent-black font-medium">Workflow Failed</h3>
+                        <h3 className="text-label-large text-foreground font-medium">Workflow Failed</h3>
                       </div>
                       <div className="mb-12">
                         <div className="flex items-center justify-between mb-6">
-                          <p className="text-body-small text-accent-black font-medium">Error Details:</p>
+                          <p className="text-body-small text-foreground font-medium">Error Details:</p>
                           <button
                             onClick={() => handleCopyError(execution.error!, 'workflow')}
-                            className="text-body-small text-accent-black hover:text-accent-black transition-colors flex items-center gap-4 px-8 py-4 rounded-6 hover:bg-black-alpha-8"
+                            className="text-body-small text-foreground hover:text-foreground transition-colors flex items-center gap-4 px-8 py-4 rounded-6 hover:bg-black-alpha-8"
                           >
                             {copiedError === 'workflow' ? (
                               <>
@@ -1238,7 +1238,7 @@ export default function ExecutionPanel({
                           </button>
                         </div>
                         <div className="bg-black-alpha-8 rounded-8 p-12 border border-border-faint">
-                          <pre className="text-body-small text-accent-black whitespace-pre-wrap overflow-auto max-h-200 font-mono">
+                          <pre className="text-body-small text-foreground whitespace-pre-wrap overflow-auto max-h-200 font-mono">
                             {execution.error}
                           </pre>
                         </div>
@@ -1257,7 +1257,7 @@ export default function ExecutionPanel({
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="mt-24 p-20 bg-accent-white rounded-12 border border-border-faint"
+                      className="mt-24 p-20 bg-card rounded-12"
                     >
                       <div className="flex items-center gap-12 mb-12">
                         <div className="w-32 h-32 bg-black-alpha-12 rounded-full flex items-center justify-center">
@@ -1265,7 +1265,7 @@ export default function ExecutionPanel({
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <h3 className="text-label-large text-accent-black font-medium">Workflow Completed</h3>
+                        <h3 className="text-label-large text-foreground font-medium">Workflow Completed</h3>
                       </div>
                       <p className="text-body-small text-black-alpha-64">
                         All nodes executed successfully

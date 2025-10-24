@@ -26,19 +26,19 @@ export function CustomNode({ data, selected }: NodeProps) {
     if (executionStatus === 'completed') return '1px solid #9ca3af';
     if (executionStatus === 'failed') return '1px solid #eb3424';
     if (selected) return '1px solid #FA5D19';
-    return '1px solid #e5e7eb';
+    return '1px solid var(--workflow-node-border)';
   };
 
   const getBackgroundColor = () => {
     // Note nodes get yellow/gold background
     if (nodeType === 'note') return '#ca8a04';
     // All nodes have white background
-    return 'white';
+    return 'var(--workflow-node-bg)';
   };
 
   const getOutlineStyle = () => {
     if (isRunning) return '2px solid rgba(250, 93, 25, 0.32)';
-    if (selected) return '2px solid rgba(24, 24, 27, 0.18)';
+    if (selected) return '2px solid var(--workflow-node-outline)';
     return '2px solid transparent';
   };
 
@@ -51,7 +51,7 @@ export function CustomNode({ data, selected }: NodeProps) {
     if (nodeType === 'if-else' || nodeType === 'while') {
       return '#18181b'; // Dark text for orange background nodes
     }
-    return '#18181b'; // Default dark text
+    return 'var(--workflow-node-text)'; // Default text aligns with theme
   };
 
   // Update editText when noteText changes (for different notes)
@@ -195,8 +195,8 @@ export function CustomNode({ data, selected }: NodeProps) {
           style={{
             width: 10,
             height: 10,
-            background: '#9ca3af',
-            border: '2px solid white',
+            background: 'var(--workflow-node-handle-fill)',
+            border: '2px solid var(--workflow-node-handle-border)',
             left: -5,
             top: '50%',
             transform: 'translateY(-50%)',
@@ -221,7 +221,7 @@ export function CustomNode({ data, selected }: NodeProps) {
               width: 10,
               height: 10,
               background: '#FA5D19',
-              border: '2px solid white',
+              border: '2px solid var(--workflow-node-handle-border)',
               right: -5,
               top: '35%',
               transform: 'translateY(-50%)',
@@ -236,7 +236,7 @@ export function CustomNode({ data, selected }: NodeProps) {
               width: 10,
               height: 10,
               background: '#18181b',
-              border: '2px solid white',
+              border: '2px solid var(--workflow-node-handle-border)',
               right: -5,
               top: '65%',
               transform: 'translateY(-50%)',
@@ -258,7 +258,7 @@ export function CustomNode({ data, selected }: NodeProps) {
             right: -55,
             transform: 'translateY(-50%)',
             fontSize: '10px',
-            color: '#18181b',
+            color: 'var(--workflow-node-text)',
             fontWeight: 600,
           }}>Else</div>
         </>
@@ -273,7 +273,7 @@ export function CustomNode({ data, selected }: NodeProps) {
               width: 10,
               height: 10,
               background: '#10b981',
-              border: '2px solid white',
+              border: '2px solid var(--workflow-node-handle-border)',
               right: -5,
               top: '35%',
               transform: 'translateY(-50%)',
@@ -288,7 +288,7 @@ export function CustomNode({ data, selected }: NodeProps) {
               width: 10,
               height: 10,
               background: '#ef4444',
-              border: '2px solid white',
+              border: '2px solid var(--workflow-node-handle-border)',
               right: -5,
               top: '65%',
               transform: 'translateY(-50%)',
@@ -325,7 +325,7 @@ export function CustomNode({ data, selected }: NodeProps) {
               width: 10,
               height: 10,
               background: '#FA5D19',
-              border: '2px solid white',
+              border: '2px solid var(--workflow-node-handle-border)',
               right: -5,
               top: '35%',
               transform: 'translateY(-50%)',
@@ -340,7 +340,7 @@ export function CustomNode({ data, selected }: NodeProps) {
               width: 10,
               height: 10,
               background: '#18181b',
-              border: '2px solid white',
+              border: '2px solid var(--workflow-node-handle-border)',
               right: -5,
               top: '65%',
               transform: 'translateY(-50%)',
@@ -362,7 +362,7 @@ export function CustomNode({ data, selected }: NodeProps) {
             right: -55,
             transform: 'translateY(-50%)',
             fontSize: '10px',
-            color: '#18181b',
+            color: 'var(--workflow-node-text)',
             fontWeight: 600,
           }}>Break</div>
         </>
@@ -374,8 +374,8 @@ export function CustomNode({ data, selected }: NodeProps) {
           style={{
             width: 10,
             height: 10,
-            background: '#9ca3af',
-            border: '2px solid white',
+            background: 'var(--workflow-node-handle-fill)',
+            border: '2px solid var(--workflow-node-handle-border)',
             right: -5,
             top: '50%',
             transform: 'translateY(-50%)',

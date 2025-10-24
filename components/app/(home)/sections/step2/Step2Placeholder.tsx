@@ -55,8 +55,8 @@ export default function Step2Placeholder({ onReset, onCreateWorkflow, onLoadWork
         transition={{ duration: 0.5 }}
         className="text-center mb-24"
       >
-        <h2 className="text-title-h2 text-accent-black mb-8">Get Started</h2>
-        <p className="text-body-large text-black-alpha-48">
+        <h2 className="text-title-h2 text-foreground mb-8">Get Started</h2>
+        <p className="text-body-large text-muted-foreground">
           Create a new workflow, use a template, or continue where you left off
         </p>
       </motion.div>
@@ -68,7 +68,7 @@ export default function Step2Placeholder({ onReset, onCreateWorkflow, onLoadWork
           className={`px-20 py-10 rounded-8 text-body-medium transition-all ${
             activeTab === "workflows"
               ? "bg-heat-100 text-white"
-              : "bg-background-base text-accent-black hover:bg-black-alpha-4 border border-border-faint"
+              : "bg-card text-foreground hover:bg-muted border border-gray-200 dark:border-gray-900"
           }`}
         >
           Your Workflows ({workflows.length})
@@ -78,7 +78,7 @@ export default function Step2Placeholder({ onReset, onCreateWorkflow, onLoadWork
           className={`px-20 py-10 rounded-8 text-body-medium transition-all ${
             activeTab === "templates"
               ? "bg-heat-100 text-white"
-              : "bg-background-base text-accent-black hover:bg-black-alpha-4 border border-border-faint"
+              : "bg-card text-foreground hover:bg-muted border border-gray-200 dark:border-gray-900"
           }`}
         >
           Templates ({templates.length})
@@ -99,14 +99,14 @@ export default function Step2Placeholder({ onReset, onCreateWorkflow, onLoadWork
           className="relative cursor-pointer"
           onClick={onCreateWorkflow}
         >
-          <div className="bg-accent-white rounded-12 p-24 border-2 border-dashed border-border-light hover:border-heat-100 transition-all h-full flex items-center justify-center min-h-[160px]">
+          <div className="bg-card rounded-12 p-24 border-2 border-dashed border-gray-300 dark:border-gray-800 hover:border-heat-100 transition-all h-full flex items-center justify-center min-h-[160px]">
             <div className="text-center">
               <div className="w-48 h-48 rounded-full bg-heat-4 flex items-center justify-center mx-auto mb-12">
                 <svg className="w-24 h-24 text-heat-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
               </div>
-              <h3 className="text-label-large text-accent-black font-medium">Create Workflow</h3>
+              <h3 className="text-label-large text-foreground font-medium">Create Workflow</h3>
             </div>
           </div>
         </motion.div>
@@ -127,21 +127,21 @@ export default function Step2Placeholder({ onReset, onCreateWorkflow, onLoadWork
                 className="relative cursor-pointer"
                 onClick={() => onLoadWorkflow?.(workflow.id)}
               >
-                <div className="bg-accent-white rounded-12 p-24 border border-border-faint hover:border-heat-100 hover:shadow-sm transition-all h-full min-h-[160px] group">
-                  <div className="absolute inset-0 rounded-12 bg-gradient-to-br from-heat-4 to-transparent opacity-0 group-hover:opacity-10 transition-opacity" />
+                <div className="bg-card rounded-12 p-24 border border-border-faint dark:border-black-alpha-12 hover:border-heat-100 hover:shadow-sm transition-all h-full min-h-[160px] group">
+                  <div className="absolute inset-0 rounded-12 bg-gradient-to-br from-heat-4 to-transparent opacity-0 group-hover:opacity-5 transition-opacity" />
                   <div className="relative">
-                    <h3 className="text-label-large text-accent-black font-medium mb-8">{workflow.title}</h3>
+                    <h3 className="text-label-large text-foreground font-medium mb-8">{workflow.title}</h3>
                     {workflow.description && (
-                      <p className="text-body-small text-black-alpha-48 mb-12 line-clamp-2">{workflow.description}</p>
+                      <p className="text-body-small text-muted-foreground mb-12 line-clamp-2">{workflow.description}</p>
                     )}
-                    <p className="text-body-small text-black-alpha-32">Updated {workflow.createdAt}</p>
+                    <p className="text-body-small text-muted-foreground opacity-80">Updated {workflow.createdAt}</p>
                   </div>
                 </div>
               </motion.div>
             ))
           ) : (
             <div className="col-span-1 lg:col-span-3 flex items-center justify-center min-h-[160px]">
-              <p className="text-body-medium text-black-alpha-48">No saved workflows yet</p>
+              <p className="text-body-medium text-black-alpha-48 dark:text-gray-400">No saved workflows yet</p>
             </div>
           )
         ) : (
@@ -158,11 +158,11 @@ export default function Step2Placeholder({ onReset, onCreateWorkflow, onLoadWork
               className="relative cursor-pointer"
               onClick={() => onLoadTemplate?.(template.id)}
             >
-              <div className="bg-accent-white rounded-12 p-24 border border-border-faint hover:border-gray-700 hover:shadow-md transition-all h-full min-h-[160px] relative overflow-hidden group">
+              <div className="bg-card rounded-12 p-24 border border-border-faint dark:border-black-alpha-12 hover:border-heat-100 hover:shadow-md transition-all h-full min-h-[160px] relative overflow-hidden group">
                 <div className="relative">
-                  <h3 className="text-label-large text-accent-black font-medium mb-8">{template.name}</h3>
-                  <p className="text-body-small text-black-alpha-48">{template.description}</p>
-                  <div className="mt-12 inline-flex items-center gap-6 text-body-small text-accent-black group-hover:text-gray-700">
+                  <h3 className="text-label-large text-foreground font-medium mb-8">{template.name}</h3>
+                  <p className="text-body-small text-muted-foreground">{template.description}</p>
+                  <div className="mt-12 inline-flex items-center gap-6 text-body-small text-foreground group-hover:text-foreground">
                     <span>Use template</span>
                     <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -184,7 +184,7 @@ export default function Step2Placeholder({ onReset, onCreateWorkflow, onLoadWork
       >
         <button
           onClick={onReset}
-          className="px-24 py-12 text-label-large text-black-alpha-48 hover:text-accent-black transition-colors"
+          className="px-24 py-12 text-label-large text-muted-foreground hover:text-foreground transition-colors"
         >
           Back
         </button>

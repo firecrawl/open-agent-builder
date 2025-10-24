@@ -61,12 +61,12 @@ export default function OutputSchemaPanel({ nodeId, currentSchema, onUpdate }: O
   return (
     <div className="space-y-16">
       <div className="flex items-center justify-between">
-        <h3 className="text-label-small text-black-alpha-48">
+        <h3 className="text-label-small text-gray-600 dark:text-gray-400">
           Output Schema
         </h3>
         <button
           onClick={addField}
-          className="px-10 py-6 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small text-accent-black transition-colors flex items-center gap-6"
+          className="px-10 py-6 bg-card hover:bg-black-alpha-4 border border-border-faint rounded-6 text-body-small text-foreground transition-colors flex items-center gap-6"
         >
           <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -76,8 +76,8 @@ export default function OutputSchemaPanel({ nodeId, currentSchema, onUpdate }: O
       </div>
 
       {schema.length === 0 ? (
-        <div className="p-16 bg-background-base rounded-8 border border-border-faint text-center">
-          <p className="text-body-small text-black-alpha-48">
+        <div className="p-16 bg-card rounded-8 text-center">
+          <p className="text-body-small text-gray-600 dark:text-gray-400">
             Define the shape of this node's output
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function OutputSchemaPanel({ nodeId, currentSchema, onUpdate }: O
               key={index}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-12 bg-background-base rounded-8 border border-border-faint space-y-8"
+              className="p-12 bg-card rounded-8 space-y-8"
             >
               <div className="flex items-start gap-8">
                 <div className="flex-1 grid grid-cols-2 gap-8">
@@ -98,14 +98,14 @@ export default function OutputSchemaPanel({ nodeId, currentSchema, onUpdate }: O
                     value={field.name}
                     onChange={(e) => updateField(index, { name: e.target.value })}
                     placeholder="fieldName"
-                    className="px-10 py-6 bg-white border border-border-faint rounded-6 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                    className="px-10 py-6 bg-gray-50 dark:bg-gray-800 border border-border-faint rounded-6 text-body-small text-foreground font-mono focus:outline-none focus:border-heat-100 transition-colors"
                   />
 
                   {/* Field Type */}
                   <select
                     value={field.type}
                     onChange={(e) => updateField(index, { type: e.target.value as any })}
-                    className="px-10 py-6 bg-white border border-border-faint rounded-6 text-body-small text-accent-black focus:outline-none focus:border-heat-100 transition-colors"
+                    className="px-10 py-6 bg-gray-50 dark:bg-gray-800 border border-border-faint rounded-6 text-body-small text-foreground focus:outline-none focus:border-heat-100 transition-colors"
                   >
                     <option value="string">String</option>
                     <option value="number">Number</option>
@@ -120,7 +120,7 @@ export default function OutputSchemaPanel({ nodeId, currentSchema, onUpdate }: O
                   onClick={() => removeField(index)}
                   className="w-24 h-24 rounded-4 hover:bg-black-alpha-4 transition-colors flex items-center justify-center group"
                 >
-                  <svg className="w-12 h-12 text-black-alpha-48 group-hover:text-accent-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-12 h-12 text-gray-600 dark:text-gray-400 group-hover:text-foreground dark:group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -132,7 +132,7 @@ export default function OutputSchemaPanel({ nodeId, currentSchema, onUpdate }: O
                 value={field.description || ''}
                 onChange={(e) => updateField(index, { description: e.target.value })}
                 placeholder="Field description (optional)"
-                className="w-full px-10 py-6 bg-white border border-border-faint rounded-6 text-body-small text-black-alpha-48 focus:outline-none focus:border-heat-100 transition-colors"
+                className="w-full px-10 py-6 bg-gray-50 dark:bg-gray-800 border border-border-faint rounded-6 text-body-small text-gray-600 dark:text-gray-400 focus:outline-none focus:border-heat-100 transition-colors"
               />
             </motion.div>
           ))}
@@ -142,15 +142,15 @@ export default function OutputSchemaPanel({ nodeId, currentSchema, onUpdate }: O
       {/* TypeScript Preview */}
       {schema.length > 0 && (
         <div>
-          <label className="block text-label-small text-black-alpha-48 mb-8">
+          <label className="block text-label-small text-gray-600 dark:text-gray-400 mb-8">
             TypeScript Interface
           </label>
-          <div className="p-12 bg-gray-900 rounded-8 border border-border-faint">
+          <div className="p-12 bg-card rounded-8">
             <pre className="text-body-small text-heat-100 font-mono whitespace-pre-wrap">
               {generateTypeScriptInterface()}
             </pre>
           </div>
-          <p className="text-body-small text-black-alpha-48 mt-8">
+          <p className="text-body-small text-gray-600 dark:text-gray-400 mt-8">
             Access fields: <code className="font-mono text-heat-100">state.variables.{nodeId}.fieldName</code>
           </p>
         </div>

@@ -78,19 +78,19 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 400, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-accent-white border border-border-faint shadow-lg overflow-y-auto z-50 rounded-16"
+          className="fixed right-20 top-80 h-[calc(100vh-100px)] w-[calc(100vw-240px)] max-w-480 bg-card shadow-lg overflow-y-auto z-50 rounded-16"
         >
           {/* Header */}
-          <div className="p-16 border-b border-border-faint">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-title-h4 text-accent-black">HTTP Request</h3>
+          <div className="p-20 border-b border-gray-200 dark:border-gray-900">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-label-large font-medium text-foreground">HTTP Request</h3>
               <div className="flex items-center gap-8">
                 <button
                   onClick={() => onDelete(node?.id || '')}
                   className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center group"
                   title="Delete node"
                 >
-                  <svg className="w-16 h-16 text-black-alpha-48 group-hover:text-accent-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 text-black-alpha-72 group-hover:text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
@@ -98,7 +98,7 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                   onClick={onClose}
                   className="w-32 h-32 rounded-6 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
                 >
-                  <svg className="w-16 h-16 text-black-alpha-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 text-black-alpha-72 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -120,7 +120,7 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                 <select
                   value={method}
                   onChange={(e) => setMethod(e.target.value)}
-                  className="px-12 py-8 bg-background-base border border-border-faint rounded-8 text-body-small text-accent-black font-medium focus:outline-none focus:border-heat-100 transition-colors"
+                  className="px-12 py-8 bg-card dark:bg-[#1c1d24] rounded-8 text-body-small text-foreground dark:text-white font-medium focus:outline-none focus:border-heat-100 transition-colors"
                 >
                   <option value="GET">GET</option>
                   <option value="POST">POST</option>
@@ -135,7 +135,7 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     placeholder="https://api.example.com/endpoint"
-                    className="w-full px-12 py-8 pr-150 bg-background-base border border-border-faint rounded-8 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                    className="w-full px-12 py-8 pr-150 bg-card dark:bg-[#1c1d24] rounded-8 text-body-small text-foreground dark:text-white font-mono focus:outline-none focus:border-heat-100 transition-colors"
                   />
                   {nodes && (
                     <div className="absolute right-8 top-1/2 -translate-y-1/2">
@@ -158,7 +158,7 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
               <select
                 value={authType}
                 onChange={(e) => setAuthType(e.target.value)}
-                className="w-full px-12 py-8 bg-background-base border border-border-faint rounded-8 text-body-small text-accent-black focus:outline-none focus:border-heat-100 transition-colors mb-12"
+                className="w-full px-12 py-8 bg-card dark:bg-[#1c1d24] rounded-8 text-body-small text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors mb-12"
               >
                 <option value="none">None</option>
                 <option value="bearer">Bearer Token</option>
@@ -173,11 +173,11 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                     value={authToken}
                     onChange={(e) => setAuthToken(e.target.value)}
                     placeholder={authType === 'bearer' ? 'Bearer token...' : 'API key or credentials...'}
-                    className="w-full px-12 py-8 pr-40 bg-background-base border border-border-faint rounded-8 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                    className="w-full px-12 py-8 pr-40 bg-card dark:bg-[#1c1d24] rounded-8 text-body-small text-foreground dark:text-white font-mono focus:outline-none focus:border-heat-100 transition-colors"
                   />
                   <button
                     onClick={() => setShowAuthToken(!showAuthToken)}
-                    className="absolute right-12 top-1/2 -translate-y-1/2 text-black-alpha-48 hover:text-accent-black transition-colors"
+                    className="absolute right-12 top-1/2 -translate-y-1/2 text-black-alpha-48 hover:text-foreground transition-colors"
                   >
                     {showAuthToken ? (
                       <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,13 +203,13 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                 <div className="flex gap-6">
                   <button
                     onClick={() => insertQuickHeader('Content-Type', 'application/json')}
-                    className="px-8 py-4 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-4 text-body-small text-accent-black transition-colors"
+                    className="px-8 py-4 bg-card hover:bg-black-alpha-4 border border-border-faint rounded-4 text-body-small text-foreground transition-colors"
                   >
                     + JSON
                   </button>
                   <button
                     onClick={addHeader}
-                    className="px-8 py-4 bg-background-base hover:bg-black-alpha-4 border border-border-faint rounded-4 text-body-small text-accent-black transition-colors"
+                    className="px-8 py-4 bg-card hover:bg-black-alpha-4 border border-border-faint rounded-4 text-body-small text-foreground transition-colors"
                   >
                     + Header
                   </button>
@@ -224,20 +224,20 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                       value={header.key}
                       onChange={(e) => updateHeader(index, 'key', e.target.value)}
                       placeholder="Header-Name"
-                      className="flex-1 px-10 py-6 bg-background-base border border-border-faint rounded-6 text-body-small text-accent-black font-mono focus:outline-none focus:border-heat-100 transition-colors"
+                      className="flex-1 px-10 py-6 bg-card dark:bg-[#1c1d24] rounded-6 text-body-small text-foreground dark:text-white font-mono focus:outline-none focus:border-heat-100 transition-colors"
                     />
                     <input
                       type="text"
                       value={header.value}
                       onChange={(e) => updateHeader(index, 'value', e.target.value)}
                       placeholder="value"
-                      className="flex-1 px-10 py-6 bg-background-base border border-border-faint rounded-6 text-body-small text-accent-black focus:outline-none focus:border-heat-100 transition-colors"
+                      className="flex-1 px-10 py-6 bg-card dark:bg-[#1c1d24] rounded-6 text-body-small text-foreground dark:text-white focus:outline-none focus:border-heat-100 transition-colors"
                     />
                     <button
                       onClick={() => removeHeader(index)}
                       className="w-24 h-24 rounded-4 hover:bg-black-alpha-4 transition-colors flex items-center justify-center group"
                     >
-                      <svg className="w-12 h-12 text-black-alpha-48 group-hover:text-accent-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-12 h-12 text-black-alpha-72 group-hover:text-foreground dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
@@ -266,18 +266,18 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                   onChange={(e) => setBody(e.target.value)}
                   rows={8}
                   placeholder='{"key": "value"}'
-                  className="w-full px-12 py-10 bg-gray-900 text-heat-100 border border-border-faint rounded-8 text-body-small font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
+                  className="w-full px-12 py-10 bg-gray-900 dark:bg-[#0d0d0d] text-heat-100 dark:text-white border border-border-faint rounded-8 text-body-small font-mono focus:outline-none focus:border-heat-100 transition-colors resize-none"
                 />
                 <div className="flex gap-8 mt-8">
                   <button
                     onClick={() => setBody('{{state.variables.lastOutput}}')}
-                    className="px-10 py-6 bg-heat-4 hover:bg-heat-8 border border-heat-100 rounded-6 text-body-small text-accent-black transition-colors"
+                    className="px-10 py-6 bg-heat-4 hover:bg-heat-8 border border-heat-100 rounded-6 text-body-small text-foreground transition-colors"
                   >
                     Use Previous Output
                   </button>
                   <button
                     onClick={() => setBody(JSON.stringify({ data: "{{state.variables.lastOutput}}" }, null, 2))}
-                    className="px-10 py-6 bg-heat-4 hover:bg-heat-8 border border-heat-100 rounded-6 text-body-small text-accent-black transition-colors"
+                    className="px-10 py-6 bg-heat-4 hover:bg-heat-8 border border-heat-100 rounded-6 text-body-small text-foreground transition-colors"
                   >
                     Wrap in JSON
                   </button>
@@ -300,7 +300,7 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                   }}
                   className="w-full p-10 bg-heat-4 hover:bg-heat-8 rounded-6 text-left border border-heat-100 transition-colors"
                 >
-                  <p className="text-body-small text-accent-black font-medium">Slack Message</p>
+                  <p className="text-body-small text-foreground font-medium">Slack Message</p>
                   <p className="text-body-small text-heat-100 mt-4">Post to Slack channel</p>
                 </button>
 
@@ -314,7 +314,7 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                   }}
                   className="w-full p-10 bg-heat-4 hover:bg-heat-8 rounded-6 text-left border border-heat-100 transition-colors"
                 >
-                  <p className="text-body-small text-accent-black font-medium">Notion Page</p>
+                  <p className="text-body-small text-foreground font-medium">Notion Page</p>
                   <p className="text-body-small text-heat-100 mt-4">Create Notion page</p>
                 </button>
 
@@ -326,7 +326,7 @@ export default function HTTPNodePanel({ node, nodes, onClose, onDelete, onUpdate
                   }}
                   className="w-full p-10 bg-heat-4 hover:bg-heat-8 rounded-6 text-left border border-heat-100 transition-colors"
                 >
-                  <p className="text-body-small text-accent-black font-medium">Zapier Webhook</p>
+                  <p className="text-body-small text-foreground font-medium">Zapier Webhook</p>
                   <p className="text-body-small text-heat-100 mt-4">Trigger Zapier automation</p>
                 </button>
               </div>
