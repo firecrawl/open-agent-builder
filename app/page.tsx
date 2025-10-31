@@ -119,6 +119,15 @@ function StyleGuidePageContent() {
               </div>
               
               <div className="flex gap-8 items-center">
+                {/* UI Builder Link */}
+                <SignedIn>
+                  <Link href="/ui-builder">
+                    <ButtonUI variant="outline">
+                      UI Builder
+                    </ButtonUI>
+                  </Link>
+                </SignedIn>
+
                 {/* GitHub Template Button */}
                 <a
                   className="contents"
