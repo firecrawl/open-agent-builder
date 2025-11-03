@@ -171,7 +171,7 @@ export const seedOfficialMCPs = mutation({
       return { message: "Official MCPs already seeded" };
     }
 
-    // Official MCP configuration - Only Firecrawl
+    // Official MCP configuration
     const officialMCPs = [
       {
         name: "Firecrawl",
@@ -189,6 +189,127 @@ export const seedOfficialMCPs = mutation({
           "firecrawl_check_crawl_status"
         ],
       },
+      // --- ADDED FINNHUB SERVER ---
+      {
+        name: "Finnhub",
+        url: "https://finnhub.io/api/v1",
+        description: "Real-time and historical financial market data for stocks, crypto, and forex.",
+        category: "data",
+        authType: "api-key",
+        headers: {
+          "X-Finnhub-Token": "${FINNHUB_API_KEY}"
+        },
+        tools: [
+          'symbol_search',
+          'stock_symbols',
+          'market_status',
+          'market_holiday',
+          'company_profile',
+          'company_profile2',
+          'company_executive',
+          'market_news',
+          'company_news',
+          'press_releases',
+          'news_sentiment',
+          'company_peers',
+          'company_basic_financials',
+          'price_metrics',
+          'symbol_change',
+          'isin_change',
+          'historical_market_cap',
+          'historical_employee_count',
+          'institutional_profile',
+          'institutional_portfolio',
+          'institutional_ownership',
+          'ownership',
+          'fund_ownership',
+          'insider_transactions',
+          'insider_sentiment',
+          'financials',
+          'financials_reported',
+          'revenue_breakdown',
+          'filings',
+          'filings_sentiment',
+          'similarity_index',
+          'ipo_calendar',
+          'stock_dividends',
+          'sector_metric',
+          'recommendation_trends',
+          'price_target',
+          'upgrade_downgrade',
+          'company_revenue_estimates',
+          'company_ebitda_estimates',
+          'company_ebit_estimates',
+          'company_eps_estimates',
+          'company_earnings',
+          'earnings_calendar',
+          'quote',
+          'stock_candles',
+          'stock_tick',
+          'stock_nbbo',
+          'stock_bidask',
+          'stock_splits',
+          'stock_basic_dividends',
+          'indices_constituents',
+          'indices_historical_constituents',
+          'etfs_profile',
+          'etfs_holdings',
+          'etfs_sector_exposure',
+          'etfs_country_exposure',
+          'mutual_fund_profile',
+          'mutual_fund_holdings',
+          'mutual_fund_sector_exposure',
+          'mutual_fund_country_exposure',
+          'mutual_fund_eet',
+          'mutual_fund_eet_pai',
+          'bond_profile',
+          'bond_price',
+          'bond_tick',
+          'bond_yield_curve',
+          'forex_exchanges',
+          'forex_symbols',
+          'forex_candles',
+          'forex_rates',
+          'crypto_exchanges',
+          'crypto_symbols',
+          'crypto_profile',
+          'crypto_candles',
+          'pattern_recognition',
+          'support_resistance',
+          'aggregate_indicator',
+          'technical_indicator',
+          'transcripts_list',
+          'transcripts',
+          'earnings_call_live',
+          'stock_presentation',
+          'social_sentiment',
+          'investment_themes',
+          'supply_chain_relationships',
+          'company_esg_score',
+          'company_historical_esg_score',
+          'company_earnings_quality_score',
+          'covid_19',
+          'fda_committee_meeting_calendar',
+          'stock_uspto_patent',
+          'stock_visa_application',
+          'stock_lobbying',
+          'stock_usa_spending',
+          'congressional_trading',
+          'bank_branch',
+          'airline_price_index',
+          'ai_chat',
+          'revenue_breakdown2',
+          'international_filings',
+          'global_filings_search',
+          'search_in_filing',
+          'global_filings_search_filter',
+          'global_filings_download',
+          'country',
+          'economic_calendar',
+          'economic_code',
+          'economic_data',
+        ],
+      },
     ];
 
     // Insert official MCPs for the user
@@ -198,7 +319,7 @@ export const seedOfficialMCPs = mutation({
           userId,
           ...mcp,
           connectionStatus: "untested",
-          enabled: true, // Firecrawl enabled by default
+          enabled: true, // Enable all official servers by default
           isOfficial: true,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -263,15 +384,19 @@ export const cleanupOfficialMCPs = mutation({
       .filter((q) => q.eq(q.field("isOfficial"), true))
       .collect();
 
-    // Delete any that are not Firecrawl
+    // --- MODIFIED LOGIC ---
+    // Define the official servers that should be kept
+    const allowedOfficialNames = ["Firecrawl", "Finnhub"];
+    
+    // Delete any that are not in the allowed list
     let deletedCount = 0;
     for (const mcp of officialMCPs) {
-      if (mcp.name !== "Firecrawl") {
+      if (!allowedOfficialNames.includes(mcp.name)) {
         await db.delete(mcp._id);
         deletedCount++;
       }
     }
 
-    return { message: `Cleaned up ${deletedCount} non-Firecrawl official MCPs` };
+    return { message: `Cleaned up ${deletedCount} old official MCPs` };
   },
 });

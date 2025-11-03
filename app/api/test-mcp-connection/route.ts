@@ -3,6 +3,54 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 /**
+ * Helper function to handle API responses
+ */
+async function handleResponse(response: Response, resolvedUrl: string, isFinnhub = false) {
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('MCP connection failed:', response.status, errorText);
+
+    let errorMessage = `HTTP ${response.status}`;
+    if (response.status === 404) {
+      errorMessage = 'MCP server not found - check URL';
+    } else if (response.status === 401 || response.status === 403) {
+      errorMessage = 'Authentication failed - check API key';
+    } else if (response.status === 500) {
+      errorMessage = 'Server error - API may be down';
+    }
+
+    return NextResponse.json({
+      success: false,
+      error: errorMessage,
+      details: errorText.substring(0, 500),
+      statusCode: response.status,
+      testedUrl: resolvedUrl,
+    }, { status: 200 });
+  }
+
+  // For Finnhub, return success with predefined tools
+  if (isFinnhub) {
+    const finnhubTools = [
+      'quote',
+      'company_profile2',
+      'symbol_search',
+      'stock_candles'
+    ];
+    return NextResponse.json({
+      success: true,
+      tools: finnhubTools,
+      toolsDetailed: finnhubTools.map(name => ({ name })),
+      serverInfo: {
+        name: 'Finnhub',
+        version: 'v1',
+      },
+    });
+  }
+
+  return null; // Continue with normal processing
+}
+
+/**
  * Test MCP Server Connection
  * Discovers available tools by calling the MCP server's tools/list endpoint
  */
@@ -69,7 +117,33 @@ export async function POST(request: NextRequest) {
       headers['Authorization'] = `Bearer ${resolvedToken}`;
     }
 
-    // Call MCP server to list tools
+    // Special handling for Finnhub API
+    if (url.includes('finnhub.io')) {
+      console.log('Testing Finnhub API connection');
+      // Test connection by making a simple symbol lookup request
+      const testUrl = new URL('/quote', resolvedUrl);
+      testUrl.searchParams.set('symbol', 'AAPL');
+
+      // Ensure API key is in the correct header
+      if (!headers['X-Finnhub-Token']) {
+        if (authToken) {
+          headers['X-Finnhub-Token'] = authToken;
+        } else if (process.env.FINNHUB_API_KEY) {
+          headers['X-Finnhub-Token'] = process.env.FINNHUB_API_KEY;
+        }
+      }
+
+      console.log('Making request to:', testUrl.toString());
+      
+      const response = await fetch(testUrl, {
+        method: 'GET',
+        headers,
+        signal: AbortSignal.timeout(10000),
+      });
+      return handleResponse(response, resolvedUrl, true);
+    }
+
+    // For other MCP servers, use JSON-RPC
     const mcpRequest = {
       jsonrpc: '2.0',
       method: 'tools/list',
@@ -87,27 +161,10 @@ export async function POST(request: NextRequest) {
       signal: AbortSignal.timeout(10000), // 10 second timeout
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('MCP connection failed:', response.status, errorText);
+    // Process response through helper
 
-      let errorMessage = `HTTP ${response.status}`;
-      if (response.status === 404) {
-        errorMessage = 'MCP server not found - check URL';
-      } else if (response.status === 401 || response.status === 403) {
-        errorMessage = 'Authentication failed - check access token';
-      } else if (response.status === 500) {
-        errorMessage = 'Server error - MCP server may be down';
-      }
-
-      return NextResponse.json({
-        success: false,
-        error: errorMessage,
-        details: errorText.substring(0, 500),
-        statusCode: response.status,
-        testedUrl: resolvedUrl, // Show resolved URL for debugging
-      }, { status: 200 }); // Return 200 so frontend can show user-friendly error
-    }
+    const responseResult = await handleResponse(response, resolvedUrl);
+    if (responseResult) return responseResult;
 
     // Parse response: some servers reply with SSE (text/event-stream)
     const contentType = response.headers.get('content-type') || '';

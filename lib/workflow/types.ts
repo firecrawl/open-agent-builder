@@ -30,6 +30,13 @@ export interface NodeData {
   mcpAction?: string;
   outputField?: string;
 
+  // Finnhub specific data
+  symbol?: string;
+  resolution?: string;
+  from?: number;
+  to?: number;
+  query?: string;
+
   // Arcade node data
   arcadeTool?: string; // e.g., "GoogleDocs.CreateDocumentFromText@4.3.1"
   arcadeInput?: any; // Input parameters for the tool

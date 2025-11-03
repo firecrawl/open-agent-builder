@@ -10,6 +10,7 @@ export interface APIKeys {
   firecrawl?: string;
   arcade?: string;
   e2b?: string;
+  finnhub?: string;
 }
 
 /**
@@ -23,6 +24,7 @@ export function getServerAPIKeys(): APIKeys {
   const firecrawl = process.env.FIRECRAWL_API_KEY;
   const arcade = process.env.ARCADE_API_KEY;
   const e2b = process.env.E2B_API_KEY;
+  const finnhub = process.env.FINNHUB_API_KEY;
 
   return {
     anthropic,
@@ -31,6 +33,7 @@ export function getServerAPIKeys(): APIKeys {
     firecrawl,
     arcade,
     e2b,
+    finnhub,
   };
 }
 

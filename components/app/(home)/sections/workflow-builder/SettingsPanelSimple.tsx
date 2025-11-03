@@ -565,11 +565,17 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                 setShowAddMCPModal(false);
                 setEditingMCP(null);
               } else if (user?.id) {
+                // Special handling for Finnhub - ensure proper headers
+                const headers = data.url.includes('finnhub.io') 
+                  ? { 'X-Finnhub-Token': data.accessToken }
+                  : undefined;
+
                 // If tools already discovered via Test Connection button, use those
                 if (data.tools && data.tools.length > 0) {
                   await addMCPServer({
                     userId: user.id,
                     ...data,
+                    headers,
                   });
                   toast.success(`${data.name} added with ${data.tools.length} tools`);
                 } else {
@@ -596,10 +602,15 @@ export default function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                     return; // Don't save if connection fails
                   }
 
-                  // Save with discovered tools
+                  // Save with discovered tools and proper headers
+                  const headers = data.url.includes('finnhub.io') 
+                    ? { 'X-Finnhub-Token': data.accessToken }
+                    : undefined;
+
                   await addMCPServer({
                     userId: user.id,
                     ...data,
+                    headers,
                     tools: testResult.tools || [],
                   });
 

@@ -103,12 +103,26 @@ export async function resolveMCPServer(serverId: string): Promise<any | null> {
  * and migrate it to the new mcpServerIds format
  */
 export function migrateMCPData(data: any): any {
-  // If using old format with full configs, return as-is for backward compatibility
-  if (data.mcpTools && Array.isArray(data.mcpTools)) {
-    console.warn('Node using legacy mcpTools format. Consider migrating to mcpServerIds.');
+  // If using old format with full configs, migrate to mcpServerIds
+  if (data.mcpTools && Array.isArray(data.mcpTools) && data.mcpTools.length > 0) {
+    console.warn('Node using legacy mcpTools format. Migrating to mcpServerIds.');
+    
+    // Check if the first element has an 'id' - if not, it might be an even older format
+    if (typeof data.mcpTools[0] === 'object' && data.mcpTools[0] !== null && 'id' in data.mcpTools[0]) {
+      const mcpServerIds = data.mcpTools.map((tool: any) => tool.id).filter(Boolean);
+      
+      // Create a new data object to avoid mutating the original
+      const migratedData = { ...data, mcpServerIds };
+      delete migratedData.mcpTools; // Remove the old field
+      
+      return migratedData;
+    }
+    
+    // If the format is unexpected, return original data to avoid breaking things
+    console.warn('Legacy mcpTools format is unrecognized, cannot migrate.');
     return data;
   }
 
-  // New format uses mcpServerIds
+  // New format uses mcpServerIds, or no MCP tools are present
   return data;
 }

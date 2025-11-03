@@ -4,6 +4,7 @@ import { substituteVariables } from '../variable-substitution';
 import FirecrawlApp from '@mendable/firecrawl-js';
 import { getServerAPIKeys } from '@/lib/api/config';
 import { resolveMCPServer } from '@/lib/mcp/resolver';
+import { executeFinnhubRequest } from './finnhub';
 
 /**
  * Extract specific field from Firecrawl response
@@ -158,8 +159,9 @@ export async function executeMCPNode(
   const results: any[] = [];
 
   for (const serverConfig of mcpServers) {
-    // For all servers (including Firecrawl), use API routes
-    if (serverConfig.name.toLowerCase().includes('firecrawl')) {
+    const serverName = serverConfig.name.toLowerCase();
+    
+    if (serverName.includes('firecrawl')) {
       // Server-side Firecrawl execution - use Firecrawl SDK directly
       console.log('🖥️ MCP executor running Firecrawl on server side');
 
@@ -277,6 +279,41 @@ export async function executeMCPNode(
       } catch (error) {
         console.error('❌ MCP Firecrawl server-side execution failed:', error);
         throw new Error(`Firecrawl ${action} failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    } else if (serverName.includes('finnhub')) {
+      // Server-side Finnhub execution
+      try {
+        const result = await executeFinnhubRequest(node, state);
+        console.log('✅ MCP Finnhub execution completed successfully');
+
+        // Extract specific field based on configuration
+        let outputData = result;
+        if (nodeData.outputField && nodeData.outputField !== 'full') {
+          outputData = extractField(result, nodeData.outputField, nodeData.customOutputPath);
+        }
+
+        // Update state
+        state.variables.lastOutput = outputData;
+
+        return {
+          results: [{
+            server: 'Finnhub',
+            tool: nodeData.mcpAction,
+            success: true,
+            data: result,
+          }],
+          extractedField: nodeData.outputField,
+          output: outputData,
+          mcpServers: ['Finnhub'],
+          toolCalls: [{
+            name: `finnhub_${nodeData.mcpAction}`,
+            arguments: { ...nodeData },
+            output: result,
+          }],
+        };
+      } catch (error) {
+        console.error('❌ MCP Finnhub execution failed:', error);
+        throw new Error(`Finnhub ${nodeData.mcpAction} failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     } else {
       // Generic MCP server support (DeepWiki, etc.)
