@@ -33,7 +33,9 @@
     "test:comprehensive:headed": "playwright test tests/comprehensive-workflow-tests.spec.ts --headed",
     "test:templates:ui": "playwright test tests/template-verification.spec.ts --ui",
     "test:templates:headed": "playwright test tests/template-verification.spec.ts --headed",
-    "test:all:comprehensive": "npm run test:comprehensive && npm run test:templates && npm run test:streaming"
+    "test:all:comprehensive": "npm run test:comprehensive && npm run test:templates && npm run test:streaming",
+    "dev:finnhub": "tsx lib/mcp/finnhub/index.ts",
+    "update-workflow": "dotenv -e .env.local tsx lib/update-workflow.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.65.0",
@@ -83,6 +85,7 @@
     "convex": "^1.28.0",
     "convex-helpers": "^0.1.104",
     "copy-to-clipboard": "^3.3.3",
+    "dotenv-cli": "^11.0.0",
     "framer-motion": "^11.1.7",
     "geist": "^1.4.2",
     "jotai": "^2.15.0",
@@ -109,6 +112,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",
+    "@types/express": "^4.17.21",
     "@types/node": "^20.10.4",
     "@types/react": "^19.0.5",
     "@types/react-dom": "^19.0.3",
@@ -117,6 +121,7 @@
     "dotenv": "^17.2.3",
     "eslint": "^8",
     "eslint-config-next": "^16.0.0-beta.0",
+    "express": "^4.19.2",
     "postcss": "^8.4.32",
     "postcss-import": "^16.1.1",
     "postcss-nesting": "^13.0.2",

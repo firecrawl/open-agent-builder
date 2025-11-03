@@ -21,7 +21,6 @@ import { executeToolsNode } from './executors/tools';
 import { executeHTTPNode } from './executors/http';
 import { executeExtractNode } from './executors/extract';
 import { executeArcadeNode } from './executors/arcade';
-import { executeFinnhubRequest } from './executors/finnhub';
 import { createOrUpdateArcadeAuthRecord } from '../arcade/auth-store';
 
 interface ArcadePendingResponse {
@@ -506,9 +505,9 @@ export class LangGraphExecutor {
           ...(typeof parsedInput === 'object' && parsedInput !== null ? parsedInput : { input: parsedInput })
         };
 
-      case 'finnhub': {
-        return await executeFinnhubRequest(node, state as WorkflowState);
-      }
+      // case 'finnhub': {
+      //   return await executeFinnhubRequest(node, state as WorkflowState);
+      // }
 
       case 'agent': {
         // Use the proper executeAgentNode which handles MCP tools
