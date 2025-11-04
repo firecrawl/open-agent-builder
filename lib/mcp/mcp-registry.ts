@@ -139,7 +139,7 @@ export const officialMCPServers: MCPServerConfig[] = [
   {
     id: 'finnhub',
     name: 'Finnhub',
-    url: 'http://localhost:3030/v1/mcp',
+    url: 'https://integration.bounteous.tools/webhook/finnhub-mcp',
     description: 'MCP adapter for Finnhub REST API',
     category: 'data',
     authType: 'none',
