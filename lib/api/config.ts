@@ -10,6 +10,10 @@ export interface APIKeys {
   firecrawl?: string;
   arcade?: string;
   e2b?: string;
+  cloudflareAccountId?: string;
+  cloudflareApiToken?: string;
+  cloudflareZoneId?: string;
+  supabaseAccessToken?: string;
 }
 
 /**
@@ -23,6 +27,10 @@ export function getServerAPIKeys(): APIKeys {
   const firecrawl = process.env.FIRECRAWL_API_KEY;
   const arcade = process.env.ARCADE_API_KEY;
   const e2b = process.env.E2B_API_KEY;
+  const cloudflareAccountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const cloudflareApiToken = process.env.CLOUDFLARE_API_TOKEN;
+  const cloudflareZoneId = process.env.CLOUDFLARE_ZONE_ID;
+  const supabaseAccessToken = process.env.SUPABASE_ACCESS_TOKEN;
 
   return {
     anthropic,
@@ -31,6 +39,10 @@ export function getServerAPIKeys(): APIKeys {
     firecrawl,
     arcade,
     e2b,
+    cloudflareAccountId,
+    cloudflareApiToken,
+    cloudflareZoneId,
+    supabaseAccessToken,
   };
 }
 

@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true && next dev",
+    "dev": "next dev",
     "dev:all": "concurrently \"npx convex dev\" \"npm run dev\"",
     "build": "next build",
+    "build:cf": "npx @cloudflare/next-on-pages",
+    "deploy": "npm run build:cf && npx wrangler pages deploy .vercel/output/static --project-name=triconnect-builder",
     "start": "next start",
     "lint": "next lint",
     "test": "playwright test",
@@ -68,6 +70,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@supabase/supabase-js": "^2.95.3",
     "@tabler/icons-react": "^3.0.1",
     "@tailwindcss/typography": "^0.5.13",
     "@types/lodash-es": "^4.17.12",
@@ -105,6 +108,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@playwright/test": "^1.56.0",
     "@types/node": "^20.10.4",
     "@types/react": "^19.0.5",
@@ -119,6 +123,7 @@
     "postcss-nesting": "^13.0.2",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.20.6",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "wrangler": "^4.66.0"
   }
 }

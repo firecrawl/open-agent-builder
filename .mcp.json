@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "huggingface-free": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "d:/trishika_project/BUILDER/scripts/mcp/hf-free-mcp.mjs"
+      ],
+      "env": {}
+    }
+  }
+}

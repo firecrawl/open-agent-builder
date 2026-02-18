@@ -1,0 +1,12 @@
+name = "triconnect-builder"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+# Cloudflare Workers AI binding (free)
+[ai]
+binding = "AI"
+
+# Environment variables for production
+[vars]
+NODE_ENV = "production"

@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "huggingface-free"
+  ],
+  "enableAllProjectMcpServers": true
+}
