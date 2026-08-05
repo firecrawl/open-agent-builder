@@ -89,8 +89,9 @@ export default function NodePanel({
         models.push({
           provider: 'Novita',
           models: [
-            { id: 'novita/deepseek/deepseek-v3-0324', name: 'DeepSeek V3 0324' },
-            { id: 'novita/meta-llama/llama-3.3-70b-instruct', name: 'Llama 3.3 70B Instruct' },
+            { id: 'novita/moonshotai/kimi-k3', name: 'Kimi K3' },
+            { id: 'novita/zai-org/glm-5.2', name: 'GLM 5.2' },
+            { id: 'novita/deepseek/deepseek-v4-flash-0731', name: 'DeepSeek V4 Flash 0731' },
           ]
         });
       }

@@ -35,8 +35,9 @@ export const SUPPORTED_MODELS = {
   ],
   novita: [
     // Novita models with function-calling support (per Novita's model catalog)
-    'deepseek/deepseek-v3-0324',
-    'meta-llama/llama-3.3-70b-instruct',
+    'moonshotai/kimi-k3',
+    'zai-org/glm-5.2',
+    'deepseek/deepseek-v4-flash-0731',
   ],
 } as const;
 
@@ -47,7 +48,7 @@ export const DEFAULT_MODELS = {
   openai: 'gpt-4o',
   anthropic: 'claude-sonnet-4-5-20250929', // Claude 4.5 Sonnet
   groq: 'gpt-oss-120b', // Using Responses API model for better MCP support
-  novita: 'deepseek/deepseek-v3-0324',
+  novita: 'moonshotai/kimi-k3',
 } as const;
 
 /**
