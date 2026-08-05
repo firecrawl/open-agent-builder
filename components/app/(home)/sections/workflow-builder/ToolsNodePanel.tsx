@@ -480,6 +480,10 @@ export default function ToolsNodePanel({ node, onClose, onDelete, onUpdate }: To
                           <option value="anthropic/claude-sonnet-4-5-20250929">Claude Sonnet 4.5</option>
                           <option value="anthropic/claude-sonnet-4-20250514">Claude Sonnet 4</option>
                         </optgroup>
+                        <optgroup label="Novita">
+                          <option value="novita/deepseek/deepseek-v3-0324">DeepSeek V3 0324</option>
+                          <option value="novita/meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B Instruct</option>
+                        </optgroup>
                       </select>
                       <p className="text-body-small text-black-alpha-48 mt-8">
                         LLM used to analyze content for violations

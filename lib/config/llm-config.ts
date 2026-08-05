@@ -8,7 +8,7 @@
 export interface LLMModel {
   id: string;
   name: string;
-  provider: 'anthropic' | 'openai' | 'groq';
+  provider: 'anthropic' | 'openai' | 'groq' | 'novita';
   contextWindow: number;
   inputCostPer1M: number;
   outputCostPer1M: number;
@@ -114,12 +114,44 @@ export const llmProviders: LLMProvider[] = [
       },
     ],
   },
+  {
+    id: 'novita',
+    name: 'Novita',
+    envKey: 'NOVITA_API_KEY',
+    defaultModel: 'deepseek/deepseek-v3-0324',
+    models: [
+      {
+        id: 'deepseek/deepseek-v3-0324',
+        name: 'DeepSeek V3 0324',
+        provider: 'novita',
+        contextWindow: 163840,
+        inputCostPer1M: 0.27,
+        outputCostPer1M: 1.12,
+        supportsJSON: true,
+        supportsMCP: false,
+        maxTokens: 65536,
+        description: 'Mixture-of-experts model with strong function calling',
+      },
+      {
+        id: 'meta-llama/llama-3.3-70b-instruct',
+        name: 'Llama 3.3 70B Instruct',
+        provider: 'novita',
+        contextWindow: 6000,
+        inputCostPer1M: 0.135,
+        outputCostPer1M: 0.40,
+        supportsJSON: true,
+        supportsMCP: false,
+        maxTokens: 120000,
+        description: 'Multilingual instruction-tuned model with function calling',
+      },
+    ],
+  },
 ];
 
 /**
  * Get default model for a provider
  */
-export function getDefaultModel(provider: 'anthropic' | 'openai' | 'groq'): string {
+export function getDefaultModel(provider: 'anthropic' | 'openai' | 'groq' | 'novita'): string {
   const config = llmProviders.find(p => p.id === provider);
   return config?.defaultModel || '';
 }
@@ -127,7 +159,7 @@ export function getDefaultModel(provider: 'anthropic' | 'openai' | 'groq'): stri
 /**
  * Get all models for a provider
  */
-export function getModelsForProvider(provider: 'anthropic' | 'openai' | 'groq'): LLMModel[] {
+export function getModelsForProvider(provider: 'anthropic' | 'openai' | 'groq' | 'novita'): LLMModel[] {
   const config = llmProviders.find(p => p.id === provider);
   return config?.models || [];
 }
@@ -165,7 +197,7 @@ export function getAllModels(): Array<LLMModel & { fullId: string }> {
 /**
  * Check if provider API key is configured
  */
-export function isProviderConfigured(provider: 'anthropic' | 'openai' | 'groq'): boolean {
+export function isProviderConfigured(provider: 'anthropic' | 'openai' | 'groq' | 'novita'): boolean {
   const config = llmProviders.find(p => p.id === provider);
   if (!config) return false;
 

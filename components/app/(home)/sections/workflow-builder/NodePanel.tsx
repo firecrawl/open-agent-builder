@@ -85,6 +85,14 @@ export default function NodePanel({
             { id: 'groq/openai/gpt-oss-120b', name: 'GPT OSS 120B' },
           ]
         });
+      } else if (key.provider === 'novita') {
+        models.push({
+          provider: 'Novita',
+          models: [
+            { id: 'novita/deepseek/deepseek-v3-0324', name: 'DeepSeek V3 0324' },
+            { id: 'novita/meta-llama/llama-3.3-70b-instruct', name: 'Llama 3.3 70B Instruct' },
+          ]
+        });
       }
     });
 

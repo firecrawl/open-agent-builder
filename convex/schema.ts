@@ -163,7 +163,7 @@ export default defineSchema({
   // User LLM API Keys - Store user's own LLM provider keys
   userLLMKeys: defineTable({
     userId: v.string(), // Clerk user ID
-    provider: v.string(), // "anthropic" | "openai" | "groq"
+    provider: v.string(), // "anthropic" | "openai" | "groq" | "novita"
     encryptedKey: v.string(), // Encrypted API key
     keyPrefix: v.string(), // First/last few chars for display (e.g. "sk-ant...abc")
 

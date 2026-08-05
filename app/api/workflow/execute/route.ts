@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
           anthropic: process.env.ANTHROPIC_API_KEY,
           groq: process.env.GROQ_API_KEY,
           openai: process.env.OPENAI_API_KEY,
+          novita: process.env.NOVITA_API_KEY,
           firecrawl: process.env.FIRECRAWL_API_KEY,
           arcade: process.env.ARCADE_API_KEY,
         };
