@@ -10,7 +10,7 @@ import { resolveMCPServers, migrateMCPData } from '@/lib/mcp/resolver';
 export async function executeAgentNode(
   node: WorkflowNode,
   state: WorkflowState,
-  apiKeys?: { anthropic?: string; groq?: string; openai?: string; firecrawl?: string }
+  apiKeys?: { anthropic?: string; groq?: string; openai?: string; novita?: string; firecrawl?: string }
 ): Promise<any> {
   const { data } = node;
 
@@ -378,6 +378,20 @@ export async function executeAgentNode(
         responseText = response.content as string;
         usage = response.response_metadata?.usage || {};
       }
+    } else if (provider === 'novita' && apiKeys?.novita) {
+      // Novita chat completions (OpenAI-compatible, no MCP support yet)
+      const { ChatOpenAI } = await import('@langchain/openai');
+      const model = new ChatOpenAI({
+        apiKey: apiKeys.novita,
+        model: modelName,
+        configuration: {
+          baseURL: 'https://api.novita.ai/openai/v1',
+        },
+      });
+
+      const response = await model.invoke(messages);
+      responseText = response.content as string;
+      usage = response.response_metadata?.usage || {};
     } else {
       throw new Error(`No API key available for provider: ${provider}`);
     }
@@ -421,7 +435,7 @@ export async function executeAgentNode(
     }
 
     if (errorMessage.includes('No API key available')) {
-      throw new Error('No API key configured. Please add an Anthropic, OpenAI, or Groq API key in your .env.local file.');
+      throw new Error('No API key configured. Please add an Anthropic, OpenAI, Groq, or Novita API key in your .env.local file.');
     }
 
     throw new Error(`Agent execution failed: ${errorMessage}`);

@@ -8,7 +8,7 @@
 export interface LLMModel {
   id: string;
   name: string;
-  provider: 'anthropic' | 'openai' | 'groq';
+  provider: 'anthropic' | 'openai' | 'groq' | 'novita';
   contextWindow: number;
   inputCostPer1M: number;
   outputCostPer1M: number;
@@ -114,12 +114,56 @@ export const llmProviders: LLMProvider[] = [
       },
     ],
   },
+  {
+    id: 'novita',
+    name: 'Novita',
+    envKey: 'NOVITA_API_KEY',
+    defaultModel: 'moonshotai/kimi-k3',
+    models: [
+      {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        provider: 'novita',
+        contextWindow: 1048576,
+        inputCostPer1M: 3.0,
+        outputCostPer1M: 15.0,
+        supportsJSON: true,
+        supportsMCP: false,
+        maxTokens: 1048576,
+        description: '2.8T-parameter model with native visual understanding',
+      },
+      {
+        id: 'zai-org/glm-5.2',
+        name: 'GLM 5.2',
+        provider: 'novita',
+        contextWindow: 1048576,
+        inputCostPer1M: 1.4,
+        outputCostPer1M: 4.4,
+        supportsJSON: true,
+        supportsMCP: false,
+        maxTokens: 131072,
+        description: 'Agentic model built for long-horizon autonomous tasks',
+      },
+      {
+        id: 'deepseek/deepseek-v4-flash-0731',
+        name: 'DeepSeek V4 Flash 0731',
+        provider: 'novita',
+        contextWindow: 1048576,
+        inputCostPer1M: 0.14,
+        outputCostPer1M: 0.28,
+        supportsJSON: true,
+        supportsMCP: false,
+        maxTokens: 393216,
+        description: 'Sparse mixture-of-experts model for coding and agent workflows',
+      },
+    ],
+  },
 ];
 
 /**
  * Get default model for a provider
  */
-export function getDefaultModel(provider: 'anthropic' | 'openai' | 'groq'): string {
+export function getDefaultModel(provider: 'anthropic' | 'openai' | 'groq' | 'novita'): string {
   const config = llmProviders.find(p => p.id === provider);
   return config?.defaultModel || '';
 }
@@ -127,7 +171,7 @@ export function getDefaultModel(provider: 'anthropic' | 'openai' | 'groq'): stri
 /**
  * Get all models for a provider
  */
-export function getModelsForProvider(provider: 'anthropic' | 'openai' | 'groq'): LLMModel[] {
+export function getModelsForProvider(provider: 'anthropic' | 'openai' | 'groq' | 'novita'): LLMModel[] {
   const config = llmProviders.find(p => p.id === provider);
   return config?.models || [];
 }
@@ -165,7 +209,7 @@ export function getAllModels(): Array<LLMModel & { fullId: string }> {
 /**
  * Check if provider API key is configured
  */
-export function isProviderConfigured(provider: 'anthropic' | 'openai' | 'groq'): boolean {
+export function isProviderConfigured(provider: 'anthropic' | 'openai' | 'groq' | 'novita'): boolean {
   const config = llmProviders.find(p => p.id === provider);
   if (!config) return false;
 

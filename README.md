@@ -68,6 +68,7 @@ Open Agent Builder is a visual workflow builder for creating AI agent pipelines 
 | **[Anthropic](https://www.anthropic.com/)** | Claude AI integration with native MCP support (Claude Haiku 4.5 & Sonnet 4.5) |
 | **[OpenAI](https://platform.openai.com/)** | gpt-5 integration (MCP support coming soon) |
 | **[Groq](https://groq.com/)** | Fast inference for open models (MCP support coming soon) |
+| **[Novita](https://novita.ai/)** | OpenAI-compatible inference for open models (MCP support coming soon) |
 | **[E2B](https://e2b.dev)** | Sandboxed code execution for secure transform nodes |
 | **[Vercel](https://vercel.com)** | Deployment platform with edge functions |
 
@@ -188,6 +189,9 @@ OPENAI_API_KEY=sk-...
 
 # Groq (MCP support coming soon)
 GROQ_API_KEY=gsk_...
+
+# Novita (OpenAI-compatible, MCP support coming soon)
+NOVITA_API_KEY=sk_...
 ```
 
 > **Important:** For workflows using MCP tools (like Firecrawl integration), Anthropic Claude is currently the recommended provider as it has native MCP support. OpenAI and Groq MCP support is coming soon.
@@ -408,6 +412,7 @@ Add custom MCP servers in **Settings → MCP Registry**:
 - `ANTHROPIC_API_KEY` - Default Claude provider (Recommended for MCP)
 - `OPENAI_API_KEY` - Default gpt-5 provider (MCP coming soon)
 - `GROQ_API_KEY` - Default Groq provider (MCP coming soon)
+- `NOVITA_API_KEY` - Default Novita provider (MCP coming soon)
 - `E2B_API_KEY` - Sandboxed code execution
 
 ## API Usage

@@ -283,6 +283,21 @@ async function analyzeWithLLM(
 
     const text = response.choices[0]?.message?.content || '{}';
     return JSON.parse(text);
+  } else if (provider === 'novita' && apiKeys.novita) {
+    const OpenAI = (await import('openai')).default;
+    const client = new OpenAI({
+      apiKey: apiKeys.novita,
+      baseURL: 'https://api.novita.ai/openai/v1',
+    });
+
+    const response = await client.chat.completions.create({
+      model: modelName,
+      messages: [{ role: 'user', content: prompt }],
+      response_format: { type: 'json_object' },
+    });
+
+    const text = response.choices[0]?.message?.content || '{}';
+    return JSON.parse(text);
   }
 
   throw new Error(`Unsupported provider: ${provider}`);
